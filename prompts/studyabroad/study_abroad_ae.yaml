@@ -1,0 +1,142 @@
+# 阿联酋(United Arab Emirates)本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 阿联酋留学, 迪拜留学, 阿布扎比留学, 哈利法大学, 阿联酋大学, 海湾国家奖学金, Study in UAE
+id: ae_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Study in UAE (studyinuae.ae)
+    - UAE Ministry of Education (moe.gov.ae)
+    - GDRFA (gdrfad.gov.ae)
+    - Khalifa University
+    - United Arab Emirates University (UAEU)
+    - American University of Sharjah (AUS)
+    - University of Sharjah
+    - Heriot-Watt University Dubai
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 阿联酋本科留学申请全景分析报告
+  en: United Arab Emirates Undergraduate Study Application Analysis
+
+description:
+  zh: 高中毕业->阿联酋(United Arab Emirates)的本科留学路径分析。覆盖教育体系架构、入学路径与录取标准、学费与奖学金、签证与居留政策、毕业后就业与回国发展。数据来源仅限官方机构与英文权威来源。
+  en: Undergraduate study in United Arab Emirates for Chinese high school graduates. Covers education system, admission pathways, tuition, visa, and post-graduation career development.
+
+triggers:
+    - "阿联酋留学"
+    - "迪拜留学"
+    - "阿布扎比留学"
+    - "哈利法大学"
+    - "阿联酋大学"
+    - "海湾国家奖学金"
+    - "Study in UAE"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 阿联酋
+  region_en: United Arab Emirates
+  country_code: AE
+  peers:
+    - "Saudi Arabia (KAUST)"
+    - "Qatar (Qatar Foundation)"
+    - "Singapore"
+    - "Australia (ATN)"
+  focus_schools:
+    - "Khalifa University"
+    - "United Arab Emirates University (UAEU)"
+    - "American University of Sharjah (AUS)"
+    - "University of Sharjah"
+    - "Heriot-Watt University Dubai"
+
+data_pipes:
+  - pipe: ae_bachelor_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gaokao_pathway", "annual_tuition_aed", "top_programs", "moe_recognized"]
+      source_url: https://www.studyinuae.ae
+  - pipe: ae_visa_poststudy
+    params:
+      source_url: https://www.gdrfad.gov.ae
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: ae_scholarships
+    params:
+      source_url: https://www.moe.gov.ae/En/Pages/home.aspx
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: ae_bachelor_admission_standards
+    label_zh: 本科录取标准与入学路径
+    label_en: Bachelor's Admission Standards
+    method: admission_standard_analysis
+    required_data: [ae_bachelor_admissions]
+
+  - id: ae_tuition_and_costs
+    label_zh: 学费与留学成本
+    label_en: Tuition & Study Costs
+    method: cost_model
+    required_data: [ae_bachelor_admissions]
+
+  - id: ae_scholarship_overview
+    label_zh: 可申请奖学金概览
+    label_en: Scholarships Available
+    method: scholarship_analysis
+    required_data: [ae_scholarships]
+
+  - id: ae_visa_and_post_study_work
+    label_zh: 学生签证与毕业后工作权利
+    label_en: Student Visa & Post-Study Work
+    method: policy_scan
+    required_data: [ae_visa_poststudy]
+
+  - id: ae_employment_and_roi
+    label_zh: 就业前景与投资回报率
+    label_en: Employment Outlook & ROI
+    method: career_outcome_analysis
+    required_data: [ae_bachelor_admissions]
+
+  - id: ae_application_timeline
+    label_zh: 申请时间轴与关键节点
+    label_en: Application Timeline
+    method: timeline_projection
+    required_data: [ae_bachelor_admissions]
+
+  - id: ae_risk_assessment
+    label_zh: 风险矩阵与备选路径
+    label_en: Risk Matrix & Alternatives
+    method: risk_analysis
+    required_data: [ae_visa_poststudy, ae_bachelor_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/ae_undergraduate
+  style:
+    primary_color: #00732F
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - verify_information_with_official_sources

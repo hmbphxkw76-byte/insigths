@@ -1,0 +1,106 @@
+# 马来西亚(Malaysia)博士申请全景分析 — Prompt 定义
+# 触发关键词: 马来西亚博士, 马来西亚PhD
+id: my_phd_study
+version: 1
+enabled: true
+
+label:
+  zh: 马来西亚博士留学申请全景分析报告
+  en: Malaysia PhD Application Analysis
+
+description:
+  zh: 本科直博/硕士申博->马来西亚(Malaysia)的博士申请路径分析。覆盖博士导师匹配、研究计划撰写、套磁技巧、CSC/大学全额奖学金、学制(3-5年)、毕业后学术/工业界发展。
+  en: PhD study in Malaysia for Chinese graduates. Covers supervisor matching, research proposal, scholarship funding, duration (3-5 years), and post-PhD career development.
+
+triggers:
+    - "马来西亚博士"
+    - "马来西亚PhD"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 马来西亚
+  region_en: Malaysia
+  country_code: MY
+  peers:
+    - "Singapore (NTU)"
+    - "Thailand (Chula)"
+    - "Indonesia (UI)"
+    - "Australia (G8)"
+  focus_schools:
+    - "Universiti Malaya (UM)"
+    - "Universiti Putra Malaysia (UPM)"
+    - "Universiti Kebangsaan Malaysia (UKM)"
+    - "Universiti Teknologi Malaysia (UTM)"
+    - "Monash University Malaysia"
+
+data_pipes:
+  - pipe: my_phd_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gpa_min_pct", "annual_tuition_myr", "stipend_myr", "duration_years", "funding_model", "top_fields", "competition_level"]
+      source_url: https://www.studyinmalaysia.com
+  - pipe: my_visa_poststudy
+    params:
+      source_url: https://esd.imi.gov.my
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: my_scholarships
+    params:
+      source_url: https://biasiswa.mohe.gov.my
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: my_phd_funding_and_stipend
+    label_zh: 博士资助模式与奖学金(CSC/大学/项目)
+    label_en: PhD Funding & Stipend Models
+    method: scholarship_analysis
+    required_data: [my_phd_admissions, my_scholarships]
+
+  - id: my_phd_application_requirements
+    label_zh: 博士申请要求与套磁策略
+    label_en: PhD Application Requirements & Supervisor Matching
+    method: admission_standard_analysis
+    required_data: [my_phd_admissions]
+
+  - id: my_phd_duration_and_supervision
+    label_zh: 学制、导师指导与学术路径
+    label_en: Duration, Supervision & Academic Pathway
+    method: program_analysis
+    required_data: [my_phd_admissions]
+
+  - id: my_phd_visa_and_post_study
+    label_zh: 博士签证与毕业后发展路径
+    label_en: PhD Visa & Post-Study Development
+    method: policy_scan
+    required_data: [my_visa_poststudy]
+
+  - id: my_phd_career_outcomes
+    label_zh: 博士后/学术界/工业界发展路径
+    label_en: Post-PhD Career Outcomes
+    method: career_outcome_analysis
+    required_data: [my_phd_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/my_phd
+  style:
+    primary_color: #CC0001
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: semi_annual
+  month: [3, 9]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 120
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - phd_funding_availability_varies_by_year

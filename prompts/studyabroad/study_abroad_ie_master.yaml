@@ -1,0 +1,112 @@
+# 爱尔兰(Ireland)硕士留学申请全景分析 — Prompt 定义
+# 触发关键词: 爱尔兰硕士, 爱尔兰研究生
+id: ie_master_study
+version: 1
+enabled: true
+
+label:
+  zh: 爱尔兰硕士留学申请全景分析报告
+  en: Ireland Master's Study Application Analysis
+
+description:
+  zh: 本科毕业->爱尔兰(Ireland)的硕士留学路径分析。覆盖入学要求与GPA标准、雅思/GMAT/GRE语言与标化考试、学费与奖学金、授课型/研究型分流、毕业后工作与居留路径。
+  en: Master's study in Ireland for Chinese bachelor's graduates. Covers admission requirements, standardized tests, tuition, scholarships, taught vs research, and post-study pathways.
+
+triggers:
+    - "爱尔兰硕士"
+    - "爱尔兰研究生"
+
+horizon:
+  type: future_years
+  value: 3
+
+geo:
+  region_zh: 爱尔兰
+  region_en: Ireland
+  country_code: IE
+  peers:
+    - "UK (Russell Group)"
+    - "EU (Netherlands/Germany)"
+    - "Australia (G8)"
+    - "Canada (U15)"
+  focus_schools:
+    - "Trinity College Dublin (TCD)"
+    - "University College Dublin (UCD)"
+    - "University College Cork (UCC)"
+    - "Dublin City University (DCU)"
+    - "University of Galway"
+
+data_pipes:
+  - pipe: ie_master_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gpa_min_pct", "annual_tuition_eur", "duration_years", "program_type", "top_programs", "moe_recognized"]
+      source_url: https://www.educationinireland.com
+  - pipe: ie_visa_poststudy
+    params:
+      source_url: https://www.irishimmigration.ie
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: ie_scholarships
+    params:
+      source_url: https://www.educationinireland.com/en/What-can-I-study-/Scholarships
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: ie_master_admission_standards
+    label_zh: 硕士录取标准与背景要求
+    label_en: Master's Admission Standards
+    method: admission_standard_analysis
+    required_data: [ie_master_admissions]
+
+  - id: ie_master_tuition_and_scholarship
+    label_zh: 硕士学费与奖学金机会
+    label_en: Master's Tuition & Scholarships
+    method: cost_model
+    required_data: [ie_master_admissions, ie_scholarships]
+
+  - id: ie_master_type_and_duration
+    label_zh: 授课型/研究型硕士分流分析
+    label_en: Taught vs Research Master's
+    method: program_analysis
+    required_data: [ie_master_admissions]
+
+  - id: ie_visa_and_post_study_pathways
+    label_zh: 签证与毕业后居留路径
+    label_en: Visa & Post-Graduation Pathways
+    method: policy_scan
+    required_data: [ie_visa_poststudy]
+
+  - id: ie_employment_and_roi
+    label_zh: 就业前景与投资回报率
+    label_en: Employment Outlook & ROI
+    method: career_outcome_analysis
+    required_data: [ie_master_admissions]
+
+  - id: ie_application_timeline
+    label_zh: 申请时间轴与关键节点
+    label_en: Application Timeline
+    method: timeline_projection
+    required_data: [ie_master_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/ie_master
+  style:
+    primary_color: #169B62
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - verify_information_with_official_sources

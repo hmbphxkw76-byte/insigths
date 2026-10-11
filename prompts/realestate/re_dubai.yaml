@@ -1,0 +1,133 @@
+# 迪拜房地产市场月度深度分析 — Prompt 定义
+id: re_dubai
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Dubai Land Department (DLD)
+    - ValuStrat
+    - UAE Central Bank
+    - JLL
+    - Dubai Municipality
+    - Dubai Statistics Center
+    - Federal Competitiveness and Statistics Authority
+    - Khaleej Times
+    - Gulf News
+    - Arabian Business
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: 迪拜房地产市场月度深度分析报告
+  en: Dubai Real Estate Monthly Deep-Dive
+
+description:
+  zh: 迪拜住宅/商业地产的价格、交易量、租金收益、供需平衡与政策分析
+  en: Dubai residential/commercial property price, transaction volume, rental yield, supply-demand balance & policy analysis
+
+triggers:
+  - "迪拜"
+  - "Dubai real estate"
+  - "Dubai property"
+  - "阿联酋地产"
+  - "UAE real estate"
+
+horizon:
+  type: rolling
+  value: 12
+  unit: months
+
+geo:
+  region_zh: 迪拜
+  region_en: Dubai
+  country_code: AE
+  peers:
+    - Abu Dhabi
+    - Riyadh
+    - Singapore
+    - Hong Kong
+  focus_areas:
+    - "Downtown Dubai"
+    - "DIFC"
+    - "Dubai Marina"
+    - "Palm Jumeirah"
+    - "Business Bay"
+    - "Dubai Hills Estate"
+    - "Jumeirah Beach Residence"
+    - "Dubai Creek Harbour"
+
+data_pipes:
+  - pipe: dld_transactions
+    params:
+      property_types: ["Residential", "Commercial", "Land", "Hotel"]
+      metrics: ["transaction_count", "total_value", "avg_price_per_sqft"]
+  - pipe: valustrat_price_index
+    params:
+      indices: ["Dubai Residential Price Index", "Rental Yield Index"]
+  - pipe: mortgage_and_rates
+    params:
+      sources: ["UAE Central Bank", "major banks"]
+      types: ["fixed", "variable", "off-plan payment plans"]
+  - pipe: supply_pipeline
+    params:
+      status: ["planned", "under construction", "completed"]
+      delivery_years: [2025, 2026, 2027, 2028]
+  - pipe: population_demographics
+    params:
+      metrics: ["population", "household formation", "expat inflow", "visa data"]
+      source: "Dubai Statistics Center"
+  - pipe: real_estate_news
+    params:
+      keywords: ["Dubai property", "DLD", "market outlook", "foreign investment", "Golden Visa"]
+
+analysis_dimensions:
+  - id: price_trend
+    label_zh: 价格与交易量趋势
+    label_en: Price & Transaction Volume Trends
+    method: time_series_decomposition
+    required_data: [dld_transactions, valustrat_price_index]
+  - id: rental_yield
+    label_zh: 租金收益率与投资回报
+    label_en: Rental Yield & Investment Return
+    method: yield_model
+    required_data: [valustrat_price_index, mortgage_and_rates]
+  - id: supply_demand_balance
+    label_zh: 供需平衡表
+    label_en: Supply-Demand Balance
+    method: balance_sheet
+    required_data: [supply_pipeline, population_demographics, dld_transactions]
+  - id: area_deep_dives
+    label_zh: 重点商圈深度画像
+    label_en: Priority Area Deep-Dives
+    method: micro_market_profile
+    required_data: [dld_transactions, valustrat_price_index]
+  - id: policy_risk
+    label_zh: 政策与监管风险
+    label_en: Policy & Regulatory Risk
+    method: policy_scan
+    required_data: [real_estate_news]
+
+report:
+  template: real_estate_dashboard
+  output_dir: reports/realestate/dubai
+  style:
+    primary_color: "#0f2027"
+    accent_color: "#ff6f00"
+
+schedule:
+  cadence: monthly
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2
+  required_disclaimers:
+    - not_investment_advice
+    - market_cycle_warning

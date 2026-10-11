@@ -1,0 +1,137 @@
+# 芬兰(Finland)本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 芬兰留学, 芬兰本科, 赫尔辛基大学, 阿尔托大学, Study in Finland, 芬兰应用科学大学, 免学费留学
+id: fi_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Study in Finland (studyinfinland.fi)
+    - Finnish Immigration Service (Migri)
+    - EDUFI - Finnish National Agency for Education
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 芬兰本科留学申请全景分析报告
+  en: Finland Undergraduate Study Application Analysis
+
+description:
+  zh: 高中毕业->芬兰(Finland)的本科留学路径分析。覆盖教育体系架构、入学路径与录取标准、学费与奖学金、签证与居留政策、毕业后就业与回国发展。数据来源仅限官方机构与英文权威来源。
+  en: Undergraduate study in Finland for Chinese high school graduates. Covers education system, admission pathways, tuition, visa, and post-graduation career development.
+
+triggers:
+    - "芬兰留学"
+    - "芬兰本科"
+    - "赫尔辛基大学"
+    - "阿尔托大学"
+    - "Study in Finland"
+    - "芬兰应用科学大学"
+    - "免学费留学"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 芬兰
+  region_en: Finland
+  country_code: FI
+  peers:
+    - "Sweden (KTH/Lund)"
+    - "Denmark (DTU/KU)"
+    - "Germany"
+    - "Nordics"
+  focus_schools:
+    - "University of Helsinki"
+    - "Aalto University"
+    - "University of Tampere"
+    - "University of Oulu"
+    - "LUT University"
+
+data_pipes:
+  - pipe: fi_bachelor_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gaokao_pathway", "annual_tuition_eur", "top_programs", "moe_recognized"]
+      source_url: https://www.studyinfinland.fi
+  - pipe: fi_visa_poststudy
+    params:
+      source_url: https://migri.fi/en/student-residence-permit
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: fi_scholarships
+    params:
+      source_url: https://www.studyinfinland.fi/scholarships
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: fi_bachelor_admission_standards
+    label_zh: 本科录取标准与入学路径
+    label_en: Bachelor's Admission Standards
+    method: admission_standard_analysis
+    required_data: [fi_bachelor_admissions]
+
+  - id: fi_tuition_and_costs
+    label_zh: 学费与留学成本
+    label_en: Tuition & Study Costs
+    method: cost_model
+    required_data: [fi_bachelor_admissions]
+
+  - id: fi_scholarship_overview
+    label_zh: 可申请奖学金概览
+    label_en: Scholarships Available
+    method: scholarship_analysis
+    required_data: [fi_scholarships]
+
+  - id: fi_visa_and_post_study_work
+    label_zh: 学生签证与毕业后工作权利
+    label_en: Student Visa & Post-Study Work
+    method: policy_scan
+    required_data: [fi_visa_poststudy]
+
+  - id: fi_employment_and_roi
+    label_zh: 就业前景与投资回报率
+    label_en: Employment Outlook & ROI
+    method: career_outcome_analysis
+    required_data: [fi_bachelor_admissions]
+
+  - id: fi_application_timeline
+    label_zh: 申请时间轴与关键节点
+    label_en: Application Timeline
+    method: timeline_projection
+    required_data: [fi_bachelor_admissions]
+
+  - id: fi_risk_assessment
+    label_zh: 风险矩阵与备选路径
+    label_en: Risk Matrix & Alternatives
+    method: risk_analysis
+    required_data: [fi_visa_poststudy, fi_bachelor_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/fi_undergraduate
+  style:
+    primary_color: #003580
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - verify_information_with_official_sources

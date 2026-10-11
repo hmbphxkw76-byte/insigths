@@ -1,0 +1,173 @@
+# 法国工程师学院(Grande École)本科/本硕连读申请 — Prompt 定义
+# 触发关键词: 法国工程师, Grande École, Diplôme d'Ingénieur, INSA, UT, N+i, IMT, CTI认证, 法国留学
+id: fr_engineering_grande_ecole
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - CTI - Commission des Titres d'Ingénieur
+    - Campus France
+    - France-Visas
+    - INSEE
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 法国工程师学院(Grande École)申请全景分析报告
+  en: French Grande École Engineering Application Analysis
+
+description:
+  zh: 面向高中毕业生的法国工程师学院(Grande École d'Ingénieur)、5年制工程师项目(INSA/UT/N+i/IMT)、公立大学理工科路径(Terminale→L1)的深度分析。覆盖CTI认证、中国教育部认证、竞考录取率、学费与汇率、签证与APS居留、就业与回国发展。
+  en: Deep analysis of French Grande École engineering programs for high school graduates, covering CTI accreditation, Chinese MOE recognition, admission pathways, tuition, visa/APS, and career outcomes.
+
+triggers:
+  - "法国工程师"
+  - "Grande École"
+  - "法国工程师学院"
+  - "INSA"
+  - "UT本部"
+  - "N+i"
+  - "IMT Atlantique"
+  - "法国留学"
+  - "法国本科"
+  - "Diplôme d'Ingénieur"
+  - "CTI认证"
+  - "法国5年制工程师"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: 法国
+  region_en: France
+  country_code: FR
+  peers:
+    - "Germany (TU9)"
+    - "Netherlands (TU/e, TU Delft)"
+    - "Japan (旧帝大工学部)"
+    - "中国（985工科试验班）"
+  focus_schools:
+    - "École Polytechnique (L'X)"
+    - "CentraleSupélec"
+    - "MINES Paris - PSL"
+    - "INSA Lyon / INSA Toulouse / INSA Rouen"
+    - "UT Compiègne / UT Troyes / UT Belfort-Montbéliard"
+    - "IMT Atlantique"
+    - "ENSTA Paris"
+    - "EPF"
+    - "ESILV"
+    - "ECE"
+
+data_pipes:
+  - pipe: fr_engineering_schools_cti
+    params:
+      accreditation: "CTI"
+      level: "bac_to_bac5"
+      fields: ["school_name_fr", "school_name_en", "accreditation_status", "accreditation_expiry", "city", "tuition_eur", "is_public"]
+      source_url: "https://www.cti-commission.fr/accreditation"
+  - pipe: fr_campus_france_programs
+    params:
+      degree_level: "bachelor_engineering"
+      fields: ["program_name", "school", "duration_years", "language", "tuition_range", "application_deadline"]
+      source_url: "https://www.campusfrance.org/en"
+  - pipe: fr_engineering_tuition_comparison
+    params:
+      student_nationality: "non-eu"
+      year: 2025
+      fields: ["school_name", "annual_tuition_min_eur", "annual_tuition_max_eur", "registration_fee", "health_insurance", "source_url"]
+  - pipe: fr_visa_policy
+    params:
+      visa_type: "student_long_stay"
+      source_url: "https://france-visas.gouv.fr"
+      fields: ["visa_category", "requirements", "processing_time_days", "fee_eur", "work_rights_hours_year", "post_study_visa"]
+  - pipe: fr_engineering_employment_stats
+    params:
+      fields: ["school_name", "employment_rate_6mo", "median_salary_eur", "top_industries", "pct_international", "graduation_year"]
+  - pipe: study_abroad_official_ranking
+    params:
+      ranking_source: "QS_subject_engineering"
+      year: 2025
+      country: "France"
+      top_n: 50
+
+analysis_dimensions:
+  - id: education_system_overview
+    label_zh: 法国高等教育体系架构与工程师学院定位
+    label_en: French Higher Education System & Grande École Positioning
+    method: institutional_comparison
+    required_data: [fr_engineering_schools_cti]
+
+  - id: admission_pathways
+    label_zh: 申请路径全景图（5年制/N+i/Prépa→竞考→公立大学）
+    label_en: Admission Pathway Decision Map
+    method: pathway_analysis
+    required_data: [fr_campus_france_programs, fr_engineering_schools_cti]
+
+  - id: cti_accreditation_check
+    label_zh: CTI认证与中国教育部认可核查
+    label_en: CTI Accreditation & Chinese MOE Recognition Verification
+    method: accreditation_audit
+    required_data: [fr_engineering_schools_cti]
+
+  - id: cost_breakdown
+    label_zh: 费用全拆解（学费/生活费/隐性成本/奖学金）
+    label_en: Cost Breakdown (Tuition, Living, Hidden Costs, Scholarships)
+    method: cost_model
+    required_data: [fr_engineering_tuition_comparison]
+
+  - id: timeline_planning
+    label_zh: 申请时间轴与关键节点（倒推规划）
+    label_en: Application Timeline & Critical Milestones
+    method: timeline_projection
+    required_data: [fr_campus_france_programs]
+
+  - id: visa_and_residency
+    label_zh: 签证与居留政策（VLS-TS/APS/毕业工签）
+    label_en: Visa & Residency Policy (VLS-TS/APS/Post-Study Visa)
+    method: policy_scan
+    required_data: [fr_visa_policy]
+
+  - id: employment_and_career
+    label_zh: 就业分析与职业发展（留法/回国/第三国）
+    label_en: Employment Analysis & Career Development
+    method: career_outcome_analysis
+    required_data: [fr_engineering_employment_stats, study_abroad_official_ranking]
+
+  - id: risk_assessment
+    label_zh: 风险矩阵与避坑指南（中国高中生的典型风险）
+    label_en: Risk Matrix & Pitfalls Guide
+    method: risk_analysis
+    required_data: [fr_engineering_schools_cti, fr_campus_france_programs, fr_visa_policy]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/fr_engineering
+  style:
+    primary_color: "#002395"
+    accent_color: "#ed2939"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 1
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 60
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - tuition_may_change_annually
+    - visa_policy_subject_to_change

@@ -1,0 +1,189 @@
+# 全局 Prompt Schema 定义
+# 用于 Prompt 定义的结构化描述与校验
+#
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  最高原则 (CONSTITUTIONAL PRINCIPLE)                              ║
+# ║  数据来源: 英文权威机构优先 (English Authoritative Sources Only)    ║
+# ║  报告输出: 统一中文显示 (Chinese-Only Output)                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+#  【一般规则】
+#  严禁使用任何中文网站、UGC 平台作为数据来源。
+#  所有资料必须从英文权威机构获取(World Bank, IMF, 各国政府英文门户等)。
+#  最终报告必须以中文显示给终端用户。
+#
+#  【国家特定例外 — 日本】
+#  针对日本相关资料，允许参照日本日语语言官方网站（如 e-Gov Japan、
+# 厚生劳动省、经济产业省、国土交通省等），理由：信息更新更及时。
+#  但输出时仍必须以中文显示（日语官网仅为数据采集来源，非输出语言）。
+#
+$id: prompt_definition
+type: object
+required:
+  - id
+  - version
+  - label
+  - triggers
+  - data_pipes
+  - analysis_dimensions
+  - report
+  - data_source_policy
+
+properties:
+  id:
+    type: string
+    pattern: '^[a-z][a-z0-9_]*$'
+    description: 唯一标识符,小写字母+下划线
+
+  version:
+    type: integer
+    description: Prompt 定义版本
+
+  # ── 数据来源合规策略 (强制字段) ──
+  data_source_policy:
+    type: object
+    required: [mode, allowed_sources, forbidden_sources, output_language]
+    description: 数据来源合规策略 — 强制约束所有管道数据来源
+    properties:
+      mode:
+        type: string
+        enum: [english_authoritative_only]
+        description: 数据源模式 — 仅允许英文权威来源
+      allowed_sources:
+        type: array
+        items: { type: string }
+        description: 允许的权威来源白名单(英文机构)
+      forbidden_sources:
+        type: array
+        items: { type: string }
+        description: 严禁使用的来源黑名单(任何中文平台)
+      output_language:
+        type: string
+        enum: [zh]
+        description: 终端用户输出语言 — 统一中文
+      # ── 国家特定例外 ──
+      # 针对特定国家允许使用该国官方语言网站（因信息更新更及时）
+      # 此类例外仅限数据采集来源，输出语言仍必须为中文
+      country_specific_exceptions:
+        type: object
+        description: 国家特定数据源例外 — 允许使用该国官方语言网站（输出仍为中文）
+        properties:
+          JP:
+            type: object
+            description: 日本例外 — 允许日语官方网站作为数据来源（信息更新更及时）
+            properties:
+              enabled:
+                type: boolean
+                description: 是否启用日本例外规则
+              language:
+                type: string
+                enum: [ja]
+                description: 允许的日本官方语言
+              official_sources:
+                type: array
+                items: { type: string }
+                description: 日本官方日语网站白名单（英文缩写/名称）
+              note:
+                type: string
+                description: 例外说明 — 仅限数据采集，输出仍为中文
+
+  enabled:
+    type: boolean
+    default: true
+    description: 是否启用
+
+  label:
+    type: object
+    properties:
+      zh: { type: string }
+      en: { type: string }
+    description: 显示名称
+
+  description:
+    type: object
+    properties:
+      zh: { type: string }
+      en: { type: string }
+    description: 详细描述
+
+  triggers:
+    type: array
+    items: { type: string }
+    description: 触发关键词列表
+
+  horizon:
+    type: object
+    properties:
+      type: { enum: [future_years, rolling] }
+      value: { type: integer }
+      unit: { enum: [months, years] }
+
+  geo:
+    type: object
+    properties:
+      region_zh: { type: string }
+      region_en: { type: string }
+      country_code: { type: string }
+      peers: { type: array, items: { type: string } }
+
+  indicators:
+    type: object
+    properties:
+      primary: { type: array, items: { type: string } }
+      secondary: { type: array, items: { type: string } }
+
+  data_pipes:
+    type: array
+    items:
+      type: object
+      required: [pipe]
+      properties:
+        pipe: { type: string }
+        params: { type: object }
+    description: 数据管道声明列表
+
+  analysis_dimensions:
+    type: array
+    items:
+      type: object
+      required: [id, label_zh, label_en, method, required_data]
+      properties:
+        id: { type: string }
+        label_zh: { type: string }
+        label_en: { type: string }
+        method: { type: string }
+        required_data: { type: array, items: { type: string } }
+
+  report:
+    type: object
+    required: [template, output_dir]
+    properties:
+      template: { type: string }
+      output_dir: { type: string }
+      style:
+        type: object
+        properties:
+          primary_color: { type: string }
+          accent_color: { type: string }
+      format:
+        type: object
+        properties:
+          type: { enum: [html, markdown, pdf] }
+          sections: { type: array, items: { type: string } }
+
+  schedule:
+    type: object
+    properties:
+      cadence: { enum: [daily, weekly, biweekly, monthly, quarterly, event-driven] }
+      day_of_week: { type: string }
+      week_of_month: { type: integer }
+      month: { type: array, items: { type: integer } }
+      time: { type: string }
+      timezone: { type: string }
+
+  quality:
+    type: object
+    properties:
+      min_data_freshness_days: { type: integer }
+      min_sources_per_section: { type: integer }
+      required_disclaimers: { type: array, items: { type: string } }

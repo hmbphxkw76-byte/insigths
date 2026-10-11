@@ -1,0 +1,79 @@
+# =====================================================================
+# 留学申请全景分析 · 通用提示词模板（参数化）
+# =====================================================================
+# 使用说明：
+#   1. 复制本模板
+#   2. 将 {COUNTRY} 替换为目标国家名称（中文）
+#   3. 将 {COUNTRY_EN} 替换为目标国家名称（英文）
+#   4. 填充所有占位符
+#   5. 保存为 study_abroad_{country_code}.yaml
+#
+# 占位符说明：
+#   {COUNTRY}        — 国家中文名（如：法国、日本、德国）
+#   {COUNTRY_EN}     — 国家英文名（如：France、Japan、Germany）
+#   {COUNTRY_CODE}   — ISO 3166-1 alpha-2 代码（如：FR、JP、DE）
+#   {DEGREE}         — 学位层次（本科/硕士/博士）
+#   {TOP_INSTITUTIONS}— 目标国家Top院校列表（每行 - 格式）
+#   {TUITION_RANGE}  — 学费区间描述
+#   {LIVING_COST}    — 月生活费区间
+#   {VISA_TYPE}      — 主要学生签证类型
+#   {OFFICIAL_URL}   — 官方机构网站
+#   {DATA_SOURCE_URL}— 数据源URL列表
+#   {KEY_TRIGGERS}   — 触发关键词列表
+#   {PEER_COUNTRIES} — 对标国家列表
+#   {ANALYSIS_PIPES} — 数据管道列表
+#   {FOCUS_SECTIONS} — 重点分析维度
+# =====================================================================
+
+id: "{COUNTRY_CODE}_undergraduate_study"
+version: 1
+enabled: true
+
+label:
+  zh: "{COUNTRY}留学申请全景分析报告"
+  en: "{COUNTRY_EN} Study Abroad Application Analysis"
+
+description:
+  zh: "高中毕业→{COUNTRY}({COUNTRY_EN})的本科留学路径分析。覆盖教育体系架构、入学路径与录取标准、学费与奖学金、签证与居留政策、毕业后就业与回国发展。数据来源仅限官方机构与英文权威来源。"
+  en: "Undergraduate study in {COUNTRY_EN} for Chinese high school graduates. Covers education system, admission pathways, tuition, visa, and post-graduation career development."
+
+triggers: [{KEY_TRIGGERS}]
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: "{COUNTRY}"
+  region_en: "{COUNTRY_EN}"
+  country_code: "{COUNTRY_CODE}"
+  peers: ["{PEER_COUNTRIES}"]
+  focus_schools: ["{TOP_INSTITUTIONS}"]
+
+data_pipes: ["{ANALYSIS_PIPES}"]
+
+analysis_dimensions: ["{FOCUS_SECTIONS}"]
+
+report:
+  template: study_abroad_analysis
+  output_dir: "reports/studyabroad/{COUNTRY_CODE}_undergraduate"
+  style:
+    primary_color: "#000000"
+    accent_color: "#cc0000"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - verify_information_with_official_sources

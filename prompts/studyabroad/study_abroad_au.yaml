@@ -1,0 +1,159 @@
+# 澳洲本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 澳洲留学, 澳洲本科, Group of Eight, G8, 墨尔本大学, 悉尼大学, ANU, UNSW, 澳洲国立, 墨尔本, RMIT, 澳洲留学, TAFE, 澳洲签证, Subclass 500
+id: au_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Study Australia (studyaustralia.gov.au)
+    - Home Affairs Australia
+    - CRICOS
+    - Research Training Program
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 澳洲本科留学申请全景分析报告
+  en: Australia Undergraduate Study Application Analysis
+
+description:
+  zh: 面向高中毕业生的澳洲本科留学路径分析。覆盖Group of Eight八大名校录取标准(高考直录/预科/快捷文凭)、IELTS语言要求、学费(AUD $30,000-$50,000/年)、生活费、Subclass 500学生签证与工作权利、Post-Study Work Stream临时工签(2-4年)、技术移民打分制(189/190/491)与PR路径。
+  en: Australia undergraduate study analysis for high school graduates, covering Group of Eight, Gaokar直录/fast-track diploma, tuition, Subclass 500 visa, PSW, and skilled migration pathways.
+
+triggers:
+  - "澳洲留学"
+  - "澳洲本科"
+  - "Group of Eight"
+  - "G8"
+  - "墨尔本大学"
+  - "悉尼大学"
+  - "ANU"
+  - "UNSW"
+  - "澳洲国立"
+  - "Monash"
+  - "昆士兰大学"
+  - "UQ"
+  - "RMIT"
+  - "澳洲签证"
+  - "Subclass 500"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 澳大利亚
+  region_en: Australia
+  country_code: AU
+  peers:
+    - "UK (Russell Group)"
+    - "Canada (U15)"
+    - New Zealand
+    - "中国(985/211)"
+  focus_schools:
+    - "University of Melbourne"
+    - "University of Sydney"
+    - "Australian National University (ANU)"
+    - "University of New South Wales (UNSW)"
+    - "Monash University"
+    - "University of Queensland (UQ)"
+
+data_pipes:
+  - pipe: au_group_of_eight_admissions
+    params:
+      fields: ["university", "gaokao_pathway_entry_type", "gaokao_min_pct", "ielts_min_overall", "foundation_available", "fast_track_diploma", "annual_tuition_aud_min", "annual_tuition_aud_max"]
+      source_url: "https://www.studyinaustralia.gov.au"
+  - pipe: au_tuition_comparison
+    params:
+      year: 2025
+      fields: ["university", "field_of_study", "annual_tuition_aud", "duration_years", "living_cost_aud_year", "total_estimated_cost_aud"]
+  - pipe: au_visa_subclass500
+    params:
+      source_url: "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/student-500"
+      fields: ["visa_category", "financial_requirement_aud_year", "english_requirement", "work_hours_limit", "ohsc_required", "post_study_work_visa_eligible"]
+  - pipe: au_temporary_graduate_visa
+    params:
+      source_url: "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/temporary-graduate-485"
+      fields: ["visa_subclass", "duration_years_by_degree", "regional_extra_year", "requirements", "pathway_to_pr"]
+  - pipe: au_skilled_migration_points
+    params:
+      source_url: "https://immi.homeaffairs.gov.au/help-support/tools/points-calculator"
+      fields: ["visa_subclass", "min_points_required", "age_bonus", "english_bonus", "australian_study_bonus", "regional_bonus", "phd_bonus"]
+  - pipe: au_graduate_employment_stats
+    params:
+      fields: ["university", "graduate_employment_rate_4mo_pct", "median_starting_aud", "top_employers", "professional_year_eligible_fields"]
+
+analysis_dimensions:
+  - id: au_g8_admission_pathways
+    label_zh: "八大名校录取路径(高考直录/预科/快捷文凭)"
+    label_en: "G8 Admission Pathways (Gaokao/Foundation/Diploma)"
+    method: pathway_analysis
+    required_data: [au_group_of_eight_admissions]
+
+  - id: au_tuition_and_living_costs
+    label_zh: "费用全拆解与汇率分析"
+    label_en: Cost Breakdown & Exchange Rate Analysis
+    method: cost_model
+    required_data: [au_tuition_comparison]
+
+  - id: au_visa_and_work_rights
+    label_zh: "学生签证与工作权利(500/485/PSW)"
+    label_en: Student Visa & Work Rights (500/485/PSW)
+    method: policy_scan
+    required_data: [au_visa_subclass500, au_temporary_graduate_visa]
+
+  - id: au_timeline_planning
+    label_zh: "申请时间轴与关键节点"
+    label_en: Application Timeline & Critical Milestones
+    method: timeline_projection
+    required_data: [au_group_of_eight_admissions]
+
+  - id: au_skilled_migration_pathway
+    label_zh: "毕业生工签转PR路径(189/190/491打分制)"
+    label_en: PSW to PR Pathway (189/190/491 Points-tested)
+    method: policy_analysis
+    required_data: [au_temporary_graduate_visa, au_skilled_migration_points]
+
+  - id: au_employment_outcomes
+    label_zh: "就业前景与毕业生薪资"
+    label_en: Employment Outcomes & Graduate Salary
+    method: career_outcome_analysis
+    required_data: [au_graduate_employment_stats]
+
+  - id: au_risk_assessment
+    label_zh: 风险矩阵与避坑指南
+    label_en: Risk Matrix & Pitfalls Guide
+    method: risk_analysis
+    required_data: [au_visa_subclass500, au_group_of_eight_admissions, au_skilled_migration_points]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/australia_undergraduate
+  style:
+    primary_color: "#00843d"
+    accent_color: "#ffcd00"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 3
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_immigration_or_legal_advice
+    - verify_cricos_registration_of_institution
+    - tuition_and_costs_subject_to_change
+    - migration_points_and_policies_frequently_change

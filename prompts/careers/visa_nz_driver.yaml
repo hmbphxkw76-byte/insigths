@@ -1,0 +1,287 @@
+id: visa_nz_driver
+version: 2
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Immigration New Zealand (immigration.govt.nz)
+    - NZTA (nzta.govt.nz)
+    - Stats NZ (stats.govt.nz)
+    - MBIE (mbie.govt.nz)
+    - World Bank
+    - ILO
+    - OECD
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: 新西兰认证雇主工签(AEWV)卡车司机移民可行性全析报告 · 三阶段闭环
+  en: NZ AEWV Truck Driver Migration Feasibility Report · Triple-Phase Closed-Loop
+description:
+  zh: "面向中国国内起点的「新西兰卡车司机」岗位移民可行性全析。三阶段闭环：(1)国内准备期——资格预审/英语学习/驾照换发/雇主匹配 (2)到达适应期——IRD税号/银行/Class 4驾照/劳动权益 (3)扎根留期——AEWV转永住/家属团聚/归化入籍。数据100%来源于新西兰移民局·NZTA·IRD·Stats NZ官方数据。"
+  en: "Triple-phase closed-loop feasibility analysis for Chinese nationals pursuing truck driver positions in New Zealand via AEWV pathway."
+triggers:
+- 新西兰卡车司机
+- NZ truck driver
+- 新西兰货车司机
+- 新西兰司机
+- 新西兰工作签证司机
+- 新西兰AEWV司机
+- 新西兰移民司机
+- 新西兰重卡司机
+- New Zealand truck driver
+- NZ Class 4 driver
+- NZ Class 5 driver
+- AEWV truck driver
+- 新西兰开车工作
+- 出国新西兰做司机
+horizon:
+  type: future_years
+  value: 5
+geo:
+  region_zh: 新西兰
+  region_en: New Zealand
+  country_code: NZ
+  peers:
+  - Australia (TSS 482 - Truck Driver)
+  - Canada (PNP Transport Worker)
+  - Japan (SSW Driver)
+  - UK (HGV Driver Visa)
+  focus_areas:
+  - 奥克兰(最大物流枢纽·最多就业机会·薪资最高)
+  - 汉密尔顿(怀卡托农牧区·牛奶/肉类运输需求巨大)
+  - 基督城(南岛物流中心·跨岛长途运输线路)
+indicators:
+  primary:
+  - 新西兰AEWV卡车司机签发数(年度)
+  - 新西兰外籍卡车司机总数
+  - 新西兰卡车司机空缺率
+  - 新西兰卡车司机平均时薪(分车型/地域)
+  secondary:
+  - 中国B2/A2驾照换发NZ Class 4通过率
+  - 新西兰卡车司机老龄化率
+  - 新西兰物流运输业离职率
+data_pipes:
+- pipe: nz_immigration_policy_driver
+  params:
+    categories:
+    - AEWV
+    - Residence from Work
+    - Green List
+    source_url: https://www.immigration.govt.nz/new-zealand-visas/apply-for-a-visa/about-visa/accredited-employer-work-visa
+    data_quality: inz_nz
+- pipe: nz_trucking_industry_stats
+  params:
+    source_url: https://www.stats.govt.nz/
+    data_quality: stats_nz
+- pipe: nz_driver_license_conversion
+  params:
+    source_url: https://www.nzta.govt.nz/driver-licences/new-to-nz/converting-your-overseas-licence/
+    data_quality: nzta_nz
+- pipe: nz_driver_salary
+  params:
+    source_url: https://www.mbie.govt.nz/
+    data_quality: mbie_nz
+- pipe: nz_labor_law_foreign_workers
+  params:
+    source_url: https://www.employment.govt.nz/
+    data_quality: employment_nz
+- pipe: nz_arrival_requirements
+  params:
+    source_url: https://www.immigration.govt.nz/
+    data_quality: official_nz
+- pipe: nz_pr_pathway_driver
+  params:
+    source_url: https://www.immigration.govt.nz/new-zealand-visas/apply-for-a-visa/about-visa/residence-visa
+    data_quality: inz_nz
+- pipe: nz_driver_shortage_outlook
+  params:
+    source_url: https://occupationoutlook.mbie.govt.nz/
+    data_quality: mbie_nz
+analysis_dimensions:
+- id: policy_snapshot
+  label_zh: 新西兰AEWV卡车司机政策快照(2025-2026)
+  label_en: NZ AEWV Driver Policy Snapshot (2025-2026)
+  method: nz_aewv_driver_policy_analysis
+  required_data:
+  - nz_immigration_policy_driver
+  - nz_pr_pathway_driver
+- id: qualification_mapping
+  label_zh: 中国驾照与NZ Class 4/5驾照映射·资格预审
+  label_en: CN→NZ Heavy License Conversion & Qualification Pre-screening
+  method: nz_license_qualification_mapping_analysis
+  required_data:
+  - nz_driver_license_conversion
+  - nz_immigration_policy_driver
+- id: domestic_preparation
+  label_zh: 国内准备方案：英语学习与成本规划
+  label_en: Domestic Preparation (English Learning & Cost Planning)
+  method: nz_domestic_preparation_analysis
+  required_data:
+  - nz_driver_license_conversion
+- id: language_learning
+  label_zh: 英语IELTS 5.0达标路径与考试安排
+  label_en: English IELTS 5.0 Pathway & Exam Planning
+  method: nz_language_learning_analysis
+  required_data:
+  - nz_immigration_policy_driver
+- id: certification_conversion
+  label_zh: 中国B2/A2→NZ Class 4/5驾照换发实操
+  label_en: CN B2/A2→NZ Class 4/5 License Conversion Guide
+  method: nz_driver_license_conversion_analysis
+  required_data:
+  - nz_driver_license_conversion
+- id: visa_application_guide
+  label_zh: AEWV签证DIY自助办理指南
+  label_en: AEWV Visa Application DIY Guide
+  method: nz_visa_diy_guide
+  required_data:
+  - nz_immigration_policy_driver
+  - nz_pr_pathway_driver
+- id: pre_departure_finance
+  label_zh: 出境前财务规划：外汇/KiwiSaver/税务衔接
+  label_en: 'Pre-Departure Finance: FX / KiwiSaver / Tax Transition'
+  method: nz_pre_departure_finance_analysis
+  required_data:
+  - nz_arrival_requirements
+  - nz_labor_law_foreign_workers
+- id: family_planning
+  label_zh: 家庭规划——AEWV配偶/子女权益与分居策略
+  label_en: 'Family Planning: AEWV Partner/Child Entitlements & Separation Strategy'
+  method: nz_family_planning_analysis
+  required_data:
+  - nz_immigration_policy_driver
+  - nz_pr_pathway_driver
+- id: health_preparation
+  label_zh: 出境前体检与NZ医保/ACC衔接
+  label_en: Pre-Departure Health Check & NZ Health/ACC Transition
+  method: nz_health_preparation_analysis
+  required_data:
+  - nz_arrival_requirements
+  - nz_immigration_policy_driver
+- id: cost_benefit_roi
+  label_zh: 成本效益分析(5年ROI模型)
+  label_en: Cost-Benefit Analysis (5-Year ROI Model)
+  method: roi_model
+  required_data:
+  - nz_driver_salary
+  - nz_trucking_industry_stats
+- id: arrival_checklist
+  label_zh: 登陆后90天关键事项清单(IRD/银行/驾照)
+  label_en: Arrival 90-Day Critical Checklist (IRD / Bank / License)
+  method: nz_arrival_checklist_analysis
+  required_data:
+  - nz_arrival_requirements
+  - nz_driver_license_conversion
+- id: housing_setup
+  label_zh: 新西兰安居指南：租房/KiwiSaver/银行
+  label_en: 'Settlement Guide: Renting / KiwiSaver / Banking'
+  method: nz_housing_setup_analysis
+  required_data:
+  - nz_arrival_requirements
+  - nz_labor_law_foreign_workers
+- id: labor_rights
+  label_zh: 劳动权益保护(就业关系法+工作安全)
+  label_en: Labor Rights Protection (ERA + WorkSafe NZ)
+  method: nz_labor_rights_analysis
+  required_data:
+  - nz_labor_law_foreign_workers
+- id: emergency_response
+  label_zh: 紧急协议——ACC工伤/雇主解雇/剥削防护
+  label_en: Emergency Protocol — ACC Injury / Unlawful Dismissal / Exploitation
+  method: nz_emergency_response_analysis
+  required_data:
+  - nz_labor_law_foreign_workers
+  - nz_arrival_requirements
+- id: employer_landscape
+  label_zh: 雇主调查与薪资结构(认证雇主名录)
+  label_en: Employer Landscape & Salary Structure (Accredited Employers)
+  method: nz_employer_salary_analysis
+  required_data:
+  - nz_driver_salary
+  - nz_trucking_industry_stats
+- id: industry_outlook
+  label_zh: NZ运输行业趋势——老龄化退休潮与短缺展望
+  label_en: NZ Transport Industry Outlook — Retirement Wave & Shortage
+  method: nz_industry_outlook_analysis
+  required_data:
+  - nz_trucking_industry_stats
+  - nz_driver_shortage_outlook
+- id: career_upgrade
+  label_zh: 职业晋升——Class 4→Class 5→长途/冷藏路线图
+  label_en: 'Career Upgrade: Class 4→Class 5→Long Haul/Refrigerated Path'
+  method: nz_career_upgrade_analysis
+  required_data:
+  - nz_driver_license_conversion
+  - nz_driver_salary
+  - nz_trucking_industry_stats
+- id: tax_optimization
+  label_zh: NZ税务优化(KiwiSaver/IRD/中避免双重征税)
+  label_en: NZ Tax Optimization — KiwiSaver / IRD / CN-NZ DTA
+  method: nz_tax_optimization_analysis
+  required_data:
+  - nz_labor_law_foreign_workers
+  - nz_pr_pathway_driver
+- id: education_children
+  label_zh: 在NZ子女教育体系(公校免费+大学学习权益)
+  label_en: Children's Education System in NZ (Free Public + Tertiary Entitlements)
+  method: nz_education_children_analysis
+  required_data:
+  - nz_pr_pathway_driver
+- id: pr_pathway
+  label_zh: 永住权时间线——AEWV 2年转永住策略
+  label_en: PR Timeline — AEWV 2-Year Work-to-Residence Strategy
+  method: nz_pr_pathway_analysis
+  required_data:
+  - nz_pr_pathway_driver
+  - nz_immigration_policy_driver
+- id: naturalization
+  label_zh: 归化入籍深度指南——住满5年+放弃中国籍实操
+  label_en: Naturalization Deep Dive — 5-Year Residence + Renunciation
+  method: nz_naturalization_analysis
+  required_data:
+  - nz_pr_pathway_driver
+- id: retirement_reunification
+  label_zh: KiwiSaver脱退与父母团聚路径(含排期)
+  label_en: KiwiSaver Withdrawal & Parent Reunification (Waitlist)
+  method: nz_retirement_reunification_analysis
+  required_data:
+  - nz_pr_pathway_driver
+  - nz_labor_law_foreign_workers
+- id: risk_assessment
+  label_zh: 三阶段风险评估矩阵与Plan B备选方案
+  label_en: Triple-Phase Risk Assessment Matrix & Plan B Options
+  method: risk_matrix
+  required_data:
+  - nz_immigration_policy_driver
+  - nz_trucking_industry_stats
+  - nz_pr_pathway_driver
+report:
+  template: migration_lifecycle
+  output_dir: reports/career
+  style:
+    primary_color: '#0d1b2a'
+    accent_color: '#e63946'
+schedule:
+  cadence: quarterly
+  month:
+  - 1
+  - 4
+  - 7
+  - 10
+  day_of_week: monday
+  week_of_month: 2
+  time: 09:00
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+  - not_legal_or_immigration_advice
+  - verify_policy_at_official_sources
+  - salary_data_may_vary_by_region_and_company
+  - exchange_rate_fluctuation_warning
+  - information_asymmetry_disclaimer

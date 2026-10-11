@@ -1,0 +1,162 @@
+# 英国本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 英国留学, 英国本科, UCAS, G5, 牛津, 剑桥, 帝国理工, LSE, UCL, 爱丁堡, 曼彻斯特, 英国预科, Foundation, A-Level
+id: uk_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - UCAS (ucas.com)
+    - British Council - Study UK
+    - UK Gov - Student Visa
+    - HESA (hesa.ac.uk)
+    - QS World University Rankings
+    - Times Higher Education
+    - The Guardian University Guide
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 英国本科留学申请全景分析报告
+  en: UK Undergraduate Study Application Analysis
+
+description:
+  zh: 面向高中毕业生的英国本科留学路径分析。覆盖UCAS申请系统、G5超级精英大学录取标准(牛津/剑桥/ICL/LSE/UCL)、A-Level/IB/高考成绩换算、Foundation预科路径、IELTS/TOEFL语言要求、学费(£9,250-£58,600/年)、生活费(London加权)、Tier 4签证与Graduate Route毕业工签、PSW转工签与永居路径。
+  en: UK undergraduate study analysis for Chinese high school graduates, covering UCAS, G5 admissions, A-Level equivalence, Foundation pathway, tuition, Tier 4 visa, Graduate Route, and settlement pathways.
+
+triggers:
+  - "英国留学"
+  - "英国本科"
+  - "UCAS"
+  - "G5"
+  - "牛津"
+  - "剑桥"
+  - "帝国理工"
+  - "ICL"
+  - "LSE"
+  - "UCL"
+  - "Edinburgh"
+  - "Manchester"
+  - "英国预科"
+  - "Foundation英国"
+  - "Kaplan INTO"
+
+horizon:
+  type: future_years
+  value: 3
+
+geo:
+  region_zh: 英国
+  region_en: United Kingdom
+  country_code: GB
+  peers:
+    - "US (Ivy League)"
+    - "Australia (Group of Eight)"
+    - "Canada (U15)"
+    - "中国 (C9联盟)"
+  focus_schools:
+    - "University of Oxford"
+    - "University of Cambridge"
+    - "Imperial College London"
+    - "London School of Economics"
+    - "University College London"
+    - "University of Edinburgh"
+    - "University of Manchester"
+    - "King's College London"
+
+data_pipes:
+  - pipe: uk_ucas_application_system
+    params:
+      fields: ["application_deadline_oxbridge", "general_deadline", "personal_statement_word_limit", "reference_required", "application_fee_gbp", "max_choices"]
+      source_url: "https://www.ucas.com"
+  - pipe: uk_g5_admission_stats
+    params:
+      fields: ["university", "program", "offer_rate_pct", "average_entry_standard", "international_student_pct", "tuition_gbp_min", "tuition_gbp_max"]
+      source_url: "https://www.undergraduate.study.cam.ac.uk/statistics"
+  - pipe: uk_foundation_programs
+    params:
+      fields: ["foundation_provider", "progression_university", "duration_months", "ielts_requirement_min", "academic_requirement", "tuition_gbp"]
+      source_url: "https://www.studyuk.britishcouncil.org"
+  - pipe: uk_tuition_and_living_costs
+    params:
+      year: 2025
+      fields: ["university", "home_fee_gbp", "international_fee_gbp", "living_cost_month_gbp_london", "living_cost_month_gbp_other"]
+  - pipe: uk_tier4_visa_policy
+    params:
+      source_url: "https://www.gov.uk/student-visa"
+      fields: ["visa_category", "financial_requirement_gbp_month", "ielts_min_score", "cas_required", "nhs_surcharge_gbp_month", "post_study_work_visa"]
+  - pipe: uk_employment_and_salary
+    params:
+      fields: ["university", "field_of_study", "graduate_employment_rate_pct", "median_salary_gbp", "top_sectors", "graduate_route_eligible"]
+
+analysis_dimensions:
+  - id: uk_ucas_application_overview
+    label_zh: UCAS申请系统与关键时间节点
+    label_en: UCAS Application System & Key Milestones
+    method: application_timeline
+    required_data: [uk_ucas_application_system]
+
+  - id: uk_g5_and_top_university_requirements
+    label_zh: G5精英大学与Top院校录取标准
+    label_en: G5 Elite Universities & Top University Requirements
+    method: admission_standard_analysis
+    required_data: [uk_g5_admission_stats]
+
+  - id: uk_pathway_comparison
+    label_zh: 入学路径对比（直录/预科/国际大一/A-Level）
+    label_en: Admission Pathway Comparison (Direct Entry / Foundation / International Year 1 / A-Level)
+    method: pathway_analysis
+    required_data: [uk_foundation_programs, uk_g5_admission_stats]
+
+  - id: uk_cost_and_scholarships
+    label_zh: 费用拆解与奖学金机会
+    label_en: Cost Breakdown & Scholarship Opportunities
+    method: cost_model
+    required_data: [uk_tuition_and_living_costs]
+
+  - id: uk_visa_and_post_study_work
+    label_zh: Tier 4签证与Graduate Route毕业后工签
+    label_en: Tier 4 Visa & Graduate Route Post-Study Work
+    method: policy_scan
+    required_data: [uk_tier4_visa_policy]
+
+  - id: uk_employment_and_settlement
+    label_zh: 就业前景与永居路径分析
+    label_en: Employment Outlook & Settlement Pathway
+    method: career_outcome_analysis
+    required_data: [uk_employment_and_salary]
+
+  - id: uk_risk_assessment
+    label_zh: 风险矩阵与避坑指南（拒签/院校排名/费用通胀）
+    label_en: Risk Matrix & Pitfalls Guide
+    method: risk_analysis
+    required_data: [uk_g5_admission_stats, uk_tier4_visa_policy, uk_tuition_and_living_costs]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/uk_undergraduate
+  style:
+    primary_color: "#012169"
+    accent_color: "#c8102e"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 3
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 60
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_entry_requirements_with_each_university
+    - fees_and_costs_may_increase_annually
+    - visa_policies_subject_to_change

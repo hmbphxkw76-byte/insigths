@@ -1,0 +1,126 @@
+id: tech_ai_cybersecurity
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Gartner
+    - IDC
+    - Forrester
+    - NIST
+    - Mandiant (Google)
+    - CrowdStrike
+    - Microsoft
+    - Palo Alto Networks
+    - Recorded Future
+    - ArXiv
+    - NeurIPS / ICML / ICLR
+    - PitchBook
+    - Crunchbase
+    - Company IR / SEC filings
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: "AI驱动的网络安全行业深度分析报告"
+  en: "AI-Driven Cybersecurity Industry Deep-Dive"
+
+description:
+  zh: "聚焦AI与网络安全的交叉领域 -- (1) AI赋能安全运营(SOC/威胁检测/自动响应); (2) AI自身的安全对齐与对抗风险; (3) 政策与伦理框架"
+  en: "The AI x Cybersecurity intersection: AI for security operations, AI safety/alignment, adversarial risks, and governance frameworks"
+
+triggers:
+  - "AI安全"
+  - "AI网络安全"
+  - "AI-driven security"
+  - "AI for cybersecurity"
+  - "AI SOC"
+  - "AI对抗"
+  - "AI alignment"
+  - "红队AI"
+  - "LLM安全"
+  - "AI威胁检测"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: "全球"
+  region_en: "Global"
+  country_code: ""
+  focus_regions:
+    - "Silicon Valley"
+    - "Tel Aviv"
+    - "London"
+    - "Beijing"
+    - "Washington D.C."
+
+data_pipes:
+  - pipe: ai_security_market
+    params:
+      segments: ["AI-based threat detection", "AI SOC automation", "AI red-teaming", "LLM guardrails"]
+      forecast_years: [2025, 2026, 2027, 2028, 2030]
+  - pipe: ai_security_startups
+    params:
+      verticals: ["AI SOC", "AI red team", "prompt injection defense", "model monitoring", "AI governance"]
+  - pipe: nist_ai_rmf
+    params:
+      track_updates: true
+      related: ["EU AI Act", "UK AI Safety Institute", "Beijing AI regulation"]
+  - pipe: orange_ai_papers
+    params:
+      topics: ["LLM jailbreak", "adversarial examples", "model watermarking", "mechanistic interpretability"]
+  - pipe: company_ai_security_products
+    params:
+      companies: ["Microsoft", "CrowdStrike", "Palo Alto", "Google", "Anthropic", "OpenAI", "Cohere"]
+      focus: ["AI security suite", "responsible AI", "red team offerings"]
+
+analysis_dimensions:
+  - id: ai_for_security
+    label_zh: "AI赋能安全运营市场"
+    label_en: "AI-for-Security Operations Market"
+    method: tam_sam_somer_model
+    required_data: [ai_security_market, ai_security_startups]
+  - id: security_for_ai
+    label_zh: "AI自身的安全防护(Secure AI)"
+    label_en: "Security-for-AI / Secure AI"
+    method: value_chain_mapping
+    required_data: [orange_ai_papers, company_ai_security_products]
+  - id: threat_evolution
+    label_zh: "AI时代威胁演变量级"
+    label_en: "AI-Augmented Threat Evolution"
+    method: scenario_modeling
+    required_data: [orange_ai_papers, nist_ai_rmf]
+  - id: policy_synthesis
+    label_zh: "全球AI安全治理框架对比"
+    label_en: "Global AI Safety Governance Comparison"
+    method: policy_comparison
+    required_data: [nist_ai_rmf]
+  - id: investment_imperative
+    label_zh: "投资框架与优先级"
+    label_en: "Investment Imperative and Priority Sectors"
+    method: heat_map_analysis
+    required_data: [ai_security_market, ai_security_startups]
+
+report:
+  template: mckinsey_tech
+  output_dir: reports/tech
+  style:
+    primary_color: "#0b2545"
+    accent_color: "#c8a24b"
+
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2

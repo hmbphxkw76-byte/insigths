@@ -1,0 +1,149 @@
+# 新加坡本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 新加坡留学, 新加坡本科, NUS, NTU, SMU, SUTD, SIT, 新加坡公立大学, 新加坡助学金, 教育部学费补贴, 新加坡PR, 新加坡签证, Student Pass
+id: sg_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - ICA Singapore
+    - MOE Singapore - Tuition Grant
+    - NUS Office of Admissions
+    - SINGA - Singapore International Graduate Award
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 新加坡本科留学申请全景分析报告
+  en: Singapore Undergraduate Study Application Analysis
+
+description:
+  zh: 面向高中毕业生的本科留学路径分析。覆盖NUS/NTU/SMU/SUTD录取标准(高考超一本线100+/SAT/IELTS)、新加坡教育部学费补贴(MOE Tuition Grant)与Service Bond(3年留新工作)、学费(SGD $17,000-$38,000/年含补贴)、Student Pass签证、毕业后PR申请路径、就业市场与薪资水平。
+  en: Singapore undergraduate study for Chinese high school graduates, covering NUS/NTU admissions, MOE Tuition Grant, Service Bond, Student Pass visa, PR pathway, and employment market.
+
+triggers:
+  - "新加坡留学"
+  - "新加坡本科"
+  - "NUS"
+  - "NTU"
+  - "SMU"
+  - "SUTD"
+  - "新加坡公立大学"
+  - "新加坡助学金"
+  - "MOE Tuition Grant"
+  - "新加坡PR"
+  - "Student Pass"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 新加坡
+  region_en: Singapore
+  country_code: SG
+  peers:
+    - "Japan (旧帝大)"
+    - "Australia (G8)"
+    - "Hong Kong (HKU/HKUST)"
+    - "中国(清北/华五)"
+  focus_schools:
+    - "National University of Singapore (NUS)"
+    - "Nanyang Technological University (NTU)"
+    - "Singapore Management University (SMU)"
+    - "Singapore University of Technology and Design (SUTD)"
+
+data_pipes:
+  - pipe: sg_public_university_admissions
+    params:
+      fields: ["university", "gaokao_above_1st_tier_by_points", "sat_min", "ielts_min", "program_available", "annual_fee_before_grant_sgd", "annual_fee_after_grant_sgd", "scholarship_available"]
+      source_url: "https://www.nus.edu.sg/osa/international-students"
+  - pipe: sg_moe_tuition_grant
+    params:
+      source_url: "https://www.moe.gov.sg/financial-matters/awards-scholarships/tuition-grant"
+      fields: ["grant_type", "fee_reduction_pct", "service_bond_years", "bond_breach_penalty", "eligibility_citizenship", "applicable_programs"]
+  - pipe: sg_student_pass_policy
+    params:
+      source_url: "https://www.ica.gov.sg"
+      fields: ["pass_type", "applied_via_school", "processing_time_days", "work_hours_limit_term", "work_hours_limit_vacation", "pr_eligible_after"]
+  - pipe: sg_graduate_employment
+    params:
+      fields: ["university", "course", "employment_rate_pct", "monthly_salary_median_sgd", "full_time_employment_pct", "employment_sectors"]
+  - pipe: sg_pr_application_criteria
+    params:
+      source_url: "https://www.ica.gov.sg/reside/PR/apply"
+      fields: ["applicant_category", "min_residence_years", "contribution_assessment", "student_pass_holds", "spouse_citizenship_advantage"]
+
+analysis_dimensions:
+  - id: sg_nus_ntu_admission_standards
+    label_zh: NUS/NTU录取标准与中国高考生匹配度
+    label_en: NUS/NTU Admission Standards for Chinese Gaokao Students
+    method: admission_standard_analysis
+    required_data: [sg_public_university_admissions]
+
+  - id: sg_moe_tuition_grant_and_service_bond
+    label_zh: MOE学费补贴与Service Bond义务分析
+    label_en: MOE Tuition Grant & Service Bond Obligations
+    method: cost_model_with_obligations
+    required_data: [sg_moe_tuition_grant]
+
+  - id: sg_comparison_with_alternatives
+    label_zh: 新港英澳同档次学校对比
+    label_en: Comparison with HK/UK/AU Counterparts
+    method: institutional_comparison
+    required_data: [sg_public_university_admissions]
+
+  - id: sg_student_pass_and_post_study_work
+    label_zh: Student Pass与毕业后就业/PR路径
+    label_en: Student Pass & Post-Study PR Pathway
+    method: policy_scan
+    required_data: [sg_student_pass_policy, sg_pr_application_criteria]
+
+  - id: sg_timeline_and_application
+    label_zh: 申请时间轴与批次规划
+    label_en: Application Timeline & Round Planning
+    method: timeline_projection
+    required_data: [sg_public_university_admissions]
+
+  - id: sg_employment_and_salary
+    label_zh: 就业市场与薪资水平
+    label_en: Employment Market & Salary Levels
+    method: career_outcome_analysis
+    required_data: [sg_graduate_employment]
+
+  - id: sg_risk_assessment
+    label_zh: 风险矩阵与备选路径(私立/Poly/半工半读)
+    label_en: Risk Matrix & Alternative Pathways
+    method: risk_analysis
+    required_data: [sg_student_pass_policy, sg_public_university_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/singapore_undergraduate
+  style:
+    primary_color: "#ef3340"
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [3, 6, 9, 12]
+  day_of_week: monday
+  week_of_month: 3
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 60
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_immigration_advice
+    - verify_with_ica_and_university
+    - moe_grant_policy_subject_to_change
+    - service_bond_obligation_is_legally_binding

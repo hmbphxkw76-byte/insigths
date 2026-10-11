@@ -1,0 +1,176 @@
+# 日本留学(本科)申请全景分析 — Prompt 定义
+# 触发关键词: 日本留学, 日本本科, EJU, SGU, 旧帝大, March, 同志社, 立命馆, 早稻田, 庆应, 一桥, 上智, 日本G30, 日本SGU, 日本大学申请
+id: jp_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - JASSO (jasso.go.jp/en)
+    - MEXT (mext.go.jp/en)
+    - Japan Study Support (jpss.jp/en)
+    - Immigration Services Agency of Japan
+    - EJU - Examination for Japanese University Admission
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 日本本科留学申请全景分析报告
+  en: Japan Undergraduate Study Application Analysis
+
+description:
+  zh: 面向高中毕业生的日本本科留学路径分析。覆盖日语路径(EJU+校内考)、英语SGU路径、特殊选拔(渡日前入学许可)。旧帝大/早庆/March等重点院校录取标准、EJU成绩要求、英语要求(TOEFL/IELTS)、学费(国立/公立/私立)、MEXT/JASSO奖学金、在留资格与打工政策、毕业后就业与高度人才签证衔接。
+  en: Japan undergraduate study abroad analysis for high school graduates, covering EJU pathway, SGU English pathway, direct admission, tuition, scholarships, visa policy, and post-graduation career path.
+
+triggers:
+  - "日本留学"
+  - "日本本科"
+  - "EJU"
+  - "SGU日本"
+  - "日本G30"
+  - "旧帝大"
+  - "早稻田"
+  - "庆应"
+  - "同志社"
+  - "立命馆"
+  - "MARCH"
+  - "上智大学"
+  - "一桥大学"
+  - "日本申请"
+  - "日本渡日前入学"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 日本
+  region_en: Japan
+  country_code: JP
+  peers:
+    - "France (Grande École)"
+    - "Germany (TU9)"
+    - "中国（211工程大学）"
+    - "Singapore (NUS/NTU)"
+  focus_schools:
+    - "東京大学 (University of Tokyo)"
+    - "京都大学 (Kyoto University)"
+    - "東京工業大学 (Tokyo Tech)"
+    - "大阪大学 (Osaka University)"
+    - "東北大学 (Tohoku University)"
+    - "名古屋大学 (Nagoya University)"
+    - "早稲田大学 (Waseda University)"
+    - "慶應義塾大学 (Keio University)"
+    - "上智大学 (Sophia University)"
+    - "同志社大学 (Doshisha University)"
+
+data_pipes:
+  - pipe: jp_university_rankings
+    params:
+      fields: ["university_jp", "university_en", "qs_rank", "the_rank", "arwu_rank", "tuition_type", "international_program_count"]
+      source_url: "https://www.jpss.jp/en"
+  - pipe: jp_eju_requirements
+    params:
+      fields: ["university", "eju_japanese_min", "eju_composite_min", "eju_math_course", "toefl_min", "ielts_min", "campus_exam_required"]
+      source_url: "https://www.jasso.go.jp/en/study_j/eju/index.html"
+  - pipe: jp_sgu_programs
+    params:
+      fields: ["university", "program_name", "degree_type", "application_rounds", "english_requirement", "tuition_jpy", "scholarships_available"]
+      source_url: "https://www.jasso.go.jp/en/study_j/sgu/index.html"
+  - pipe: jp_tuition_and_fees
+    params:
+      student_type: "undergraduate_international"
+      year: 2025
+      fields: ["university_type", "annual_tuition_jpy", "admission_fee_jpy", "facility_fee_jpy", "monthly_living_cost_jpy", "source"]
+  - pipe: jp_visa_and_residence
+    params:
+      visa_category: "student"
+      source_url: "https://www.moj.go.jp/isa/index.html"
+      fields: ["visa_type", "requirements", "work_hours_limit", "family_visa_options", "post_study_work"]
+  - pipe: jp_scholarships
+    params:
+      source_url: "https://www.jasso.go.jp/en/study_j/scholarships/index.html"
+      fields: ["scholarship_name", "provider", "monthly_amount_jpy", "duration", "eligibility", "application_method"]
+  - pipe: jp_employment_outlook
+    params:
+      fields: ["industry", "avg_starting_salary_jpy", "foreigner_employment_rate", "hsp_points_eligible", "top_employers"]
+
+analysis_dimensions:
+  - id: jp_education_overview
+    label_zh: 日本高等教育体系与本科入学方式概览
+    label_en: Japan Higher Education System Overview
+    method: institutional_comparison
+    required_data: [jp_university_rankings]
+
+  - id: admission_pathways_comparison
+    label_zh: 入学路径对比(EJU / SGU / 渡日前入学许可)
+    label_en: Admission Pathway Comparison (EJU / SGU / Pre-arrival Admission)
+    method: pathway_analysis
+    required_data: [jp_eju_requirements, jp_sgu_programs]
+
+  - id: eju_score_planning
+    label_zh: EJU成绩规划与院校匹配
+    label_en: EJU Score Planning & University Matching
+    method: score_mapping
+    required_data: [jp_eju_requirements, jp_university_rankings]
+
+  - id: cost_and_scholarships
+    label_zh: 费用全拆解与奖学金攻略
+    label_en: Cost Breakdown & Scholarship Strategy
+    method: cost_model
+    required_data: [jp_tuition_and_fees, jp_scholarships]
+
+  - id: timeline_planning
+    label_zh: 申请时间轴与关键节点
+    label_en: Application Timeline & Critical Milestones
+    method: timeline_projection
+    required_data: [jp_eju_requirements, jp_sgu_programs]
+
+  - id: visa_and_after_graduation
+    label_zh: 在留资格与毕业后衔接
+    label_en: Residence Status & Post-graduation Pathways
+    method: policy_scan
+    required_data: [jp_visa_and_residence, jp_employment_outlook]
+
+  - id: employment_and_career
+    label_zh: 就业前景与高度人才签证衔接
+    label_en: Employment Outlook & HSP Visa Connection
+    method: career_outcome_analysis
+    required_data: [jp_employment_outlook]
+
+  - id: risk_assessment
+    label_zh: 风险矩阵与避坑指南
+    label_en: Risk Matrix & Pitfalls Guide
+    method: risk_analysis
+    required_data: [jp_eju_requirements, jp_sgu_programs, jp_visa_and_residence]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/japan_undergraduate
+  style:
+    primary_color: "#bc002d"
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_university_accreditation_independently
+    - tuition_and_requirements_may_change_annually
+    - exam_policy_subject_to_change

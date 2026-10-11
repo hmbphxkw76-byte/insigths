@@ -1,0 +1,158 @@
+# 美国本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 美国留学, 美国本科, 美国Top30, 美国Top50, 常春藤, Ivy League, 哈佛, 耶鲁, 普林斯顿, 斯坦福, MIT, 美国大学, Common App, SAT, ACT, TOEFL, 美国F1签证
+id: us_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - EducationUSA (educationusa.state.gov)
+    - College Board (collegeboard.org)
+    - US State Department - Student Visa
+    - NSF GRFP
+    - Fulbright Foreign Student Program
+    - US News & World Report
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 美国本科留学申请全景分析报告
+  en: US Undergraduate Study Application Analysis
+
+description:
+  zh: 面向高中毕业生的美国本科留学路径分析。覆盖综合大学(Liberal Arts/大U)录取标准(SAT/ACT/TOEFL/高中GPA/AP)、Common App与Coalition Application申请系统、常春藤及Top30/50院校录取概率、学费($40,000-$65,000/年)、奖学金(need-based/merit-based)、F-1学生签证、CPT/OPT实习与H-1B工签路径、STEM OPT 36个月延期。
+  en: US undergraduate study for Chinese high school graduates, covering SAT/ACT/TOEFL requirements, Common App, Ivy League admission rates, tuition, scholarships, F-1 visa, OPT/H-1B pathways.
+
+triggers:
+  - "美国留学"
+  - "美国本科"
+  - "美国Top30"
+  - "美国Top50"
+  - "常春藤"
+  - "Ivy League"
+  - "哈佛"
+  - "耶鲁"
+  - "普林斯顿"
+  - "斯坦福"
+  - "MIT"
+  - "Common App"
+  - "SAT"
+  - "ACT"
+  - "美国F1签证"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 美国
+  region_en: United States
+  country_code: US
+  peers:
+    - "UK (Oxbridge/G5)"
+    - "Canada (U15)"
+    - "Australia (G8)"
+    - "中国(C9/985)"
+  focus_schools:
+    - "Harvard University"
+    - "Yale University"
+    - "Princeton University"
+    - "Stanford University"
+    - "Massachusetts Institute of Technology (MIT)"
+    - "Columbia University"
+    - "University of Pennsylvania"
+
+data_pipes:
+  - pipe: us_top_university_admission_stats
+    params:
+      fields: ["university", "acceptance_rate_pct", "sat_range_25_75", "toefl_min", "financial_need_met_pct", "international_student_pct", "tuition_usd", "room_board_usd"]
+      source_url: "https://www.commonapp.org"
+  - pipe: us_tuition_and_aid
+    params:
+      year: 2025
+      fields: ["university", "tuition_usd", "room_board_usd", "total_cost_usd_year", "need_based_aid", "merit_scholarships", "international_aid_eligible"]
+  - pipe: usf1_visa_policy
+    params:
+      source_url: "https://travel.state.gov/content/travel/en/us-visas/study.html"
+      fields: ["visa_category", "i20_required", "sevis_fee_usd", "interview_required", "cpt_eligible", "opt_months", "stem_opt_extension"]
+  - pipe: us_opt_and_h1b_pathway
+    params:
+      source_url: "https://www.uscis.gov/working-in-the-united-states"
+      fields: ["opt_type", "duration_months", "h1b_lottery_probability_pct", "stem_extension", "employer_sponsorship_required"]
+  - pipe: us_top_graduate_employment
+    params:
+      fields: ["university", "field_of_study", "starting_salary_usd", "employment_rate_6mo_pct", "top_recruiters", "stem_designated"]
+
+analysis_dimensions:
+  - id: us_admission_comprehensive_review
+    label_zh: "美国本科综合评审录取解析"
+    label_en: US Undergraduate Holistic Admission Analysis
+    method: admission_standard_analysis
+    required_data: [us_top_university_admission_stats]
+
+  - id: us_common_app_and_timeline
+    label_zh: Common App申请系统与时间节点
+    label_en: Common App System & Application Timeline
+    method: application_timeline
+    required_data: [us_top_university_admission_stats]
+
+  - id: us_tuition_financial_aid_scholarships
+    label_zh: 学费、助学金与奖学金(need-blind/merit-based)
+    label_en: Tuition, Financial Aid & Scholarships
+    method: cost_model
+    required_data: [us_tuition_and_aid]
+
+  - id: us_f1_visa_and_opt_h1b
+    label_zh: F-1签证与OPT/H-1B路径
+    label_en: F-1 Visa & OPT/H-1B Pathways
+    method: policy_scan
+    required_data: [usf1_visa_policy, us_opt_and_h1b_pathway]
+
+  - id: us_timeline_and_key_milestones
+    label_zh: 申请时间轴与关键决策节点
+    label_en: Application Timeline & Key Decision Milestones
+    method: timeline_projection
+    required_data: [us_top_university_admission_stats]
+
+  - id: us_employment_and_roi
+    label_zh: 就业前景与薪资水平
+    label_en: Employment Outlook & Salary Levels
+    method: career_outcome_analysis
+    required_data: [us_top_graduate_employment]
+
+  - id: us_risk_assessment
+    label_zh: 风险矩阵与备选路径(state school/transfer/pathway)
+    label_en: Risk Matrix & Alternative Pathways
+    method: risk_analysis
+    required_data: [usf1_visa_policy, us_top_university_admission_stats]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/us_undergraduate
+  style:
+    primary_color: "#002868"
+    accent_color: "#bf0a30"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 4
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 60
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_immigration_or_career_advice
+    - verify_accreditation_with_us_department_of_education
+    - admission_rates_and_policies_change_annually
+    - h1b_lottery_is_random_not_guaranteed

@@ -1,0 +1,111 @@
+# 英国(United Kingdom)博士申请全景分析 — Prompt 定义
+# 触发关键词: 英国博士, 英国PhD, CSC英国, Chevening, UK博士全额奖, UKRI
+id: gb_phd_study
+version: 1
+enabled: true
+
+label:
+  zh: 英国博士留学申请全景分析报告
+  en: United Kingdom PhD Application Analysis
+
+description:
+  zh: 本科直博/硕士申博->英国(United Kingdom)的博士申请路径分析。覆盖博士导师匹配、研究计划撰写、套磁技巧、CSC/大学全额奖学金、学制(3-5年)、毕业后学术/工业界发展。
+  en: PhD study in United Kingdom for Chinese graduates. Covers supervisor matching, research proposal, scholarship funding, duration (3-5 years), and post-PhD career development.
+
+triggers:
+    - "英国博士"
+    - "英国PhD"
+    - "CSC英国"
+    - "Chevening"
+    - "UK博士全额奖"
+    - "UKRI"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 英国
+  region_en: United Kingdom
+  country_code: GB
+  peers:
+    - "USA (Ivy Plus)"
+    - "Canada (U15)"
+    - "Australia (G8)"
+    - "Singapore (NUS)"
+  focus_schools:
+    - "University of Oxford"
+    - "University of Cambridge"
+    - "Imperial College London"
+    - "University College London (UCL)"
+    - "London School of Economics (LSE)"
+    - "University of Edinburgh"
+
+data_pipes:
+  - pipe: gb_phd_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gpa_min_pct", "annual_tuition_gbp", "stipend_gbp", "duration_years", "funding_model", "top_fields", "competition_level"]
+      source_url: https://www.ucas.com
+  - pipe: gb_visa_poststudy
+    params:
+      source_url: https://www.gov.uk/student-visa
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: gb_scholarships
+    params:
+      source_url: https://www.britishcouncil.org/study-work-abroad/in-uk/scholarship
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: gb_phd_funding_and_stipend
+    label_zh: 博士资助模式与奖学金(CSC/大学/项目)
+    label_en: PhD Funding & Stipend Models
+    method: scholarship_analysis
+    required_data: [gb_phd_admissions, gb_scholarships]
+
+  - id: gb_phd_application_requirements
+    label_zh: 博士申请要求与套磁策略
+    label_en: PhD Application Requirements & Supervisor Matching
+    method: admission_standard_analysis
+    required_data: [gb_phd_admissions]
+
+  - id: gb_phd_duration_and_supervision
+    label_zh: 学制、导师指导与学术路径
+    label_en: Duration, Supervision & Academic Pathway
+    method: program_analysis
+    required_data: [gb_phd_admissions]
+
+  - id: gb_phd_visa_and_post_study
+    label_zh: 博士签证与毕业后发展路径
+    label_en: PhD Visa & Post-Study Development
+    method: policy_scan
+    required_data: [gb_visa_poststudy]
+
+  - id: gb_phd_career_outcomes
+    label_zh: 博士后/学术界/工业界发展路径
+    label_en: Post-PhD Career Outcomes
+    method: career_outcome_analysis
+    required_data: [gb_phd_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/gb_phd
+  style:
+    primary_color: #012169
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: semi_annual
+  month: [3, 9]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 120
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - phd_funding_availability_varies_by_year

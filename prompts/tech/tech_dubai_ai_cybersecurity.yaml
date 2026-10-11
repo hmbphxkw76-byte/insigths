@@ -1,0 +1,153 @@
+id: tech_dubai_ai_cybersecurity
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Gartner
+    - IDC
+    - Frost & Sullivan
+    - Dubai Statistics Center
+    - UAE Government Portal
+    - NCA
+    - DIFC
+    - Company IR filings
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: "迪拜AI网络安全行业发展深度报告"
+  en: "Dubai AI Cybersecurity Industry Deep-Dive"
+
+description:
+  zh: "聚焦迪拜/阿联酋的AI与网络安全交叉领域 — (1) 市场规模与增长驱动力; (2) 政策监管框架与GCC对比; (3) 威胁态势与AI赋能安全运营; (4) 安全AI(Security-for-AI)新赛道; (5) 竞争格局与主要参与者; (6) 人才缺口与生态发展; (7) 未来展望与战略建议"
+  en: "Dubai/UAE AI x Cybersecurity: market sizing, GCC policy landscape, threat evolution, AI-for-Security, Security-for-AI, competitive landscape, talent gap, and 2030 outlook"
+
+triggers:
+  - "迪拜AI安全"
+  - "迪拜网络安全"
+  - "阿联酋网络安全"
+  - "迪拜AI网络安全"
+  - "Dubai AI cybersecurity"
+  - "UAE cybersecurity market"
+  - "Dubai cyber security industry"
+  - "中东网络安全"
+  - "Middle East cybersecurity"
+  - "Dubai SOC"
+  - "阿联酋AI战略"
+  - "DIFC cybersecurity"
+  - "GCC cyber security"
+  - "迪拜智慧城市安全"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: "阿联酋·迪拜"
+  region_en: "UAE·Dubai"
+  country_code: "AE"
+  peers:
+    - "Tel Aviv"
+    - "Riyadh"
+    - "Singapore"
+    - "London"
+  focus_regions:
+    - "Dubai"
+    - "Abu Dhabi"
+    - "DIFC"
+    - "Dubai Internet City"
+    - "Abu Dhabi Global Market"
+
+data_pipes:
+  - pipe: dubai_cybersecurity_market
+    params:
+      segments: ["AI threat detection", "AI SOC", "AI red-teaming", "LLM security", "cloud security", "OT security"]
+      forecast_years: [2024, 2025, 2026, 2027, 2028, 2030]
+      include_uae_total: true
+      include_gcc_benchmark: true
+  - pipe: uae_ai_policy_tracker
+    params:
+      strategies: ["UAE National AI Strategy 2031", "Dubai Cyber Security Strategy", "Dubai Artificial Intelligence Strategy", "UAE National Cybersecurity Strategy"]
+      include_regulations: ["PDPL", "NCA CII Guidelines", "DIFC Data Protection"]
+      track_progress: true
+  - pipe: gcc_threat_landscape
+    params:
+      focus_countries: ["AE", "SA", "QA", "BH", "KW", "OM"]
+      threat_types: ["APT", "ransomware", "supply chain", "state-sponsored", "AI-powered attacks"]
+      tracking_period: "2021-2026"
+  - pipe: dubai_cyber_talent
+    params:
+      metrics: ["workforce_size", "gap_estimate", "salary_benchmarks", "certification_trends", "training_programs"]
+      compare_with: ["Tel Aviv", "Riyadh", "Singapore"]
+  - pipe: mea_cybersecurity_vendors
+    params:
+      include_global: true
+      include_local: true
+      focus_segments: ["AI SOC", "XDR", "MSSP", "cloud security", "OT security"]
+      presence_in: ["Dubai", "Abu Dhabi", "Riyadh", "Doha"]
+  - pipe: dubai_smart_city_security
+    params:
+      initiatives: ["Smart Dubai", "Dubai Paperless Strategy", "Dubai Data Initiative", "Dubai Blockchain Strategy"]
+      security_investment_metrics: true
+      include_critical_infrastructure: true
+
+analysis_dimensions:
+  - id: market_sizing
+    label_zh: "市场规模与增长动力"
+    label_en: "Market Sizing & Growth Drivers"
+    method: tam_sam_somer_model
+    required_data: [dubai_cybersecurity_market, dubai_smart_city_security]
+  - id: policy_landscape
+    label_zh: "政策监管框架与GCC对比"
+    label_en: "Policy & Regulatory Landscape vs GCC Peers"
+    method: policy_comparison
+    required_data: [uae_ai_policy_tracker]
+  - id: threat_analysis
+    label_zh: "威胁态势与AI赋能安全运营"
+    label_en: "Threat Landscape & AI-for-Security Operations"
+    method: scenario_modeling
+    required_data: [gcc_threat_landscape, mea_cybersecurity_vendors]
+  - id: security_for_ai
+    label_zh: "安全AI(Security-for-AI)新赛道"
+    label_en: "Security-for-AI: Securing AI Systems"
+    method: value_chain_mapping
+    required_data: [uae_ai_policy_tracker, dubai_cybersecurity_market]
+  - id: competitive_landscape
+    label_zh: "竞争格局与市场参与者"
+    label_en: "Competitive Landscape & Vendor Ecosystem"
+    method: market_share_analysis
+    required_data: [mea_cybersecurity_vendors, dubai_cybersecurity_market]
+  - id: talent_ecosystem
+    label_zh: "人才缺口与生态发展"
+    label_en: "Talent Gap & Innovation Ecosystem"
+    method: supply_demand_balance
+    required_data: [dubai_cyber_talent]
+  - id: future_outlook
+    label_zh: "未来展望与情景分析(2027-2030)"
+    label_en: "Future Outlook & Scenario Analysis (2027-2030)"
+    method: scenario_modeling
+    required_data: [dubai_cybersecurity_market, uae_ai_policy_tracker, gcc_threat_landscape]
+
+report:
+  template: mckinsey_tech
+  output_dir: reports/tech
+  style:
+    primary_color: "#0b2545"
+    accent_color: "#c8a24b"
+
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2
+  required_disclaimers: ["本分析不构成投资建议", "部分数据为估算值"]

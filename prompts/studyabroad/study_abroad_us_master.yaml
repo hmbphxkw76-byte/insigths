@@ -1,0 +1,118 @@
+# 美国(United States)硕士留学申请全景分析 — Prompt 定义
+# 触发关键词: 美国硕士, 美国研究生, 美国Top30硕士, 美国一年制/两年制硕士, Grad School USA
+id: us_master_study
+version: 1
+enabled: true
+
+label:
+  zh: 美国硕士留学申请全景分析报告
+  en: United States Master's Study Application Analysis
+
+description:
+  zh: 本科毕业->美国(United States)的硕士留学路径分析。覆盖入学要求与GPA标准、语言与标化考试、学费与奖学金、授课型/研究型分流、毕业后工作与居留路径。
+  en: Master's study in United States for Chinese bachelor's graduates. Covers admission requirements, standardized tests, tuition, scholarships, taught vs research, and post-study pathways.
+
+triggers:
+    - "美国硕士"
+    - "美国研究生"
+    - "美国Top30硕士"
+    - "美国一年制/两年制硕士"
+    - "Grad School USA"
+
+horizon:
+  type: future_years
+  value: 3
+
+geo:
+  region_zh: 美国
+  region_en: United States
+  country_code: US
+  peers:
+    - "UK (Oxbridge)"
+    - "Canada (U15)"
+    - "Switzerland (ETH)"
+    - "China (C9)"
+  focus_schools:
+    - "Massachusetts Institute of Technology (MIT)"
+    - "Stanford University"
+    - "Harvard University"
+    - "California Institute of Technology (Caltech)"
+    - "Princeton University"
+    - "University of Chicago"
+    - "Yale University"
+    - "Columbia University"
+
+data_pipes:
+  - pipe: us_master_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gpa_min_pct", "annual_tuition_usd", "duration_years", "program_type", "top_programs", "moe_recognized"]
+      source_url: https://educationusa.state.gov
+  - pipe: us_visa_poststudy
+    params:
+      source_url: https://travel.state.gov/content/travel/en/us-visas/study.html
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: us_scholarships
+    params:
+      source_url: https://educationusa.state.gov/financial-aid
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: us_master_admission_standards
+    label_zh: 硕士录取标准与背景要求
+    label_en: Master's Admission Standards
+    method: admission_standard_analysis
+    required_data: [us_master_admissions]
+
+  - id: us_master_tuition_and_scholarship
+    label_zh: 硕士学费与奖学金机会
+    label_en: Master's Tuition & Scholarships
+    method: cost_model
+    required_data: [us_master_admissions, us_scholarships]
+
+  - id: us_master_type_and_duration
+    label_zh: 授课型/研究型硕士分流分析
+    label_en: Taught vs Research Master's
+    method: program_analysis
+    required_data: [us_master_admissions]
+
+  - id: us_visa_and_post_study_pathways
+    label_zh: 签证与毕业后居留路径
+    label_en: Visa & Post-Graduation Pathways
+    method: policy_scan
+    required_data: [us_visa_poststudy]
+
+  - id: us_employment_and_roi
+    label_zh: 就业前景与投资回报率
+    label_en: Employment Outlook & ROI
+    method: career_outcome_analysis
+    required_data: [us_master_admissions]
+
+  - id: us_application_timeline
+    label_zh: 申请时间轴与关键节点
+    label_en: Application Timeline
+    method: timeline_projection
+    required_data: [us_master_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/us_master
+  style:
+    primary_color: #002868
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - verify_information_with_official_sources

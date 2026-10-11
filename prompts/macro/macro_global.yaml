@@ -1,0 +1,166 @@
+# 全球宏观经济深度分析 — Prompt 定义
+# 触发关键词: 全球宏观经济, 世界经济, global macro, world economy
+id: macro_global
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - IMF World Economic Outlook
+    - Federal Reserve Economic Data (FRED)
+    - World Bank Development Indicators
+    - OECD Composite Leading Indicators
+    - National Statistics Offices
+    - Trading Economics
+    - Reuters
+    - Bloomberg
+    - Financial Times
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: 全球宏观经济深度分析报告
+  en: Global Macroeconomic Deep-Dive Analysis
+
+description:
+  zh: 覆盖全球主要经济体(G7+新兴市场)的GDP、通胀、就业、利率、财政、贸易等核心指标的追踪、比较与前瞻分析
+  en: Tracking, comparison and forward-looking analysis of GDP, inflation, employment, rates, fiscal and trade indicators across major economies
+
+triggers:
+  # 中文触发词
+  - "全球宏观经济"
+  - "世界经济"
+  - "全球经济"
+  - "宏观经济"
+  - "全球央行政策"
+  - "global macro"
+  - "world economy"
+  - "global economy"
+  - "macroeconomic overview"
+
+indicators:
+  primary:
+    - gdp
+    - cpi
+    - unemployment
+    - interest_rate
+    - pmi
+  secondary:
+    - government_debt
+    - fiscal_balance
+    - trade_balance
+    - fx_reserves
+    - m2_money_supply
+    - industrial_production
+    - retail_sales
+
+geo:
+  economies:
+    - US
+    - CN
+    - EU
+    - JP
+    - UK
+    - DE
+  emerging:
+    - IN
+    - BR
+    - KR
+    - SG
+    - AU
+
+horizon:
+  type: rolling
+  value: 12
+  unit: months
+
+data_pipes:
+  - pipe: imf_weo
+    params:
+      database: WEO
+      indicators: [NGDP_RPCH, PCPIPCH, LUR, GGXWDG_NGDP]
+      economies: [US, CN, EU, JP, UK, DE, IN, BR]
+  - pipe: fred_macro
+    params:
+      series: [GDP, CPAURAL, UNRATE, FEDFUNDS, T10Y2Y]
+  - pipe: worldbank_development
+    params:
+      indicators: [NY.GDP.MKPP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS]
+  - pipe: oecd_cli
+    params:
+      type: "Composite Leading Indicator"
+  - pipe: news_financial
+    params:
+      keywords: ["Federal Reserve", "ECB", "PBOC", "central bank", "inflation", "recession"]
+  - pipe: economic_calendar
+    params:
+      importance: "high"
+      lookahead_days: 30
+
+analysis_dimensions:
+  - id: growth_outlook
+    label_zh: 全球增长前景
+    label_en: Global Growth Outlook
+    method: cross_country_forecast
+    required_data: [imf_weo, fred_macro, worldbank_development]
+  - id: inflation_dynamics
+    label_zh: 通胀动力与央行路径
+    label_en: Inflation Dynamics & Central Bank Trajectory
+    method: monetary_regime_analysis
+    required_data: [fred_macro, oecd_cli, economic_calendar]
+  - id: policy_divergence
+    label_zh: 政策分化与溢出效应
+    label_en: Policy Divergence & Spillovers
+    method: spillover_mapping
+    required_data: [fred_macro, news_financial]
+  - id: risk_dashboard
+    label_zh: 宏观风险矩阵
+    label_en: Macro Risk Dashboard
+    method: risk_matrix
+    required_data: [imf_weo, fred_macro, worldbank_development]
+  - id: fiscal_space
+    label_zh: 财政空间与债务可持续性
+    label_en: Fiscal Space & Debt Sustainability
+    method: debt_dynamics_model
+    required_data: [imf_weo, worldbank_development]
+  - id: configuration
+    label_zh: 战术配置建议
+    label_en: Tactical Asset Allocation
+    method: alloc_framework
+    required_data: [fred_macro, oecd_cli]
+
+report:
+  template: macro_dashboard
+  output_dir: reports/macro
+  style:
+    primary_color: "#0d47a1"
+    accent_color: "#ff6f00"
+  format:
+    type: html
+    sections:
+      - executive_summary
+      - macro_dashboard_card
+      - growth_outlook_section
+      - inflation_section
+      - risk_matrix_section
+      - policy_calendar
+      - allocation_section
+      - methodology
+
+schedule:
+  cadence: monthly
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+  timezone: "Asia/Shanghai"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2
+  required_disclaimers:
+    - not_investment_advice
+    - data_accuracy

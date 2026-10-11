@@ -1,0 +1,179 @@
+id: visa_japan_hsp
+version: 2
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Ministry of Justice Japan (moj.go.jp/isa)
+    - Immigration Services Agency of Japan
+    - Ministry of Health, Labour and Welfare (mhlw.go.jp)
+    - World Bank
+    - ILO
+    - OECD
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: 日本高度人才签证(HSP)政策追踪与策略分析 · 三阶段闭环
+  en: Japan HSP Visa Policy Tracker · Triple-Phase Closed-Loop
+description:
+  zh: 日本高度人才签证积分制度、加分大学名单、审批趋势、永住加速路径。三阶段闭环分析。
+  en: Japan HSP visa scoring system, bonus universities, approval trends & PR pathway.
+    Triple-phase analysis.
+triggers:
+- 高度人才签证
+- 日本高度人才
+- HSP签证
+- 日本永住
+- 高度专门职
+- Highly Skilled Professional
+- 日本移民
+- 高度人才积分
+- HSP 80分
+- 一年永住
+horizon:
+  type: rolling
+  value: 24
+  unit: months
+geo:
+  region_zh: 日本
+  region_en: Japan
+  country_code: JP
+  peers:
+  - Canada Express Entry
+  - Australia GSM (subclass 189/190)
+data_pipes:
+- pipe: japan_immigration_policy
+  params:
+    categories:
+    - HSP
+    - BM
+    - SSW
+- pipe: hsp_university_list
+  params:
+    sources:
+    - QS
+    - THE
+    - ARWU
+- pipe: hsp_approval_stats
+  params:
+    source: Japan Immigration
+- pipe: japan_arrival_requirements
+  params: {}
+- pipe: japan_labor_law_foreign_workers
+  params: {}
+- pipe: japan_pr_naturalization_stats
+  params: {}
+analysis_dimensions:
+- id: policy_snapshot
+  label_zh: 当前政策快照(评分表/加分项)
+  label_en: Policy Snapshot (Scoring & Bonuses)
+  method: scoring_matrix
+  required_data:
+  - japan_immigration_policy
+- id: pathway_analysis
+  label_zh: 各路径对比(时效/成本/风险)
+  label_en: Pathway Comparison
+  method: decision_tree
+  required_data:
+  - japan_immigration_policy
+- id: qualification_mapping
+  label_zh: 加分大学核对清单与学历认证
+  label_en: Bonus University Checklist
+  method: list_verification
+  required_data:
+  - hsp_university_list
+- id: pre_departure_finance
+  label_zh: HSP准备期财务规划
+  label_en: HSP Pre-Departure Finance
+  method: pre_departure_finance_analysis_jp
+  required_data:
+  - japan_arrival_requirements
+- id: arrival_checklist
+  label_zh: HSP登陆后90天清单
+  label_en: HSP 90-Day Arrival Checklist
+  method: japan_arrival_checklist_analysis
+  required_data:
+  - japan_arrival_requirements
+- id: housing_setup
+  label_zh: 在日安居指南
+  label_en: Settlement Guide
+  method: japan_housing_setup_analysis
+  required_data:
+  - japan_arrival_requirements
+- id: labor_rights
+  label_zh: HSP持有者劳动权益保护
+  label_en: HSP Labor Rights
+  method: japan_labor_rights_analysis
+  required_data:
+  - japan_labor_law_foreign_workers
+- id: career_upgrade
+  label_zh: HSP积分升级与维持策略
+  label_en: HSP Point Upgrade & Maintenance
+  method: japan_career_upgrade_analysis
+  required_data:
+  - japan_immigration_policy
+- id: tax_optimization
+  label_zh: 高度人才税务优化
+  label_en: HSP Tax Optimization
+  method: japan_tax_optimization_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: family_planning
+  label_zh: HSP家属随行(配偶+子女+有条件父母)
+  label_en: HSP Family Reunification
+  method: family_planning_analysis_jp
+  required_data:
+  - japan_immigration_policy
+- id: education_children
+  label_zh: 在日子女教育指南
+  label_en: Children Education Guide
+  method: japan_education_children_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: pr_pathway
+  label_zh: 永住时间线(80分1年路径/70分3年路径)
+  label_en: PR Timeline (80pt=1yr / 70pt=3yr)
+  method: timeline_model
+  required_data:
+  - japan_immigration_policy
+  - hsp_approval_stats
+- id: naturalization
+  label_zh: 归化入籍深度指南
+  label_en: Naturalization
+  method: japan_naturalization_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: retirement_reunification
+  label_zh: 养老金衔接与父母团聚
+  label_en: Pension & Parent Reunification
+  method: japan_retirement_reunification_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: risk_assessment
+  label_zh: HSP风险评估矩阵
+  label_en: HSP Risk Assessment
+  method: risk_matrix
+  required_data:
+  - japan_immigration_policy
+  - hsp_approval_stats
+report:
+  template: migration_lifecycle
+  output_dir: reports/career/japan_hsp
+  style:
+    primary_color: '#1a237e'
+    accent_color: '#d32f2f'
+schedule:
+  cadence: weekly
+  day_of_week: monday
+  time: 08:00
+quality:
+  min_data_freshness_days: 7
+  min_sources_per_section: 2
+  required_disclaimers:
+  - not_legal_advice
+  - policy_change_warning

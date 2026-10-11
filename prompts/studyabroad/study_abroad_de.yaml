@@ -1,0 +1,162 @@
+# 德国本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 德国留学, 德国本科, TU9, DAAD, 慕尼黑工大, 亚琛工大, APS, APS审核, 德国大学申请, Fachhochschule, 应用科技大学
+id: de_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - DAAD (daad.de)
+    - Make it in Germany Portal
+    - TU9 (tu9.de)
+    - Destatis (destatis.de)
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 德国本科留学申请全景分析报告
+  en: Germany Undergraduate Study Application Analysis
+
+description:
+  zh: 面向高中毕业生的德国本科留学路径分析。覆盖直接入学资格(211一学期/普通本科三学期/三年制大专+预科)、TU9精英大学录取标准、APS学历审核、德语要求(TestDaF/DSH/Goethe C1/C2)、英语授课课程(IELTS/TOEFL)、学费(巴登-符腾堡€1,500/学期)、自保金(Blocked Account €11,208/年)、签证、毕业后工签与蓝卡衔接。
+  en: Germany undergraduate study analysis for high school graduates, covering APS certification, TU9 admissions, language requirements, tuition, blocked account, visa, and post-study work permit.
+
+triggers:
+  - "德国留学"
+  - "德国本科"
+  - "TU9"
+  - "DAAD"
+  - "慕尼黑工大"
+  - "TUM"
+  - "亚琛工大"
+  - "RWTH"
+  - "APS"
+  - "APS审核"
+  - "海德堡大学"
+  - "柏林工大"
+  - "柏林洪堡"
+  - "德国预科"
+  - "Studienkolleg"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 德国
+  region_en: Germany
+  country_code: DE
+  peers:
+    - "France (Grande École)"
+    - "Netherlands (Research Universities)"
+    - "Switzerland (ETH/EPFL)"
+    - "中国(211/双一流)"
+  focus_schools:
+    - "Technical University of Munich (TUM)"
+    - "RWTH Aachen University"
+    - "Heidelberg University"
+    - "TU Berlin"
+    - "KIT Karlsruhe"
+    - "HU Berlin"
+    - "LMU Munich"
+    - "University of Freiburg"
+
+data_pipes:
+  - pipe: de_tu9_admission_criteria
+    params:
+      fields: ["university", "german_requirement", "english_requirement", "aps_required", "tuition_per_semester_eur", "semester_fee_eur", "english_programs_available"]
+      source_url: "https://www.tu9.de"
+  - pipe: de_daad_program_database
+    params:
+      degree: "bachelor"
+      fields: ["program_name_university", "degree_type", "teaching_language", "tuition", "duration_semesters", "application_deadline", "winter_summer_intake"]
+      source_url: "https://www.daad.de/en/study-and-research-in-germany/courses-degree-programmes/"
+  - pipe: de_aps_certification_info
+    params:
+      source_url: "https://www.aps.org.cn/zh"
+      fields: ["aps_type", "required_documents", "processing_time_min_days", "processing_time_max_days", "fee_cyr", "eligibility_hsch_types"]
+  - pipe: de_tuition_and_blocked_account
+    params:
+      year: 2025
+      fields: ["federal_state", "tuition_per_semester_eur", "tuition_applies_to", "semester_contribution_eur", "blocked_account_monthly_eur", "living_cost_estimate_eur_month"]
+  - pipe: de_visa_policy_student
+    params:
+      source_url: "https://china.diplo.de/cn-zh/service/visa-einreise"
+      fields: ["visa_category", "required_documents", "processing_time_days", "fee_eur", "work_hours_per_year", "post_study_visa_months"]
+  - pipe: de_employment_after_graduation
+    params:
+      fields: ["university_name", "field_of_study", "employment_rate_6months_pct", "median_salary_eur", "top_employers", "blue_card_eligibility"]
+
+analysis_dimensions:
+  - id: de_admission_eligibility
+    label_zh: 入学资格判定（中国高中生→APS→德国本科路径）
+    label_en: Admission Eligibility for Chinese High School Graduates
+    method: eligibility_checklist
+    required_data: [de_aps_certification_info, de_tu9_admission_criteria]
+
+  - id: de_tu9_and_elite_universities
+    label_zh: TU9精英大学与专业排名
+    label_en: TU9 Elite Universities & Subject Rankings
+    method: ranking_comparison
+    required_data: [de_tu9_admission_criteria, de_daad_program_database]
+
+  - id: de_language_and_testdaf
+    label_zh: 语言要求与考试路径（TestDaF / DSH / Goethe-Zertifikat）
+    label_en: Language Requirements & Exam Pathways
+    method: language_pathway_analysis
+    required_data: [de_tu9_admission_criteria]
+
+  - id: de_cost_and_financing
+    label_zh: 费用与资金证明（学费+自保金+奖学金）
+    label_en: Costs & Financial Proof (Blocked Account + Scholarships)
+    method: cost_model
+    required_data: [de_tuition_and_blocked_account]
+
+  - id: de_timeline_and_application
+    label_zh: 申请时间轴与关键节点规划
+    label_en: Application Timeline & Milestones
+    method: timeline_projection
+    required_data: [de_daad_program_database]
+
+  - id: de_visa_and_post_study_work
+    label_zh: 签证流程与毕业后就业
+    label_en: Visa Process & Post-graduation Employment
+    method: policy_scan
+    required_data: [de_visa_policy_student, de_employment_after_graduation]
+
+  - id: de_risk_and_alternatives
+    label_zh: 风险矩阵与备选路径（FH/私立/英语项目）
+    label_en: Risk Matrix & Alternative Pathways
+    method: risk_analysis
+    required_data: [de_daad_program_database, de_aps_certification_info, de_visa_policy_student]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/germany_undergraduate
+  style:
+    primary_color: "#000000"
+    accent_color: "#ffcc00"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 1
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_aps_requirements_individually
+    - tuition_policies_vary_by_federal_state
+    - language_requirements_may_change

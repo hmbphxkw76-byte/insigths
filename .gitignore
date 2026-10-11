@@ -1,0 +1,43 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# .gitignore — Prompt-Driven Architecture
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ── 运行时缓存（自动生成，无需入库）──
+data/store/
+data/data_meta.json
+
+# ── 报告输出（生成物，非源码）──
+reports/
+
+# ── macOS / Windows 系统垃圾 ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE 配置 ──
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── 日志（可选入库时注释掉）──
+logs/
+
+# ── Python ──
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── 虚拟环境 ──
+.env/
+venv/
+env/
+
+# ── 敏感配置 ──
+.env.local
+*.key
+*.pem

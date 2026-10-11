@@ -1,0 +1,136 @@
+# 卡塔尔(Qatar)本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 卡塔尔留学, 卡塔尔本科, 卡塔尔大学, HBKU, 卡塔尔基金会, 卡塔尔全额奖学金, Study in Qatar
+id: qa_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Qatar University
+    - Qatar Foundation
+    - Qatar MFA - Visas
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 卡塔尔本科留学申请全景分析报告
+  en: Qatar Undergraduate Study Application Analysis
+
+description:
+  zh: 高中毕业->卡塔尔(Qatar)的本科留学路径分析。覆盖教育体系架构、入学路径与录取标准、学费与奖学金、签证与居留政策、毕业后就业与回国发展。数据来源仅限官方机构与英文权威来源。
+  en: Undergraduate study in Qatar for Chinese high school graduates. Covers education system, admission pathways, tuition, visa, and post-graduation career development.
+
+triggers:
+    - "卡塔尔留学"
+    - "卡塔尔本科"
+    - "卡塔尔大学"
+    - "HBKU"
+    - "卡塔尔基金会"
+    - "卡塔尔全额奖学金"
+    - "Study in Qatar"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 卡塔尔
+  region_en: Qatar
+  country_code: QA
+  peers:
+    - "UAE (Khalifa)"
+    - "Saudi Arabia (KAUST)"
+    - "Singapore"
+  focus_schools:
+    - "Qatar University"
+    - "Hamad Bin Khalifa University (HBKU)"
+    - "Texas A&M University at Qatar"
+    - "Carnegie Mellon University Qatar"
+    - "Georgetown University Qatar"
+
+data_pipes:
+  - pipe: qa_bachelor_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gaokao_pathway", "annual_tuition_qar", "top_programs", "moe_recognized"]
+      source_url: https://www.qu.edu.qa
+  - pipe: qa_visa_poststudy
+    params:
+      source_url: https://www.moi.gov.qa
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: qa_scholarships
+    params:
+      source_url: https://www.qf.org.qa
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: qa_bachelor_admission_standards
+    label_zh: 本科录取标准与入学路径
+    label_en: Bachelor's Admission Standards
+    method: admission_standard_analysis
+    required_data: [qa_bachelor_admissions]
+
+  - id: qa_tuition_and_costs
+    label_zh: 学费与留学成本
+    label_en: Tuition & Study Costs
+    method: cost_model
+    required_data: [qa_bachelor_admissions]
+
+  - id: qa_scholarship_overview
+    label_zh: 可申请奖学金概览
+    label_en: Scholarships Available
+    method: scholarship_analysis
+    required_data: [qa_scholarships]
+
+  - id: qa_visa_and_post_study_work
+    label_zh: 学生签证与毕业后工作权利
+    label_en: Student Visa & Post-Study Work
+    method: policy_scan
+    required_data: [qa_visa_poststudy]
+
+  - id: qa_employment_and_roi
+    label_zh: 就业前景与投资回报率
+    label_en: Employment Outlook & ROI
+    method: career_outcome_analysis
+    required_data: [qa_bachelor_admissions]
+
+  - id: qa_application_timeline
+    label_zh: 申请时间轴与关键节点
+    label_en: Application Timeline
+    method: timeline_projection
+    required_data: [qa_bachelor_admissions]
+
+  - id: qa_risk_assessment
+    label_zh: 风险矩阵与备选路径
+    label_en: Risk Matrix & Alternatives
+    method: risk_analysis
+    required_data: [qa_visa_poststudy, qa_bachelor_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/qa_undergraduate
+  style:
+    primary_color: #8A1538
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - verify_information_with_official_sources

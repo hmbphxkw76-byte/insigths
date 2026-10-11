@@ -1,0 +1,123 @@
+# 法国(France)硕士留学申请全景分析 — Prompt 定义（一般硕士/博士，区别于工程师学院）
+# 触发关键词: 法国硕士, 法国研究生, 法国高商, 法国公立大学硕士, Campus France硕士, 法国M1/M2
+id: fr_general_master_study
+version: 1
+enabled: true
+
+label:
+  zh: 法国硕士留学申请全景分析报告
+  en: France Master's Study Application Analysis
+
+description:
+  zh: 本科毕业→法国(France)的硕士留学路径分析。包含公立大学(M1/M2)、大学校(Grande École/MS/MSc)、高等商学院(MBA/MSc)三类路径、学费与奖学金、授课型/研究型分流、毕业后工作与居留路径。
+  en: Master's study in France for Chinese bachelor's graduates. Covers public university (M1/M2), Grande École, and business school pathways, tuition, scholarships, and post-study pathways.
+
+triggers:
+  - "法国硕士"
+  - "法国研究生"
+  - "法国高商"
+  - "法国公立大学硕士"
+  - "法国M1"
+  - "法国M2"
+  - "MSc France"
+  - "HEC Paris"
+  - "INSEAD"
+  - "ESSEC"
+  - "Campus France硕士"
+
+horizon:
+  type: future_years
+  value: 3
+
+geo:
+  region_zh: 法国
+  region_en: France
+  country_code: FR
+  peers:
+    - "Germany (TU9)"
+    - "Switzerland (ETH)"
+    - "UK (Russell Group)"
+    - "Netherlands (UvA)"
+  focus_schools:
+    - "Sorbonne University"
+    - "École Polytechnique (l'X)"
+    - "Paris Sciences & Lettres (PSL)"
+    - "Université Paris-Saclay"
+    - "Sciences Po Paris"
+    - "École Normale Supérieure (ENS)"
+
+data_pipes:
+  - pipe: fr_general_master_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gpa_min_pct", "annual_tuition_eur", "duration_years", "program_type", "top_programs", "moe_recognized"]
+      source_url: https://www.campusfrance.org
+  - pipe: fr_general_visa_poststudy
+    params:
+      source_url: https://france-visas.gouv.fr
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: fr_general_scholarships
+    params:
+      source_url: https://www.campusfrance.org/en/scholarship-programmes
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: fr_general_master_admission_standards
+    label_zh: 硕士录取标准与背景要求（公立大学/大学校/高商）
+    label_en: Master's Admission Standards (Public/GE/Business)
+    method: admission_standard_analysis
+    required_data: [fr_general_master_admissions]
+
+  - id: fr_general_master_tuition_and_scholarship
+    label_zh: 硕士学费与奖学金机会（Eiffel/高商奖/区域奖）
+    label_en: Master's Tuition & Scholarships
+    method: cost_model
+    required_data: [fr_general_master_admissions, fr_general_scholarships]
+
+  - id: fr_general_master_type_and_duration
+    label_zh: M1/M2分流、授课型/研究型选择
+    label_en: M1/M2 Splitting, Taught vs Research
+    method: program_analysis
+    required_data: [fr_general_master_admissions]
+
+  - id: fr_general_visa_and_post_study_pathways
+    label_zh: 签证与毕业后居留路径（APS/人才护照）
+    label_en: Visa & Post-Graduation Pathways (APS)
+    method: policy_scan
+    required_data: [fr_general_visa_poststudy]
+
+  - id: fr_general_employment_and_roi
+    label_zh: 就业前景与投资回报率
+    label_en: Employment Outlook & ROI
+    method: career_outcome_analysis
+    required_data: [fr_general_master_admissions]
+
+  - id: fr_general_application_timeline
+    label_zh: 申请时间轴与批次规划
+    label_en: Application Timeline
+    method: timeline_projection
+    required_data: [fr_general_master_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/fr_general_master
+  style:
+    primary_color: "#0055A4"
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - verify_information_with_official_sources
+    - grande_ecole_engineering_separate_document

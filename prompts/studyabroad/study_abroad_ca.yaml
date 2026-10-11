@@ -1,0 +1,158 @@
+# 加拿大本科留学申请全景分析 — Prompt 定义
+# 触发关键词: 加拿大留学, 加拿大本科, U15, 多伦多大学, UBC, McGill, 滑铁卢大学, 麦马斯特, 加拿大签证, Study Permit, PGWP, 加拿大PR, Express Entry, CEC, PNP
+id: ca_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - EduCanada (educanada.ca)
+    - IRCC - Immigration Canada
+    - Vanier CGS
+    - QS World University Rankings
+    - Times Higher Education
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 加拿大本科留学申请全景分析报告
+  en: Canada Undergraduate Study Application Analysis
+
+description:
+  zh: 面向高中毕业生的加拿大本科留学路径分析。覆盖U15研究型大学录取标准(高考/高中成绩/SAT可选)、IELTS/TOEFL语言要求、学费(CAD $25,000-$60,000/年)、Study Permit学生签证、PGWP毕业后工签、Express Entry快速通道(CEC/FSW/FST)与技术移民省提名(PNP)永居路径、配偶工签与家庭随行。
+  en: Canada undergraduate study for Chinese high school graduates, covering U15 admissions, tuition, Study Permit, PGWP, Express Entry pathways, and family sponsorship.
+
+triggers:
+  - "加拿大留学"
+  - "加拿大本科"
+  - "U15"
+  - "多伦多大学"
+  - "U of T"
+  - "UBC"
+  - "McGill"
+  - "滑铁卢大学"
+  - "Waterloo"
+  - "麦马"
+  - "McMaster"
+  - "阿尔伯塔大学"
+  - "Study Permit"
+  - "PGWP"
+  - "加拿大PR"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 加拿大
+  region_en: Canada
+  country_code: CA
+  peers:
+    - "Australia (G8)"
+    - "UK (Russell Group)"
+    - "US (Public Ivies)"
+    - "中国(985)"
+  focus_schools:
+    - "University of Toronto (U of T)"
+    - "University of British Columbia (UBC)"
+    - "McGill University"
+    - "University of Waterloo"
+    - "McMaster University"
+    - "University of Alberta"
+
+data_pipes:
+  - pipe: ca_u15_admissions
+    params:
+      fields: ["university", "province", "gaokao_required", "min_avg_pct", "ielts_min", "sat_optional", "annual_tuition_cad_min", "annual_tuition_cad_max", "coop_available"]
+      source_url: "https://www.universitystudy.ca"
+  - pipe: ca_tuition_and_costs
+    params:
+      year: 2025
+      fields: ["university", "field_of_study", "annual_tuition_cad", "living_expenses_cad_year", "health_insurance_cad", "total_year_cost_cad"]
+  - pipe: ca_study_permit_policy
+    params:
+      source_url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html"
+      fields: ["permit_type", "financial_proof_cad_year", "dli_required", "provinces_accepted", "family_can_accompany"]
+  - pipe: ca_pgwp_policy
+    params:
+      source_url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada/work/after-graduation.html"
+      fields: ["visa_type", "duration_by_program_length", "eligibility", "pathway_to_pr"]
+  - pipe: ca_express_entry_points
+    params:
+      source_url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry.html"
+      fields: ["program", "min_crs_points_current", "canadian_study_bonus", "canadian_work_bonus", "language_bonus", "advantages_for_student"]
+  - pipe: ca_employment_outlook
+    params:
+      fields: ["university", "field_of_study", "employment_rate_6mo_pct", "median_salary_cad", "top_employers", "noc_tier"]
+
+analysis_dimensions:
+  - id: ca_u15_admission_standards
+    label_zh: U15研究型大学录取标准与入学路径
+    label_en: U15 Research University Admission Standards
+    method: admission_standard_analysis
+    required_data: [ca_u15_admissions]
+
+  - id: ca_tuition_and_campus_cities
+    label_zh: 学费对比与留学城市生活成本
+    label_en: Tuition Comparison & Campus City Living Costs
+    method: cost_model
+    required_data: [ca_tuition_and_costs]
+
+  - id: ca_study_permit_and_work
+    label_zh: Study Permit与学习期间工作权利
+    label_en: Study Permit & Work Rights During Study
+    method: policy_scan
+    required_data: [ca_study_permit_policy]
+
+  - id: ca_pgwp_and_express_entry
+    label_zh: PGWP毕业工签与Express Entry移民路径
+    label_en: PGWP & Express Entry Immigration Pathway
+    method: policy_analysis
+    required_data: [ca_pgwp_policy, ca_express_entry_points]
+
+  - id: ca_timeline_and_application
+    label_zh: 申请时间轴与关键节点
+    label_en: Application Timeline & Milestones
+    method: timeline_projection
+    required_data: [ca_u15_admissions]
+
+  - id: ca_employment_and_roi
+    label_zh: 就业前景与投资回报率
+    label_en: Employment Outlook & ROI Analysis
+    method: career_outcome_analysis
+    required_data: [ca_employment_outlook]
+
+  - id: ca_risk_assessment
+    label_zh: 风险矩阵与备选路径（College转大学/SDS/PNP）
+    label_en: Risk Matrix & Alternative Pathways
+    method: risk_analysis
+    required_data: [ca_study_permit_policy, ca_express_entry_points]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/canada_undergraduate
+  style:
+    primary_color: "#ff0000"
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [3, 6, 9, 12]
+  day_of_week: monday
+  week_of_month: 1
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_immigration_or_legal_advice
+    - verify_dli_number_of_institution
+    - immigration_policies_frequently_change
+    - tuition_and_fees_may_increase

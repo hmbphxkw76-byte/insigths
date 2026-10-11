@@ -1,0 +1,332 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 通用海外职业移民生命周期 Prompt 定义模板
+# Overseas Profession Migration Lifecycle — Universal Prompt Template
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# 使用说明:
+#   1. 复制此文件，重命名为 visa_{country}_{profession}.yaml
+#   2. 替换所有 {placeholder} 为实际值
+#   3. 根据目标国/职业调整 policies 和 data_pipes
+#   4. 根据需求增删 analysis_dimensions (建议保留全部以形成完整闭环)
+#
+# 设计原则:
+#   - 三阶段闭环: Pre-Departure → Arrival & Settlement → Root & Permanent
+#   - 数据100%: 仅引用目标国政府官方机构、国际组织、行业公协会数据
+#   - 移民律师视角: 每个维度都标注最常见的坑和陷阱
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+id: "visa_{country_code}_{profession_slug}"
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - World Bank
+    - IMF
+    - ILO
+    - OECD
+    -各国移民局官方门户 (英文界面)
+    -各国统计局官方门户 (英文界面)
+    -各国教育部官方门户 (英文界面)
+    -各国劳工部官方门户 (英文界面)
+    -目标国行业协会网站 (英文版)
+    -目标国央行/税务局官方门户
+  forbidden_sources:
+    - 任何中文网站 (包括知乎、百度、微信公众号)
+    - 任何中文留学/移民中介网站
+    - 任何未经验证的 UGC 平台
+  output_language: zh
+
+label:
+  zh: "{目标国名称}{职业名称}移民可行性全析报告 · 三阶段闭环"
+  en: "{Country} {Profession} Migration Feasibility Report · Triple-Phase Closed-Loop"
+
+description:
+  zh: "面向中国国内起点的「{目标国}+{职业}」岗位移民可行性全析。融合移民律师+人力资源顾问+行业分析师三重视角。覆盖完整三阶段闭环：(1)国内准备期——资格预审/语言学习/财务规划/签证办理 (2)到达适应期——登陆清单/银行住房/劳动权益/职业规划 (3)扎根留期——永住路径/税务优化/子女教育/家庭团聚/归化入籍。数据100%来源于{目标国}政府官方机构·国际金融组织·行业公协会公开数据，排除任何中文移民中介网站信息。"
+  en: "Comprehensive closed-loop feasibility analysis for Chinese nationals pursuing {Profession} positions in {Country}. Triple-perspective: immigration lawyer + HR consultant + industry analyst. Covers: Phase 1 (Pre-Departure) → Phase 2 (Arrival & Settlement) → Phase 3 (Root & Permanent Settlement). All data from official {Country} government sources, international organizations, and industry associations."
+
+triggers:
+  - "{目标国}{职业}"
+  - "{目标国}{职业}工作"
+  - "{目标国}做{职业}"
+  - "{目标国}{职业}签证"
+  - "{目标国}{职业}移民"
+  - "{Country} {Profession}"
+  - "{职业}去{目标国}"
+  - "如何到{目标国}做{职业}"
+  - "{目标国}{职业资格}"
+  - "{职业}移民{目标国}"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: "{目标国名称}"
+  region_en: "{Country}"
+  country_code: "{ISO代码}"
+  peers:
+    - "{对标国家1} ({对标路径})"
+    - "{对标国家2} ({对标路径})"
+    - "{对标国家3} ({对标路径})"
+  focus_areas:
+    - "{城市1}(最大就业市场·薪资最高)"
+    - "{城市2}(次大就业市场·生活成本适中)"
+    - "{城市3}(新兴就业区·竞争较小)"
+
+indicators:
+  primary:
+    - "{目标国}{职业}年度新签证签发数"
+    - "{目标国}{职业}当前人才缺口数"
+    - "{目标国}{职业}平均薪资(分城市)"
+    - "{目标国}{职业}求人倍率"
+  secondary:
+    - "{目标国}同类职业外国人占比"
+    - "{目标国}{职业}老龄化/流失率"
+    - "{目标国}{职业}资格互认中国通过率"
+    - "{目标国}语言考试通过率(中国考生)"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 数据管道声明
+# ═══════════════════════════════════════════════════════════════════════════
+data_pipes:
+  # ── 核心政策数据 ──
+  - pipe: "{target_country}_immigration_policy"
+    params:
+      categories: ["work_visa_types", "pr_pathways", "profession_specific_rules"]
+      source_url: "{目标国移民局官网}"
+      track_changes: true
+      data_quality: "official_gov"
+
+  # ── 行业数据 ──
+  - pipe: "{target_country}_{profession}_industry_stats"
+    params:
+      fields: ["workforce_size", "vacancy_rate", "avg_salary", "growth_projection", "foreign_worker_ratio"]
+      source_url: "{目标国劳动/统计部门官网}"
+      data_quality: "official_stats"
+
+  # ── 到达与初期数据 ──
+  - pipe: "{target_country}_arrival_requirements"
+    params:
+      fields: ["registration_deadlines", "bank_account_requirements", "housing_access_barriers", "health_insurance_mandatory"]
+      data_quality: "{source_tag}"
+
+  # ── 劳动权益数据 ──
+  - pipe: "{target_country}_labor_law_foreign_workers"
+    params:
+      fields: ["minimum_wage_by_region", "overtime_regulations", "workplace_rights", "dispute_resolution_mechanisms"]
+      data_quality: "labor_ministry"
+
+  # ── 长期身份数据 ──
+  - pipe: "{target_country}_pr_naturalization_data"
+    params:
+      fields: ["processing_times", "approval_rates", "requirements_checklist", "dual_citizenship_policy"]
+      data_quality: "immigration_official"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 分析维度 — 三阶段闭环
+# ═══════════════════════════════════════════════════════════════════════════
+analysis_dimensions:
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PHASE 1: 国内准备期 (Pre-Departure) — Month 0 ~ 12
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - id: policy_snapshot
+    label_zh: 移民政策快照与签证路径总览
+    label_en: Immigration Policy Snapshot & Visa Pathway Overview
+    method: policy_snapshot_analysis
+    required_data: ["{target_country}_immigration_policy"]
+
+  - id: qualification_mapping
+    label_zh: 资格预审与中国学历/资历互认映射
+    label_en: "Qualification Pre-screening & Credential Recognition Mapping (CN to {Country})"
+    method: qualification_mapping_analysis
+    required_data: ["{target_country}_immigration_policy", "{target_country}_{profession}_industry_stats"]
+
+  - id: domestic_preparation
+    label_zh: 国内准备方案：语言学习与成本规划
+    label_en: Domestic Preparation (Language Learning & Cost Planning)
+    method: domestic_preparation_analysis
+    required_data: ["{target_country}_immigration_policy"]
+
+  - id: language_learning
+    label_zh: 语言能力达标路径与考试安排
+    label_en: Language Proficiency Pathway & Exam Planning
+    method: language_learning_analysis
+    required_data: ["{target_country}_immigration_policy"]
+
+  - id: certification_conversion
+    label_zh: 职业资格换发/互认路径
+    label_en: Professional Certification Conversion Path
+    method: certification_conversion_analysis
+    required_data: ["{target_country}_{profession}_industry_stats"]
+
+  - id: visa_application_guide
+    label_zh: 签证手续DIY自助办理指南
+    label_en: Visa Application DIY Guide
+    method: visa_diy_guide
+    required_data: ["{target_country}_immigration_policy"]
+
+  - id: pre_departure_finance
+    label_zh: 出境前财务规划与税务安排
+    label_en: Pre-Departure Financial Planning & Tax Arrangement
+    method: pre_departure_finance_analysis
+    required_data: ["{target_country}_arrival_requirements"]
+
+  - id: family_planning
+    label_zh: 家庭整体规划：随行政策 vs 分居策略
+    label_en: Family Planning - Dependency Policy vs Separation Strategy
+    method: family_planning_analysis
+    required_data: ["{target_country}_immigration_policy"]
+
+  - id: health_preparation
+    label_zh: 出境前体检与医疗保障衔接
+    label_en: Pre-Departure Health Check & Medical Coverage Transition
+    method: health_preparation_analysis
+    required_data: ["{target_country}_arrival_requirements"]
+
+  - id: cost_benefit_roi
+    label_zh: 成本效益分析(5年ROI模型)
+    label_en: Cost-Benefit Analysis (5-Year ROI Model)
+    method: roi_model
+    required_data: ["{target_country}_{profession}_industry_stats", "{target_country}_arrival_requirements"]
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PHASE 2: 到达与初期适应 (Arrival & Settlement) — Month 12 ~ 18
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - id: arrival_checklist
+    label_zh: 登陆后90天关键事项清单(合法在留的生命线)
+    label_en: Arrival 90-Day Critical Checklist (Legal Residence Life-or-Death Items)
+    method: arrival_checklist_analysis
+    required_data: ["{target_country}_arrival_requirements"]
+
+  - id: housing_setup
+    label_zh: 在日安居指南：住房/银行/通讯敲门砖
+    label_en: "Settlement Guide: Housing / Banking / Communications"
+    method: housing_setup_analysis
+    required_data: ["{target_country}_arrival_requirements"]
+
+  - id: labor_rights
+    label_zh: 劳动权益保护与维权路径
+    label_en: Labor Rights Protection & Dispute Resolution
+    method: labor_rights_analysis
+    required_data: ["{target_country}_labor_law_foreign_workers"]
+
+  - id: emergency_response
+    label_zh: 紧急情况应对协议(法律/医疗/意外/维权)
+    label_en: Emergency Response Protocol (Legal / Medical / Accident / Dispute)
+    method: emergency_response_analysis
+    required_data: ["{target_country}_labor_law_foreign_workers", "{target_country}_arrival_requirements"]
+
+  - id: employer_landscape
+    label_zh: 目标雇主调查与薪资结构
+    label_en: Target Employer Landscape & Salary Structure
+    method: employer_salary_analysis
+    required_data: ["{target_country}_{profession}_industry_stats", "{target_country}_labor_law_foreign_workers"]
+
+  - id: industry_outlook
+    label_zh: 目标行业趋势与政策影响
+    label_en: Target Industry Outlook & Policy Impact
+    method: industry_outlook_analysis
+    required_data: ["{target_country}_{profession}_industry_stats"]
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PHASE 3: 长期扎根留 (Root & Permanent Settlement) — Month 18+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - id: career_upgrade
+    label_zh: 职业晋升与签证升级路径图
+    label_en: Career Advancement & Visa Upgrade Pathway Map
+    method: career_upgrade_analysis
+    required_data: ["{target_country}_immigration_policy", "{target_country}_{profession}_industry_stats"]
+
+  - id: tax_optimization
+    label_zh: 税务优化策略与资产形成
+    label_en: Tax Optimization Strategy & Wealth Building
+    method: tax_optimization_analysis
+    required_data: ["{target_country}_pr_naturalization_data"]
+
+  - id: education_children
+    label_zh: 在日子女教育体系完全指南
+    label_en: Children's Education System Guide (If/When Family Joins)
+    method: education_children_analysis
+    required_data: ["{target_country}_pr_naturalization_data"]
+
+  - id: pr_pathway
+    label_zh: 永住权时间线与策略
+    label_en: Permanent Residency Timeline & Strategy
+    method: pr_pathway_analysis
+    required_data: ["{target_country}_immigration_policy", "{target_country}_pr_naturalization_data"]
+
+  - id: naturalization
+    label_zh: 归化入籍深度指南(条件/流程/隐性门槛/放弃原国籍实操)
+    label_en: Naturalization Deep Dive (Requirements / Process / Hidden Barriers / Renunciation)
+    method: naturalization_analysis
+    required_data: ["{target_country}_pr_naturalization_data"]
+
+  - id: retirement_reunification
+    label_zh: 养老、年金衔接与父母团聚
+    label_en: Pension Transition & Family Reunification
+    method: retirement_reunification_analysis
+    required_data: ["{target_country}_pr_naturalization_data"]
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # 通用维度 (跨阶段)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - id: risk_assessment
+    label_zh: 三阶段风险评估矩阵与Plan B备选方案
+    label_en: Triple-Phase Risk Assessment Matrix & Plan B Options
+    method: risk_matrix
+    required_data: ["{target_country}_immigration_policy", "{target_country}_{profession}_industry_stats"]
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 报告模板
+# ═══════════════════════════════════════════════════════════════════════════
+report:
+  template: migration_lifecycle
+  output_dir: "reports/career/{country_code}_{profession_slug}"
+  style:
+    primary_color: "#1a237e"
+    accent_color: "#ff8f00"
+    phase_colors:
+      phase1: "#2e7d32"
+      phase2: "#1565c0"
+      phase3: "#6a1b9a"
+  format:
+    type: html
+    sections:
+      - executive_summary
+      - phase1_pre_departure
+      - phase2_arrival
+      - phase3_settlement
+      - risk_assessment
+      - appendix
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 调度
+# ═══════════════════════════════════════════════════════════════════════════
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 质量护栏
+# ═══════════════════════════════════════════════════════════════════════════
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_policy_at_official_sources
+    - salary_data_may_vary_by_region_and_company
+    - exchange_rate_fluctuation_warning
+    - information_asymmetry_disclaimer

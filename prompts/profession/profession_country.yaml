@@ -1,0 +1,398 @@
+# 通用职业 × 国家/地区 — 人才需求深度分析 (McKinsey风格)
+# 触发示例: 迪拜网络安全工程师, UAE cybersecurity, 德国汽车工程师, 新加坡数据分析师, 澳洲会计师
+id: profession_country
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - World Bank
+    - IMF
+    - ILO
+    - OECD
+    - UNCTAD
+    - WEF
+    - (ISC)²
+    - ISACA
+    - CompTIA
+    - Gartner
+    - IDC
+    - Forrester
+    - NIST
+    - SANS Institute
+    - Hays
+    - Michael Page
+    - Robert Half
+    - Mercer
+    - Numbeo
+    - UAE MOHRE
+    - UAE Federal Authority for Identity, Citizenship, Customs & Port Security
+    - Dubai Statistics Center
+    - Dubai Land Department
+    - 各国统计局官方门户 (英文界面)
+    - 各国移民局官方门户 (英文界面)
+    - 各国教育部官方门户 (英文界面)
+  forbidden_sources:
+    - 任何中文网站 (包括知乎、百度、微信公众号、小红书、微博)
+    - 任何中文留学/移民中介网站
+    - 任何中文房产中介网站
+    - 任何 UGC 平台 (TripAdvisor, Yelp, Glassdoor 须经官方校验)
+  output_language: zh
+
+label:
+  zh: "[[country]][[profession]]人才需求与就业前景深度分析"
+  en: "[[country]] [[profession]] Talent Demand & Career Outlook Deep Dive"
+
+description:
+  zh: "面向[[country]]的[[profession]]岗位，以麦肯锡咨询风格输出人才市场深度分析报告。覆盖18大维度：(1)行业宏观趋势与数字化转型驱动 (2)人才需求规模与增长预测 (3)雇主格局与企业需求热力图 (4)薪酬基准与购买力对比 (5)技能栈要求与认证路径 (6)人才供给缺口量化 (7)外籍人才政策与工作签证路径 (8)风险评估与5年职业ROI模型 (9)生活成本精算与净储蓄模型 (10)全球竞争城市对标 (11)AI/自动化颠覆风险时间线 (12)行业合规框架映射 (13)候选人供给密度与竞争力 (14)雇主微观情报 (15)签证全流程时间轴 (16)跨文化适应路径指南 (17)薪资谈判话术与策略 (18)职业资格认证全路径。数据来源于世界银行/ILO/MERCER/Numbeo/(ISC)²/ISACA/Gartner/SANS/Hays/MOHRE/各国统计局/行业协会/官方劳动力调查，排除任何中文网站来源。"
+  en: "McKinsey-style deep-dive analysis of [[profession]] talent market in [[country]]. 18 dimensions: industry trends, talent demand sizing, employer landscape, salary benchmarking, skill requirements, talent supply gap, expat/visa policies, 5-year career ROI, cost of living & net savings model, global city comparison, AI disruption risk timeline, compliance framework mapping, candidate supply metrics, employer micro-intelligence, visa process timeline, cross-cultural adaptation guide, salary negotiation tactics, professional certification roadmap. Data from World Bank, ILO, MERCER, Numbeo, (ISC)², ISACA, Gartner, SANS, Hays, MOHRE, national statistics, industry associations."
+
+triggers:
+  - "迪拜网络安全工程师"
+  - "迪拜网络安全"
+  - "迪拜安全工程师"
+  - "迪拜AI安全工程师"
+  - "迪拜人工智能安全"
+  - "UAE AI security engineer"
+  - "UAE cybersecurity engineer"
+  - "UAE cyber security"
+  - "Dubai cybersecurity"
+  - "Dubai AI security"
+  - "阿联酋网络安全"
+  - "阿联酋AI安全"
+  - "迪拜工程师"
+  - "Dubai engineer"
+  - "UAE engineer"
+  - "阿联酋工程师"
+  - "迪拜IT"
+  - "迪拜技术岗位"
+  - "country profession"
+  - "职业分析"
+  - "人才需求分析"
+  - "海外就业分析"
+  - "德国汽车工程师"
+  - "德国工程师"
+  - "Germany automotive engineer"
+  - "新加坡数据分析师"
+  - "Singapore data analyst"
+  - "澳洲会计师"
+  - "Australia accountant"
+  - "加拿大护士"
+  - "Canada nurse"
+  - "英国金融"
+  - "UK finance"
+  - "美国码农"
+  - "US software engineer"
+  - "日本IT"
+  - "Japan IT engineer"
+  - "韩国半导体"
+  - "Korea semiconductor"
+  - "沙特石油工程师"
+  - "Saudi petroleum engineer"
+  - "卡塔尔航空"
+  - "Qatar aviation"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: "阿联酋・迪拜"
+  region_en: "UAE ・ Dubai"
+  country_code: AE
+  peers:
+    - Saudi Arabia (Riyadh tech hub)
+    - Singapore (Asia cyber hub)
+    - Israel (Cyber ecosystem)
+    - United States (Silicon Valley)
+    - United Kingdom (London cyber hub)
+    - Germany (Frankfurt/Berlin)
+  focus_areas:
+    - "迪拜(DIFC/DIC/Internet City・自由区科技枢纽)"
+    - "阿布扎比(Masdar City・MASDAR・科技产业中心)"
+    - "沙迦(SAQ・低运营成本区域)"
+    - "阿联酋北部(Ras Al Khaimah・富查伊拉)"
+
+indicators:
+  primary:
+    - "[[country]][[profession]]岗位空缺数(官方劳动力调查)"
+    - "[[profession]]行业薪资中位数(P50/P75/P90)"
+    - "[[country]]数字化转型投资总额(近5年)"
+    - "外籍[[profession]]从业者占比(国籍分布)"
+  secondary:
+    - "[[country]]网络安全市场规模(USD Billion)"
+    - "[[profession]]相关大学毕业生年度供给量"
+    - "工作签证( Employment Visa )年度发放量"
+    - "人才供需缺口率(Vacancy Rate)"
+
+data_pipes:
+  - pipe: country_labor_market
+    params:
+      country_code: "AE"
+      profession: "cybersecurity"
+      source_priority: "worldbank_ilo_national"
+      fields: ["labor_force_total", "unemployment_rate", "youth_unemployment", "digital_economy_index"]
+      data_quality: "worldbank_ae"
+
+  - pipe: profession_talent_demand
+    params:
+      country_code: "AE"
+      profession: "ai_cybersecurity"
+      source_priority: "official_job_portals"
+      fields: ["active_job_postings", "demand_growth_yoy", "top_hiring_industries", "employer_count"]
+      data_quality: "official_portals"
+
+  - pipe: profession_salary_benchmark
+    params:
+      country_code: "AE"
+      profession: "ai_cybersecurity"
+      source_priority: "official_salary_surveys"
+      fields: ["p50_median", "p75_upper", "p90_top", "by_experience", "by_certification"]
+      data_quality: "salary_survey"
+
+  - pipe: country_digital_transformation
+    params:
+      country_code: "AE"
+      source_priority: "government_portal"
+      fields: ["digital_strategy_investment", "smart_city_spending", "cybersecurity_budget", "tech_gdp_pct"]
+      data_quality: "uae_gov"
+
+  - pipe: profession_skill_requirements
+    params:
+      profession: "ai_cybersecurity"
+      source_priority: "industry_frameworks"
+      fields: ["top_skills", "certifications", "education_min", "experience_years"]
+      data_quality: "industry_framework"
+
+  - pipe: country_expat_visa_policy
+    params:
+      country_code: "AE"
+      source_priority: "government_portal"
+      fields: ["visa_types", "processing_time", "employer_sponsorship", "pathway_to_pr"]
+      data_quality: "uae_gov"
+
+  - pipe: country_cost_of_living
+    params:
+      country_code: "AE"
+      source_priority: "mercer_numbeo_official"
+      fields: ["housing", "insurance", "education", "utilities", "transport", "groceries", "annual_totals"]
+      data_quality: "mercer_dld_dewa_khda"
+
+  - pipe: global_city_comparison
+    params:
+      profession: "ai_cybersecurity"
+      source_priority: "isc2_hays_hsbc_oecd"
+      fields: ["cyber_p50_usd", "tax_rate", "savings_rate", "talent_gap", "visa_difficulty", "expat_friendly", "job_openings", "salary_growth"]
+      data_quality: "multi_source_authoritative"
+
+  - pipe: ai_disruption_risk_timeline
+    params:
+      profession: "ai_cybersecurity"
+      source_priority: "gartner_sans_wef_mckinsey"
+      fields: ["role_subtype", "disruption_risk_pct", "automation_timeline", "adaptation_strategy"]
+      data_quality: "gartner_sans_wef"
+
+  - pipe: compliance_framework_mapping
+    params:
+      country_code: "AE"
+      source_priority: "nesa_cbuae_difc_dha_iso"
+      fields: ["framework_name", "applies_to", "mandatory", "key_controls", "certification_benefit"]
+      data_quality: "official_uae_regulators"
+
+  - pipe: candidate_supply_metrics
+    params:
+      profession: "ai_cybersecurity"
+      source_priority: "linkedin_gulfTalent_hays_robertHalf"
+      fields: ["active_candidates", "candidate_vacancy_ratio", "time_to_fill", "offer_acceptance", "competing_offers"]
+      data_quality: "linkedin_hays_robertHalf"
+
+  - pipe: employer_micro_intelligence
+    params:
+      profession: "ai_cybersecurity"
+      source_priority: "glassdoor_linkedIn_gulfTalent_morgan_mckinley"
+      fields: ["employer_name", "hc_range", "tech_stack", "golden_visa", "tenure", "interview_process"]
+      data_quality: "glassdoor_linkedIn_gulfTalent"
+
+  - pipe: visa_process_timeline
+    params:
+      country_code: "AE"
+      source_priority: "icp_mohre_wes_hcch"
+      fields: ["step", "phase", "action", "duration_days", "cost_usd", "critical_note"]
+      data_quality: "icp_mohre_wes_official"
+
+  - pipe: cross_cultural_adaptation
+    params:
+      country_code: "AE"
+      source_priority: "hsbc_hofstede_internations_hbr"
+      fields: ["adaptation_phase", "action_items", "key_cultural_note", "common_pitfall", "success_metric"]
+      data_quality: "hsbc_hofstede_official"
+
+  - pipe: salary_negotiation_tactics
+    params:
+      profession: "cybersecurity"
+      source_priority: "robertHalf_hays_harvard_morgan"
+      fields: ["negotiation_phase", "tactic", "script_example", "key_data_to_cite", "common_mistake"]
+      data_quality: "robertHalf_hays_harvard"
+
+  - pipe: professional_certification_path
+    params:
+      profession: "cybersecurity"
+      source_priority: "isc2_isaca_comptia_sans_nist"
+      fields: ["career_level", "certification_track", "time_investment", "cost_usd", "salary_impact", "priority_for_uae"]
+      data_quality: "official_certification_bodies"
+
+analysis_dimensions:
+  - id: industry_overview
+    label_zh: "行业宏观趋势与数字化转型驱动力"
+    label_en: "Industry Overview & Digital Transformation Drivers"
+    method: profession_industry_overview
+    required_data: [country_digital_transformation, country_labor_market]
+
+  - id: talent_demand_sizing
+    label_zh: "人才需求规模量化与增长预测"
+    label_en: "Talent Demand Sizing & Growth Forecast"
+    method: profession_talent_demand
+    required_data: [profession_talent_demand, country_labor_market]
+
+  - id: employer_landscape
+    label_zh: "雇主格局与企业需求热力图"
+    label_en: "Employer Landscape & Hiring Heatmap"
+    method: profession_employer_landscape
+    required_data: [profession_talent_demand]
+
+  - id: salary_benchmarking
+    label_zh: "薪酬基准与购买力对比模型"
+    label_en: "Salary Benchmarking & Purchasing Power Parity"
+    method: profession_salary_benchmark
+    required_data: [profession_salary_benchmark]
+
+  - id: skill_certification
+    label_zh: "技能栈要求与认证路径图"
+    label_en: "Skill Stack & Certification Roadmap"
+    method: profession_skill_requirements
+    required_data: [profession_skill_requirements]
+
+  - id: supply_gap_analysis
+    label_zh: "人才供给缺口量化分析"
+    label_en: "Talent Supply Gap Quantification"
+    method: profession_supply_gap
+    required_data: [profession_talent_demand, country_labor_market]
+
+  - id: expat_policy_pathway
+    label_zh: "外籍人才政策与工作签证路径"
+    label_en: "Expatriate Policy & Work Visa Pathway"
+    method: profession_visa_pathway
+    required_data: [country_expat_visa_policy]
+
+  - id: career_roi_assessment
+    label_zh: "5年职业ROI模型与风险评估"
+    label_en: "5-Year Career ROI Model & Risk Assessment"
+    method: profession_career_roi
+    required_data: [profession_salary_benchmark, profession_talent_demand, country_expat_visa_policy]
+
+  - id: cost_of_living
+    label_zh: "生活成本精算与净储蓄模型"
+    label_en: "Cost of Living Breakdown & Net Savings Model"
+    method: cost_of_living_calculator
+    required_data: [country_cost_of_living, profession_salary_benchmark]
+
+  - id: city_comparison
+    label_zh: "全球竞争城市对标"
+    label_en: "Global City Comparison"
+    method: city_comparison_analysis
+    required_data: [global_city_comparison]
+
+  - id: ai_disruption_risk
+    label_zh: "AI/自动化颠覆风险时间线"
+    label_en: "AI/Automation Disruption Risk Timeline"
+    method: ai_disruption_analysis
+    required_data: [ai_disruption_risk_timeline]
+
+  - id: compliance_framework
+    label_zh: "行业合规框架映射"
+    label_en: "Compliance Framework Mapping"
+    method: compliance_mapping
+    required_data: [compliance_framework_mapping]
+
+  - id: candidate_supply
+    label_zh: "候选人供给密度与竞争力"
+    label_en: "Candidate Supply Density & Competitiveness"
+    method: candidate_supply_analysis
+    required_data: [candidate_supply_metrics]
+
+  - id: employer_micro_intel
+    label_zh: "雇主微观情报"
+    label_en: "Employer Micro-Intelligence"
+    method: employer_micro_analysis
+    required_data: [employer_micro_intelligence, candidate_supply_metrics]
+
+  - id: visa_timeline
+    label_zh: "签证全流程时间轴"
+    label_en: "Visa Process End-to-End Timeline"
+    method: visa_timeline_breakdown
+    required_data: [visa_process_timeline]
+
+  - id: cross_cultural_adaptation
+    label_zh: "跨文化适应路径指南"
+    label_en: "Cross-Cultural Adaptation Pathway Guide"
+    method: cross_cultural_adaptation_analysis
+    required_data: [cross_cultural_adaptation]
+
+  - id: salary_negotiation
+    label_zh: "薪资谈判话术与策略"
+    label_en: "Salary Negotiation Tactics & Scripts"
+    method: salary_negotiation_analysis
+    required_data: [salary_negotiation_tactics, profession_salary_benchmark]
+
+  - id: certification_path
+    label_zh: "职业资格认证全路径"
+    label_en: "Professional Certification Roadmap"
+    method: certification_path_analysis
+    required_data: [professional_certification_path, profession_skill_requirements]
+
+report:
+  template: profession_analyzer
+  output_dir: reports/profession
+  style:
+    primary_color: "#0b2545"
+    accent_color: "#c8a24b"
+  format:
+    type: html
+    sections:
+      - "executive_summary"
+      - "industry_overview"
+      - "talent_demand_sizing"
+      - "employer_landscape"
+      - "salary_benchmarking"
+      - "skill_certification"
+      - "supply_gap_analysis"
+      - "expat_policy_pathway"
+      - "career_roi_assessment"
+      - "cost_of_living"
+      - "city_comparison"
+      - "ai_disruption_risk"
+      - "compliance_framework"
+      - "candidate_supply"
+      - "employer_micro_intel"
+      - "visa_timeline"
+      - "cross_cultural_adaptation"
+      - "salary_negotiation"
+      - "certification_path"
+      - "action_recommendations"
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_career_or_legal_advice
+    - salary_data_may_vary
+    - verify_policy_at_official_sources

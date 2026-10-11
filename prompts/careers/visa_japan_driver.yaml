@@ -1,0 +1,282 @@
+id: visa_japan_driver
+version: 2
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Ministry of Justice Japan (moj.go.jp/isa)
+    - Immigration Services Agency of Japan
+    - National Police Agency Japan (npa.go.jp)
+    - Ministry of Land, Infrastructure, Transport and Tourism (mlit.go.jp)
+    - Ministry of Health, Labour and Welfare (mhlw.go.jp)
+    - Japan Trucking Association (jta.or.jp)
+    - Japan Automobile Federation (jaf.or.jp)
+    - World Bank
+    - ILO
+    - OECD
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: 日本特定技能司机(自動車運転業)移民可行性全析报告 · 三阶段闭环
+  en: Japan SSW Driver Migration Feasibility Report · Triple-Phase Closed-Loop
+description:
+  zh: 面向中国国内起点的『日本特定技能司机』岗位移民可行性全析。三阶段闭环：(1)国内准备期 (2)到达适应期 (3)扎根留期。
+  en: Triple-phase closed-loop feasibility analysis for Japan SSW driver positions.
+triggers:
+- 日本司机
+- 特定技能司机
+- 日本卡车司机
+- 日本货车司机
+- 日本出租车司机
+- 日本特定技能
+- 日本工作签证司机
+- Japan truck driver
+- SSW driver Japan
+- 日本开车工作
+- 特定技能1号司机
+- 日本司机工作
+- 日本移民司机
+- 自動車運転 特定技能
+- 特定技能司机签证
+horizon:
+  type: future_years
+  value: 5
+geo:
+  region_zh: 日本
+  region_en: Japan
+  country_code: JP
+  peers:
+  - Australia (TSS 482 - Truck Driver)
+  - Canada (PNP Transport Worker)
+  - Germany (§19c AufenthG Fahrkraefte)
+  - New Zealand (AEWV Truck Driver)
+  focus_areas:
+  - 东京都市圈(物流枢纽·最大就业市场)
+  - 大阪都市圈(西日本物流中心)
+  - 名古屋都市圈(中部制造业物流)
+indicators:
+  primary:
+  - 日本特定技能司机年度新认证人数
+  - 日本卡车司机缺口数(2024-2030)
+  - 日本卡车司机平均年收(按车型/地域)
+  secondary:
+  - 特定技能签证1号持有人总数(司机类)
+  - 外国驾照换发日本驾照成功率
+  - JLPT N3合格率(中国考生)
+data_pipes:
+- pipe: japan_ssw_policy
+  params:
+    categories:
+    - SSW_Type1
+    - SSW_Type2
+    - Driver_Category
+    source_url: https://www.moj.go.jp/isa/policy/ssw/index.html
+    data_quality: mojin_jp
+- pipe: japan_driver_license_conversion
+  params:
+    source_url: https://www.npa.go.jp/english/index.html
+    data_quality: npa_jp
+- pipe: japan_trucking_industry_stats
+  params:
+    source_url: https://www.mlit.go.jp/statistics/
+    data_quality: mlit_jp
+- pipe: japan_ssw_driver_exam
+  params:
+    source_url: https://www.jta.or.jp/
+    data_quality: jta_jp
+- pipe: japan_2024_problem_truck
+  params:
+    source_url: https://www.mlit.go.jp/koseisha/
+    data_quality: mlit_kosei
+- pipe: japan_driver_salary
+  params:
+    source_url: https://www.mhlw.go.jp/
+    data_quality: mhlw_jp
+- pipe: japan_ssw_approval_stats
+  params:
+    source_url: https://www.moj.go.jp/isa/policies/statistics/
+    data_quality: mojin_jp
+- pipe: japan_arrival_requirements
+  params:
+    data_quality: official_jp
+- pipe: japan_labor_law_foreign_workers
+  params:
+    data_quality: mhlw_jp
+- pipe: japan_pr_naturalization_stats
+  params:
+    data_quality: moj_jp
+analysis_dimensions:
+- id: policy_snapshot
+  label_zh: 特定技能司机制度政策快照(2024-2026)
+  label_en: SSW Driver Policy Snapshot (2024-2026)
+  method: ssw_driver_policy_analysis
+  required_data:
+  - japan_ssw_policy
+  - japan_ssw_approval_stats
+- id: qualification_mapping
+  label_zh: 中国驾照与日本驾照互认映射·资格预审
+  label_en: CN→JP License Conversion & Qualification Pre-screening
+  method: license_qualification_mapping_analysis
+  required_data:
+  - japan_driver_license_conversion
+- id: domestic_preparation
+  label_zh: 国内准备方案：日语学习与成本规划
+  label_en: Domestic Preparation (Language & Cost Planning)
+  method: domestic_preparation_analysis
+  required_data:
+  - japan_ssw_driver_exam
+- id: language_learning
+  label_zh: 日语N4达标路径与JLPT考试安排
+  label_en: Japanese N4 Proficiency Pathway & JLPT Planning
+  method: language_learning_analysis_jp
+  required_data:
+  - japan_ssw_driver_exam
+- id: certification_conversion
+  label_zh: 驾照换发与SSW司机考试准备
+  label_en: License Conversion & SSW Driver Exam Preparation
+  method: ssw_driver_certification_analysis
+  required_data:
+  - japan_driver_license_conversion
+  - japan_ssw_driver_exam
+- id: visa_application_guide
+  label_zh: 签证手续DIY自助指南
+  label_en: Visa Application DIY Guide
+  method: visa_diy_guide
+  required_data:
+  - japan_ssw_policy
+- id: pre_departure_finance
+  label_zh: 出境前财务规划：社保/外汇/税务
+  label_en: 'Pre-Departure Finance: Social Security / FX / Tax'
+  method: pre_departure_finance_analysis_jp
+  required_data:
+  - japan_arrival_requirements
+- id: family_planning
+  label_zh: 家庭规划：SSW1不可带家属的替代方案
+  label_en: 'Family Planning: SSW1 No-Dependency Alternatives'
+  method: family_planning_analysis_jp
+  required_data:
+  - japan_ssw_policy
+- id: health_preparation
+  label_zh: 出境前体检与日本国民健康保险衔接
+  label_en: Pre-Departure Health Check & NHI Transition
+  method: health_preparation_analysis_jp
+  required_data:
+  - japan_arrival_requirements
+- id: cost_benefit_roi
+  label_zh: 成本效益分析(5年ROI模型)
+  label_en: Cost-Benefit Analysis (5-Year ROI Model)
+  method: roi_model
+  required_data:
+  - japan_driver_salary
+  - japan_2024_problem_truck
+- id: arrival_checklist
+  label_zh: 登陆后90天关键事项清单
+  label_en: Arrival 90-Day Critical Checklist
+  method: japan_arrival_checklist_analysis
+  required_data:
+  - japan_arrival_requirements
+- id: housing_setup
+  label_zh: 在日安居指南：住房/银行/通讯
+  label_en: 'Settlement Guide: Housing / Bank / Phone'
+  method: japan_housing_setup_analysis
+  required_data:
+  - japan_arrival_requirements
+- id: labor_rights
+  label_zh: 劳动权益保护与维权路径
+  label_en: Labor Rights Protection & Dispute Resolution
+  method: japan_labor_rights_analysis
+  required_data:
+  - japan_labor_law_foreign_workers
+- id: emergency_response
+  label_zh: 紧急事故/疾病/解雇/在留卡丢失应对协议
+  label_en: Emergency Response Protocol
+  method: japan_emergency_response_analysis
+  required_data:
+  - japan_labor_law_foreign_workers
+  - japan_arrival_requirements
+- id: employer_landscape
+  label_zh: 目标雇用运输企业与薪资结构
+  label_en: Target Employer Landscape & Salary Structure
+  method: employer_salary_analysis
+  required_data:
+  - japan_driver_salary
+  - japan_trucking_industry_stats
+- id: industry_outlook
+  label_zh: 日本物流运输行业趋势与2024年问题影响
+  label_en: Japan Logistics Industry Outlook & 2024 Problem
+  method: industry_outlook_analysis
+  required_data:
+  - japan_trucking_industry_stats
+  - japan_2024_problem_truck
+- id: career_upgrade
+  label_zh: 职业晋升：SSW1→HSP→管理职路径图
+  label_en: 'Career Upgrade: SSW1→HSP→Management Pathway'
+  method: japan_career_upgrade_analysis
+  required_data:
+  - japan_ssw_policy
+  - japan_trucking_industry_stats
+- id: tax_optimization
+  label_zh: 中日双重征税协定与税费优化
+  label_en: CN-JP Tax Treaty & Optimization
+  method: japan_tax_optimization_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: education_children
+  label_zh: 在日子女教育体系指南
+  label_en: Children's Education System Guide
+  method: japan_education_children_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: pr_pathway
+  label_zh: 永住权时间线与SSW1→HSP加速路径
+  label_en: PR Timeline & SSW1→HSP Acceleration
+  method: pr_pathway_analysis
+  required_data:
+  - japan_ssw_policy
+  - japan_pr_naturalization_stats
+- id: naturalization
+  label_zh: 归化入籍深度指南(放弃中国籍·隐性门槛)
+  label_en: Naturalization Deep Dive
+  method: japan_naturalization_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: retirement_reunification
+  label_zh: 厚生年金脱退与父母团聚可能性
+  label_en: Pension Lump-Sum & Parent Reunification
+  method: japan_retirement_reunification_analysis
+  required_data:
+  - japan_pr_naturalization_stats
+- id: risk_assessment
+  label_zh: 三阶段风险评估矩阵与Plan B备选方案
+  label_en: Triple-Phase Risk Assessment & Plan B
+  method: risk_matrix
+  required_data:
+  - japan_ssw_policy
+  - japan_trucking_industry_stats
+report:
+  template: migration_lifecycle
+  output_dir: reports/career
+  style:
+    primary_color: '#c62828'
+    accent_color: '#1565c0'
+schedule:
+  cadence: quarterly
+  month:
+  - 1
+  - 4
+  - 7
+  - 10
+  day_of_week: monday
+  week_of_month: 2
+  time: 09:00
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+  - not_legal_or_immigration_advice
+  - verify_policy_at_official_sources

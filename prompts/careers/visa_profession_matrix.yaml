@@ -1,0 +1,111 @@
+id: visa_profession_matrix
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    -各国移民局官方门户 (英文界面)
+    - World Bank
+    - ILO
+    - OECD
+    - International Organization for Migration (IOM)
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文移民中介网站
+  output_language: zh
+
+label:
+  zh: 海外职业移民优先级排序矩阵 · 泛职业决策框架
+  en: Overseas Profession Migration Priority Matrix · Universal Decision Framework
+description:
+  zh: 日本14个在留资格覆盖职业的横向对比分析。帮助申请人根据自身条件评估最优职业移民路径。
+  en: Cross-profession comparison for Japan migration pathways.
+triggers:
+- 日本工作签证
+- 日本移民职业
+- 日本什么工作好下签
+- 日本就业机会
+- 日本热门职业
+- 日本缺人行业
+- Japan work visa profession
+- 日本特定技能职业对比
+horizon:
+  type: future_years
+  value: 3
+geo:
+  region_zh: 日本
+  region_en: Japan
+  country_code: JP
+  peers:
+  - Australia
+  - Canada
+  - Germany
+  - UK
+  - Singapore
+data_pipes:
+- pipe: japan_ssw_policy
+  params:
+    categories:
+    - all_industries
+- pipe: japan_ssw_approval_stats
+  params:
+    by_industry: true
+- pipe: japan_trucking_industry_stats
+  params: {}
+- pipe: japan_labor_law_foreign_workers
+  params: {}
+analysis_dimensions:
+- id: profession_priority_matrix
+  label_zh: 职业优先级排序矩阵(需求/薪资/签证/风险)
+  label_en: Profession Priority Ranking Matrix
+  method: profession_matrix_analysis
+  required_data:
+  - japan_ssw_policy
+  - japan_ssw_approval_stats
+- id: industry_demand_forecast
+  label_zh: 各职业2024-2030需求预测
+  label_en: Industry Demand Forecast 2024-2030
+  method: profession_demand_forecast
+  required_data:
+  - japan_trucking_industry_stats
+- id: salary_comparison_by_profession
+  label_zh: 各职业薪资横向对比
+  label_en: Salary Cross-Profession Comparison
+  method: profession_salary_comparison
+  required_data:
+  - japan_trucking_industry_stats
+- id: multi_country_decision
+  label_zh: 同职业多国横向对比决策框架
+  label_en: Multi-Country Profession Comparison
+  method: multi_country_profession_comparison
+  required_data:
+  - japan_ssw_approval_stats
+- id: policy_monitoring
+  label_zh: 政策变更预警监控指标
+  label_en: Policy Change Monitoring Indicators
+  method: policy_monitoring_analysis
+  required_data:
+  - japan_ssw_policy
+report:
+  template: migration_lifecycle
+  output_dir: reports/career/profession_matrix
+  style:
+    primary_color: '#0d47a1'
+    accent_color: '#ff8f00'
+schedule:
+  cadence: quarterly
+  month:
+  - 1
+  - 4
+  - 7
+  - 10
+  day_of_week: monday
+  time: 09:00
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 2
+  required_disclaimers:
+  - not_legal_or_immigration_advice
+  - verify_policy_at_official_sources

@@ -1,0 +1,131 @@
+id: tech_semiconductor
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - SIA (Semiconductor Industry Association)
+    - WSTS
+    - NVIDIA IR
+    - TSMC
+    - Company IR / SEC filings
+    - IDC
+    - Gartner
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: 全球半导体行业深度分析报告
+  en: Global Semiconductor Industry Deep-Dive
+
+description:
+  zh: "覆盖全球半导体产业链(设计/制造/封测/设备)的市场规模、技术路线、竞争格局、资本开支与地缘风险分析"
+  en: "End-to-end semiconductor value chain analysis: market sizing, technology roadmap, competitive landscape, capex cycle and geopolitical risk"
+
+triggers:
+  - "半导体"
+  - "芯片"
+  - "集成电路"
+  - "晶圆"
+  - "先进制程"
+  - "semiconductor"
+  - "chip industry"
+  - "wafer"
+  - "foundry"
+  - "TSMC"
+  - "NVIDIA"
+  - "ASML"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: "全球"
+  region_en: "Global"
+  country_code: ""
+  peers:
+    - "Taiwan"
+    - "South Korea"
+    - "US"
+    - "China"
+    - "Japan"
+    - "Netherlands"
+  hubs:
+    - "Silicon Valley"
+    - "Hsinchu"
+    - "Seoul"
+    - "Shanghai"
+    - "Tokyo"
+    - "Dresden"
+    - "Phoenix"
+
+data_pipes:
+  - pipe: sts_semiconductor_sales
+    params:
+      source: "SIA/WSTS"
+      granularity: "monthly"
+  - pipe: company_earnings
+    params:
+      tickers: ["NVDA", "TSM", "AMD", "INTC", "QCOM", "AVGO", "ASML", "AMAT", "LRCX", "KLAC"]
+      metrics: ["revenue", "capex", "gross_margin", "inventory"]
+  - pipe: geopolitical_chip
+    params:
+      topics: ["CHIPS Act", "export controls", "entity list", "talent restrictions"]
+  - pipe: technology_roadmap
+    params:
+      focus: ["sub-3nm", "GAA", "advanced packaging", "EUV", "chiplet"]
+  - pipe: industry_news
+    params:
+      keywords: ["semiconductor", "chip shortage", "fab", "process node"]
+      sources: ["Reuters", "Bloomberg", "FT", "Nikkei"]
+      lookback_days: 30
+
+analysis_dimensions:
+  - id: market_sizing_forecast
+    label_zh: "市场规模与周期预测"
+    label_en: "Market Sizing and Cycle Forecast"
+    method: quantitative_forecast
+    required_data: [sts_semiconductor_sales, company_earnings]
+  - id: technology_leadership
+    label_zh: "技术领导力与路线图"
+    label_en: "Technology Leadership and Roadmap"
+    method: positioning_map
+    required_data: [technology_roadmap, company_earnings]
+  - id: competitive_structure
+    label_zh: "竞争格局与价值链分配"
+    label_en: "Competitive Structure and Value Chain"
+    method: porter_five_forces
+    required_data: [company_earnings, industry_news]
+  - id: capex_cycle
+    label_zh: "资本开支周期与产能"
+    label_en: "Capex Cycle and Capacity"
+    method: cycle_analysis
+    required_data: [company_earnings, sts_semiconductor_sales]
+  - id: geopolitical_risk
+    label_zh: "地缘政治与管制的重塑"
+    label_en: "Geopolitical and Regulatory Reshaping"
+    method: policy_scan
+    required_data: [geopolitical_chip, industry_news]
+
+report:
+  template: mckinsey_tech
+  output_dir: reports/tech
+  style:
+    primary_color: "#0b2545"
+    accent_color: "#c8a24b"
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2

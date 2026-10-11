@@ -1,0 +1,135 @@
+id: tech_ai
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Gartner
+    - IDC
+    - Forrester
+    - NVIDIA IR
+    - TSMC
+    - Company IR / SEC filings
+    -_pitchBook
+    - Crunchbase
+    - Bloomberg
+    - Reuters
+    - Financial Times
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: "全球人工智能(AI)行业深度分析报告"
+  en: "Global Artificial Intelligence Industry Deep-Dive"
+
+description:
+  zh: "覆盖AI全产业链(算力基础设施/模型层/应用层/数据与安全)的技术发展、市场规模、巨头竞争与投资趋势分析"
+  en: "Full AI value chain analysis: infra/compute, foundation models, applications, data and safety"
+
+triggers:
+  - "AI"
+  - "人工智能"
+  - "大模型"
+  - "AIGC"
+  - "ChatGPT"
+  - "Claude"
+  - "Gemini"
+  - "机器学习"
+  - "深度学习"
+  - "AI芯片"
+  - "GPU"
+  - "LLM"
+  - "GPT"
+  - "生成式AI"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: "全球"
+  region_en: "Global"
+  country_code: ""
+  peers:
+    - "Silicon Valley"
+    - "Beijing"
+    - "London"
+    - "Tel Aviv"
+    - "Bangalore"
+  focus_regions:
+    - "US"
+    - "CN"
+    - "EU"
+
+data_pipes:
+  - pipe: ai_compute_demand
+    params:
+      metrics: ["GPU", "AI accelerators", "data center power", "HBM memory"]
+  - pipe: ai_company_earnings
+    params:
+      tickers: ["NVDA", "MSFT", "GOOGL", "META", "AMZN", "AMD"]
+      focus: ["AI revenue run-rate", "AI capex", "cloud AI monetization"]
+  - pipe: ai_startup_funding
+    params:
+      sectors: ["foundation models", "AI tools", "AI infra", "AI safety"]
+      stages: ["seed", "series A-C", "growth"]
+  - pipe: ai_benchmark
+    params:
+      benchmarks: ["MMLU", "HumanEval", "GPQA", "SWE-bench"]
+      models: ["GPT-5", "Claude 4", "Gemini 2.5", "Grok-3", "DeepSeek-V3", "Qwen-3"]
+  - pipe: ai_regulation
+    params:
+      regions: ["US", "EU", "UK", "China", "Canada"]
+      topics: ["AI safety framework", "compute threshold", "model evaluation", "open-source"]
+  - pipe: ai_talent_flow
+    params:
+      metrics: ["AI researcher concentration", "salary trends", "brain drain/gain"]
+
+analysis_dimensions:
+  - id: compute_infra
+    label_zh: "算力基础设施与供需"
+    label_en: "Compute Infrastructure and Supply-Demand"
+    method: supply_demand_balance
+    required_data: [ai_compute_demand, ai_company_earnings]
+  - id: model_evolution
+    label_zh: "模型演进与技术路线图"
+    label_en: "Model Evolution and Technology Roadmap"
+    method: technology_positioning
+    required_data: [ai_benchmark]
+  - id: value_chain
+    label_zh: "AI价值链与商业模式"
+    label_en: "AI Value Chain and Business Models"
+    method: value_chain_mapping
+    required_data: [ai_company_earnings, ai_startup_funding]
+  - id: investment_signal
+    label_zh: "投资信号与估值锚点"
+    label_en: "Investment Signals and Valuation Anchors"
+    method: vc_trend_analysis
+    required_data: [ai_startup_funding, ai_company_earnings]
+  - id: policy_landscape
+    label_zh: "全球政策与监管格局"
+    label_en: "Global Policy and Regulatory Landscape"
+    method: policy_comparison
+    required_data: [ai_regulation]
+
+report:
+  template: mckinsey_tech
+  output_dir: reports/tech
+  style:
+    primary_color: "#0b2545"
+    accent_color: "#c8a24b"
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2

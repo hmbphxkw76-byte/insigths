@@ -1,0 +1,123 @@
+id: tech_cybersecurity
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Gartner
+    - IDC
+    - Forrester
+    - NIST
+    - Mandiant (Google)
+    - CrowdStrike
+    - Palo Alto Networks
+    - Recorded Future
+    - Check Point Software
+    - Company IR / SEC filings
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+
+label:
+  zh: "全球网络安全行业深度分析报告"
+  en: "Global Cybersecurity Industry Deep-Dive"
+
+description:
+  zh: "覆盖网络安全全产业链(安全软件/硬件/服务/AI安全)的市场趋势、威胁态势、技术投资与竞争格局分析"
+  en: "Full cybersecurity value chain: software, hardware, services, and AI-driven security"
+
+triggers:
+  - "网络安全"
+  - "信息安全"
+  - "数据安全"
+  - "cybersecurity"
+  - "cyber security"
+  - "threat intelligence"
+  - "零信任"
+  - "SASE"
+  - "XDR"
+  - "网络攻防"
+  - "漏洞"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: "全球"
+  region_en: "Global"
+  country_code: ""
+  peers:
+    - "Silicon Valley"
+    - "Tel Aviv"
+    - "London"
+    - "Bangalore"
+    - "Canberra"
+
+data_pipes:
+  - pipe: cyber_market_size
+    params:
+      segments: ["network security", "endpoint", "identity", "cloud security", "application security", "security services"]
+      source: ["Gartner", "IDC", "MarketsandMarkets"]
+  - pipe: cyber_company_earnings
+    params:
+      tickers: ["CRWD", "PANW", "NET", "ZS", "FTNT", "CHKP", "CSCO", "MSFT"]
+      metrics: ["ARR", "NRR", "FCF margin", "RPO"]
+  - pipe: threat_intelligence
+    params:
+      categories: ["ransomware", "state-sponsored", "supply chain", "zero-day", "AI-generated"]
+      sources: ["Mandiant", "CrowdStrike", "Recorded Future"]
+  - pipe: cyber_ma
+    params:
+      focus: ["platform consolidation", "AI security", "cloud-native security"]
+  - pipe: cyber_regulation
+    params:
+      frameworks: ["NIST CSF 2.0", "DORA", "NIS2", "SEC cyber disclosure", "China DSL/PIPL"]
+
+analysis_dimensions:
+  - id: market_overview
+    label_zh: "市场规模与增速"
+    label_en: "Market Size and Growth"
+    method: quantitative_forecast
+    required_data: [cyber_market_size]
+  - id: threat_landscape
+    label_zh: "威胁态势与攻击向量演进"
+    label_en: "Threat Landscape and Attack Vector Evolution"
+    method: threat_mapping
+    required_data: [threat_intelligence]
+  - id: competitive_positioning
+    label_zh: "竞争格局与平台化趋势"
+    label_en: "Competitive Positioning and Platformization"
+    method: market_structure_analysis
+    required_data: [cyber_company_earnings, cyber_ma]
+  - id: ai_security
+    label_zh: "AI驱动的安全变革"
+    label_en: "AI-Driven Security Transformation"
+    method: technology_disruption
+    required_data: [cyber_company_earnings, threat_intelligence]
+  - id: regulatory_change
+    label_zh: "监管与合规格局"
+    label_en: "Regulatory and Compliance Landscape"
+    method: policy_scan
+    required_data: [cyber_regulation]
+
+report:
+  template: mckinsey_tech
+  output_dir: reports/tech
+  style:
+    primary_color: "#0b2545"
+    accent_color: "#c8a24b"
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2

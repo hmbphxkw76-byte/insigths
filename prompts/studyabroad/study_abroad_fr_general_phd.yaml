@@ -1,0 +1,111 @@
+# 法国(France)博士申请全景分析 — Prompt 定义（区别于工程师学院 Diploma d'Ingénieur）
+# 触发关键词: 法国博士, 法国PhD, 法国ED博士学院, CSC法国博士, ANR资助法国博士
+id: fr_general_phd_study
+version: 1
+enabled: true
+
+label:
+  zh: 法国博士留学申请全景分析报告
+  en: France PhD Application Analysis
+
+description:
+  zh: 本科直博/硕士申博→法国(France)的博士申请路径分析。覆盖École Doctorale博士学院体系、导师匹配、研究计划撰写、CSC/大学全额奖学金(Convention Industrielle)、3年学制、毕业后学术/工业界发展。
+  en: PhD study in France for Chinese graduates. Covers École Doctorale system, supervisor matching, research proposal, CSC/scholarship funding, 3-year duration, and post-PhD career.
+
+triggers:
+  - "法国博士"
+  - "法国PhD"
+  - "法国ED博士学院"
+  - "CSC法国博士"
+  - "ANR资助法国"
+  - "CIFRE法国"
+
+horizon:
+  type: future_years
+  value: 4
+
+geo:
+  region_zh: 法国
+  region_en: France
+  country_code: FR
+  peers:
+    - "Germany (Max Planck)"
+    - "Switzerland (ETH)"
+    - "UK (Oxbridge PhD)"
+    - "Netherlands"
+  focus_schools:
+    - "Sorbonne University"
+    - "Université Paris-Saclay"
+    - "Paris Sciences & Lettres (PSL)"
+    - "University of Strasbourg"
+    - "Aix-Marseille University"
+
+data_pipes:
+  - pipe: fr_general_phd_admissions
+    params:
+      fields: ["university_zh", "university_en", "qs_rank_2025", "ielts_min", "gpa_min_pct", "annual_tuition_eur", "stipend_eur", "duration_years", "funding_model", "top_fields", "competition_level"]
+      source_url: https://www.campusfrance.org
+  - pipe: fr_general_visa_poststudy
+    params:
+      source_url: https://france-visas.gouv.fr
+      fields: ["visa_cat", "duration", "work_rights", "pr_path", "condition"]
+  - pipe: fr_general_scholarships
+    params:
+      source_url: https://www.campusfrance.org/en/scholarship-programmes
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "comp"]
+
+analysis_dimensions:
+  - id: fr_general_phd_funding_and_stipend
+    label_zh: 博士资助模式与奖学金(CSC/大学/项目/CIFRE)
+    label_en: PhD Funding & Stipend Models
+    method: scholarship_analysis
+    required_data: [fr_general_phd_admissions, fr_general_scholarships]
+
+  - id: fr_general_phd_application_requirements
+    label_zh: 博士申请要求与套磁策略
+    label_en: PhD Application Requirements & Supervisor Matching
+    method: admission_standard_analysis
+    required_data: [fr_general_phd_admissions]
+
+  - id: fr_general_phd_duration_and_supervision
+    label_zh: 学制(3年)、École Doctorale与学术路径
+    label_en: 3-Year Duration, ED & Academic Pathway
+    method: program_analysis
+    required_data: [fr_general_phd_admissions]
+
+  - id: fr_general_phd_visa_and_post_study
+    label_zh: 博士签证与毕业后发展路径
+    label_en: PhD Visa & Post-Study Development
+    method: policy_scan
+    required_data: [fr_general_visa_poststudy]
+
+  - id: fr_general_phd_career_outcomes
+    label_zh: 博士后/学术界/工业界发展路径
+    label_en: Post-PhD Career Outcomes
+    method: career_outcome_analysis
+    required_data: [fr_general_phd_admissions]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/fr_general_phd
+  style:
+    primary_color: "#0055A4"
+    accent_color: "#ffffff"
+  format:
+    type: html
+
+schedule:
+  cadence: semi_annual
+  month: [3, 9]
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 120
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - phd_funding_availability_varies_by_year
+    - engineering_grande_ecole_uses_different_pathway

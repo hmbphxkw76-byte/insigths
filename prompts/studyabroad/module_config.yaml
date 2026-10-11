@@ -1,0 +1,714 @@
+# =====================================================================
+# 留学分析模块配置
+# =====================================================================
+# 本文件为 studyabroad 子模块的索引配置，列出所有已启用的留学分析
+# Prompt 定义文件及其元数据。由 scheduler / 分析器读取。
+# =====================================================================
+
+module:
+  name: studyabroad
+  label_zh: 留学申请分析(本科/硕士/博士+奖学金)
+  label_en: Study Abroad Analysis (Bachelor/Master/PhD+Scholarships)
+  description: 面向中国学生的13国留学申请全景分析，覆盖本科/硕士/博士/奖学金/签证/就业全维度
+  version: 2
+  output_base_dir: reports/studyabroad
+
+# ---------------------------------------------------------------------
+# 各国 Prompt 定义文件注册 — 共13国 × (本科+硕士+博士) = 39条 + 法国工程师专项
+# ---------------------------------------------------------------------
+prompts:
+  # ═══════════════ 法国 FR — 3条 ═══════════════
+  - file: study_abroad_fr_engineering.yaml
+    id: fr_engineering_grande_ecole
+    enabled: true
+    priority: "critical"
+    country_code: FR
+    fr_name: "法国工程师学院(Grande École)"
+
+  - file: study_abroad_fr_general_master.yaml
+    id: fr_general_master_study
+    enabled: true
+    priority: "high"
+    country_code: FR
+    fr_name: "法国公立/高商硕士"
+
+  - file: study_abroad_fr_general_phd.yaml
+    id: fr_general_phd_study
+    enabled: true
+    priority: "high"
+    country_code: FR
+    fr_name: "法国博士(École Doctorale)"
+
+  # ═══════════════ 日本 JP ═══════════════
+  - file: study_abroad_jp.yaml
+    id: jp_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: JP
+    fr_name: "日本本科留学"
+
+  - file: study_abroad_jp_master.yaml
+    id: jp_master_study
+    enabled: true
+    priority: "high"
+    country_code: JP
+    fr_name: "日本硕士留学(修士/大学院)"
+
+  - file: study_abroad_jp_phd.yaml
+    id: jp_phd_study
+    enabled: true
+    priority: "high"
+    country_code: JP
+    fr_name: "日本博士留学"
+
+  # ═══════════════ 德国 DE ═══════════════
+  - file: study_abroad_de.yaml
+    id: de_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: DE
+    fr_name: "德国本科留学"
+
+  - file: study_abroad_de_master.yaml
+    id: de_master_study
+    enabled: true
+    priority: "high"
+    country_code: DE
+    fr_name: "德国硕士留学"
+
+  - file: study_abroad_de_phd.yaml
+    id: de_phd_study
+    enabled: true
+    priority: "high"
+    country_code: DE
+    fr_name: "德国博士留学"
+
+  # ═══════════════ 英国 GB ═══════════════
+  - file: study_abroad_uk.yaml
+    id: uk_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: GB
+    fr_name: "英国本科留学"
+
+  - file: study_abroad_gb_master.yaml
+    id: gb_master_study
+    enabled: true
+    priority: "high"
+    country_code: GB
+    fr_name: "英国硕士留学"
+
+  - file: study_abroad_gb_phd.yaml
+    id: gb_phd_study
+    enabled: true
+    priority: "high"
+    country_code: GB
+    fr_name: "英国博士留学"
+
+  # ═══════════════ 澳洲 AU ═══════════════
+  - file: study_abroad_au.yaml
+    id: au_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: AU
+    fr_name: "澳洲本科留学"
+
+  - file: study_abroad_au_master.yaml
+    id: au_master_study
+    enabled: true
+    priority: "high"
+    country_code: AU
+    fr_name: "澳洲硕士留学"
+
+  - file: study_abroad_au_phd.yaml
+    id: au_phd_study
+    enabled: true
+    priority: "high"
+    country_code: AU
+    fr_name: "澳洲博士留学"
+
+  # ═══════════════ 加拿大 CA ═══════════════
+  - file: study_abroad_ca.yaml
+    id: ca_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: CA
+    fr_name: "加拿大本科留学"
+
+  - file: study_abroad_ca_master.yaml
+    id: ca_master_study
+    enabled: true
+    priority: "high"
+    country_code: CA
+    fr_name: "加拿大硕士留学"
+
+  - file: study_abroad_ca_phd.yaml
+    id: ca_phd_study
+    enabled: true
+    priority: "high"
+    country_code: CA
+    fr_name: "加拿大博士留学"
+
+  # ═══════════════ 美国 US ═══════════════
+  - file: study_abroad_us.yaml
+    id: us_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: US
+    fr_name: "美国本科留学"
+
+  - file: study_abroad_us_master.yaml
+    id: us_master_study
+    enabled: true
+    priority: "high"
+    country_code: US
+    fr_name: "美国硕士留学"
+
+  - file: study_abroad_us_phd.yaml
+    id: us_phd_study
+    enabled: true
+    priority: "high"
+    country_code: US
+    fr_name: "美国博士留学"
+
+  # ═══════════════ 新加坡 SG ═══════════════
+  - file: study_abroad_sg.yaml
+    id: sg_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: SG
+    fr_name: "新加坡本科留学"
+
+  - file: study_abroad_sg_master.yaml
+    id: sg_master_study
+    enabled: true
+    priority: "high"
+    country_code: SG
+    fr_name: "新加坡硕士留学"
+
+  - file: study_abroad_sg_phd.yaml
+    id: sg_phd_study
+    enabled: true
+    priority: "high"
+    country_code: SG
+    fr_name: "新加坡博士留学"
+
+  # ═══════════════ 新西兰 NZ — 新增 ═══════════════
+  - file: study_abroad_nz.yaml
+    id: nz_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: NZ
+    fr_name: "新西兰本科留学"
+
+  - file: study_abroad_nz_master.yaml
+    id: nz_master_study
+    enabled: true
+    priority: "medium"
+    country_code: NZ
+    fr_name: "新西兰硕士留学"
+
+  - file: study_abroad_nz_phd.yaml
+    id: nz_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: NZ
+    fr_name: "新西兰博士留学"
+
+  # ═══════════════ 荷兰 NL — 新增 ═══════════════
+  - file: study_abroad_nl.yaml
+    id: nl_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: NL
+    fr_name: "荷兰本科留学"
+
+  - file: study_abroad_nl_master.yaml
+    id: nl_master_study
+    enabled: true
+    priority: "medium"
+    country_code: NL
+    fr_name: "荷兰硕士留学"
+
+  - file: study_abroad_nl_phd.yaml
+    id: nl_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: NL
+    fr_name: "荷兰博士留学"
+
+  # ═══════════════ 芬兰 FI — 新增 ═══════════════
+  - file: study_abroad_fi.yaml
+    id: fi_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: FI
+    fr_name: "芬兰本科留学"
+
+  - file: study_abroad_fi_master.yaml
+    id: fi_master_study
+    enabled: true
+    priority: "medium"
+    country_code: FI
+    fr_name: "芬兰硕士留学"
+
+  - file: study_abroad_fi_phd.yaml
+    id: fi_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: FI
+    fr_name: "芬兰博士留学"
+
+  # ═══════════════ 爱尔兰 IE — 新增 ═══════════════
+  - file: study_abroad_ie.yaml
+    id: ie_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: IE
+    fr_name: "爱尔兰本科留学"
+
+  - file: study_abroad_ie_master.yaml
+    id: ie_master_study
+    enabled: true
+    priority: "medium"
+    country_code: IE
+    fr_name: "爱尔兰硕士留学"
+
+  - file: study_abroad_ie_phd.yaml
+    id: ie_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: IE
+    fr_name: "爱尔兰博士留学"
+
+  # ═══════════════ 马来西亚 MY — 新增 ═══════════════
+  - file: study_abroad_my.yaml
+    id: my_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: MY
+    fr_name: "马来西亚本科留学"
+
+  - file: study_abroad_my_master.yaml
+    id: my_master_study
+    enabled: true
+    priority: "medium"
+    country_code: MY
+    fr_name: "马来西亚硕士留学"
+
+  - file: study_abroad_my_phd.yaml
+    id: my_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: MY
+    fr_name: "马来西亚博士留学"
+
+  # ═══════════════ 香港 HK — 新增 ═══════════════
+  - file: study_abroad_hk.yaml
+    id: hk_undergraduate_study
+    enabled: true
+    priority: "high"
+    country_code: HK
+    fr_name: "香港本科留学"
+
+  - file: study_abroad_hk_master.yaml
+    id: hk_master_study
+    enabled: true
+    priority: "high"
+    country_code: HK
+    fr_name: "香港硕士留学"
+
+  - file: study_abroad_hk_phd.yaml
+    id: hk_phd_study
+    enabled: true
+    priority: "high"
+    country_code: HK
+    fr_name: "香港博士留学"
+
+  # ═══════════════ 阿联酋 AE — 新增 ═══════════════
+  - file: study_abroad_ae.yaml
+    id: ae_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: AE
+    fr_name: "阿联酋本科留学"
+
+  - file: study_abroad_ae_master.yaml
+    id: ae_master_study
+    enabled: true
+    priority: "medium"
+    country_code: AE
+    fr_name: "阿联酋硕士留学"
+
+  - file: study_abroad_ae_phd.yaml
+    id: ae_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: AE
+    fr_name: "阿联酋博士留学"
+
+  # ═══════════════ 沙特阿拉伯 SA — 新增 ═══════════════
+  - file: study_abroad_sa.yaml
+    id: sa_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: SA
+    fr_name: "沙特阿拉伯本科留学"
+
+  - file: study_abroad_sa_master.yaml
+    id: sa_master_study
+    enabled: true
+    priority: "medium"
+    country_code: SA
+    fr_name: "沙特阿拉伯硕士留学"
+
+  - file: study_abroad_sa_phd.yaml
+    id: sa_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: SA
+    fr_name: "沙特阿拉伯博士留学"
+
+  # ═══════════════ 卡塔尔 QA — 新增 ═══════════════
+  - file: study_abroad_qa.yaml
+    id: qa_undergraduate_study
+    enabled: true
+    priority: "medium"
+    country_code: QA
+    fr_name: "卡塔尔本科留学"
+
+  - file: study_abroad_qa_master.yaml
+    id: qa_master_study
+    enabled: true
+    priority: "medium"
+    country_code: QA
+    fr_name: "卡塔尔硕士留学"
+
+  - file: study_abroad_qa_phd.yaml
+    id: qa_phd_study
+    enabled: true
+    priority: "medium"
+    country_code: QA
+    fr_name: "卡塔尔博士留学"
+
+
+# ---------------------------------------------------------------------
+# 数据源配置（用于自动数据采集管道）
+# 覆盖13国官方数据源 + 奖学金机构
+# ---------------------------------------------------------------------
+data_sources:
+  fr_engineering:
+    - name: "CTI - Commission des Titres d'Ingénieur"
+      url: "https://www.cti-commission.fr"
+      frequency: "yearly"
+      data_type: "accreditation_list"
+    - name: "Campus France Chine"
+      url: "https://chine.campusfrance.org"
+      frequency: "monthly"
+      data_type: "program_listings"
+    - name: "France-Visas"
+      url: "https://france-visas.gouv.fr"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "INSEE - 法国国家统计与经济研究所"
+      url: "https://www.insee.fr/en/accueil"
+      frequency: "quarterly"
+      data_type: "economic_data"
+
+  jp_study:
+    - name: "JASSO - 日本学生支援机构"
+      url: "https://www.jasso.go.jp/en"
+      frequency: "yearly"
+      data_type: "scholarships_and_statistics"
+    - name: "MEXT - 日本文部科学省"
+      url: "https://www.mext.go.jp/en"
+      frequency: "yearly"
+      data_type: "policy_and_regulations"
+    - name: "JPSS - Japan Study Support"
+      url: "https://www.jpss.jp/en"
+      frequency: "monthly"
+      data_type: "program_listings"
+    - name: "出入国在留管理庁"
+      url: "https://www.moj.go.jp/isa/index.html"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "EJU - 日本留学試験"
+      url: "https://www.jasso.go.jp/en/study_j/eju/index.html"
+      frequency: "twice_yearly"
+      data_type: "exam_requirements"
+
+  de_study:
+    - name: "DAAD - 德国学术交流中心"
+      url: "https://www.daad.de/en"
+      frequency: "monthly"
+      data_type: "program_database"
+    - name: "DAAD China"
+      url: "https://www.daad.org.cn"
+      frequency: "monthly"
+      data_type: "program_info"
+    - name: "APS - 德国驻华使馆文化处留德人员审核部"
+      url: "https://www.aps.org.cn/zh"
+      frequency: "as_needed"
+      data_type: "certification_requirements"
+    - name: "TU9 - 德国理工大学联盟"
+      url: "https://www.tu9.de"
+      frequency: "yearly"
+      data_type: "university_alliance"
+    - name: "Destatis - 德国联邦统计局"
+      url: "https://www.destatis.de/EN"
+      frequency: "quarterly"
+      data_type: "economic_data"
+
+  uk_study:
+    - name: "UCAS - 大学和学院招生服务中心"
+      url: "https://www.ucas.com"
+      frequency: "monthly"
+      data_type: "application_system"
+    - name: "British Council - Study UK"
+      url: "https://www.britishcouncil.org/study-work-abroad"
+      frequency: "monthly"
+      data_type: "study_info"
+    - name: "UK Gov - Student Visa"
+      url: "https://www.gov.uk/student-visa"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "HESA - 高等教育统计局"
+      url: "https://www.hesa.ac.uk"
+      frequency: "yearly"
+      data_type: "statistics"
+
+  au_study:
+    - name: "Study Australia"
+      url: "https://www.studyaustralia.gov.au"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "Home Affairs Australia"
+      url: "https://immi.homeaffairs.gov.au"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "CRICOS"
+      url: "https://cricos.education.gov.au"
+      frequency: "monthly"
+      data_type: "institution_registration"
+    - name: "RTP - Research Training Program"
+      url: "https://www.education.gov.au/research-training-program"
+      frequency: "yearly"
+      data_type: "phd_funding"
+
+  ca_study:
+    - name: "EduCanada"
+      url: "https://www.educanada.ca"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "IRCC - Immigration Canada"
+      url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "Vanier CGS"
+      url: "https://vanier.gc.ca/en/home-accueil.html"
+      frequency: "yearly"
+      data_type: "phd_scholarships"
+
+  us_study:
+    - name: "EducationUSA"
+      url: "https://educationusa.state.gov"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "College Board"
+      url: "https://www.collegeboard.org"
+      frequency: "monthly"
+      data_type: "admissions_and_sat"
+    - name: "US State Department - Student Visa"
+      url: "https://travel.state.gov/content/travel/en/us-visas/study.html"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "NSF GRFP"
+      url: "https://www.nsfgrfp.org"
+      frequency: "yearly"
+      data_type: "phd_funding"
+    - name: "Fulbright Foreign Student Program"
+      url: "https://foreign.fulbrightonline.org"
+      frequency: "yearly"
+      data_type: "scholarships"
+
+  sg_study:
+    - name: "ICA Singapore"
+      url: "https://www.ica.gov.sg"
+      frequency: "as_needed"
+      data_type: "visa_and_pr"
+    - name: "MOE Singapore - Tuition Grant"
+      url: "https://www.moe.gov.sg/financial-matters/awards-scholarships/tuition-grant"
+      frequency: "yearly"
+      data_type: "scholarship_policy"
+    - name: "NUS Office of Admissions"
+      url: "https://www.nus.edu.sg/osa/international-students"
+      frequency: "yearly"
+      data_type: "admissions"
+    - name: "SINGA - Singapore International Graduate Award"
+      url: "https://www.a-star.edu.sg/Scholarships/for-graduate-studies"
+      frequency: "yearly"
+      data_type: "phd_scholarships"
+
+  nz_study:
+    - name: "Study in New Zealand"
+      url: "https://www.studyinnewzealand.govt.nz"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "Immigration NZ"
+      url: "https://www.immigration.govt.nz/new-zealand-visas/options/study"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "Universities NZ - Scholarships"
+      url: "https://www.universitiesnz.ac.nz/scholarships"
+      frequency: "yearly"
+      data_type: "scholarships"
+
+  nl_study:
+    - name: "Study in Holland"
+      url: "https://www.studyinholland.nl"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "Nuffic Neso China"
+      url: "https://www.nuffic.nl/en/education-in-the-netherlands"
+      frequency: "monthly"
+      data_type: "program_info"
+    - name: "IND - Immigration and Naturalisation Service"
+      url: "https://ind.nl/en/study"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "Orange Knowledge Programme (OKP)"
+      url: "https://www.studyinholland.nl/scholarships"
+      frequency: "yearly"
+      data_type: "scholarships"
+
+  fi_study:
+    - name: "Study in Finland"
+      url: "https://www.studyinfinland.fi"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "Finnish Immigration Service (Migri)"
+      url: "https://migri.fi/en/student-residence-permit"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "EDUFI - Finnish National Agency for Education"
+      url: "https://www.oph.fi/en"
+      frequency: "quarterly"
+      data_type: "statistics"
+
+  ie_study:
+    - name: "Education in Ireland"
+      url: "https://www.educationinireland.com"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "Irish Immigration Service"
+      url: "https://www.irishimmigration.ie"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "Government of Ireland International Education Scholarships"
+      url: "https://www.educationinireland.com/en/What-can-I-study-/Scholarships"
+      frequency: "yearly"
+      data_type: "scholarships"
+
+  my_study:
+    - name: "Study in Malaysia"
+      url: "https://www.studyinmalaysia.com"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "MOHE - Ministry of Higher Education Malaysia"
+      url: "https://biasiswa.mohe.gov.my"
+      frequency: "yearly"
+      data_type: "scholarships"
+    - name: "Expatriate Services Division"
+      url: "https://esd.imi.gov.my"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+
+  hk_study:
+    - name: "Study in Hong Kong"
+      url: "https://www.studyinhongkong.edu.hk"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "HK Immigration Department"
+      url: "https://www.immd.gov.hk/eng/services/visas/study.html"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "HKPFS - Hong Kong PhD Fellowship Scheme"
+      url: "https://www.rgc.edu.hk/hkpfs"
+      frequency: "yearly"
+      data_type: "phd_scholarships"
+    - name: "UGC - University Grants Committee"
+      url: "https://www.ugc.edu.hk"
+      frequency: "yearly"
+      data_type: "funding"
+
+  ae_study:
+    - name: "Study in UAE"
+      url: "https://www.studyinuae.ae"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "GDRFA - General Directorate"
+      url: "https://www.gdrfad.gov.ae"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+    - name: "MOE UAE - Scholarships"
+      url: "https://www.moe.gov.ae/En/Pages/home.aspx"
+      frequency: "yearly"
+      data_type: "scholarships"
+
+  sa_study:
+    - name: "Study in Saudi"
+      url: "https://www.studyinsaudi.psu.edu.sa"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "Saudi MOE Scholarships"
+      url: "https://www.my.gov.sa"
+      frequency: "yearly"
+      data_type: "scholarships"
+    - name: "KAUST Fellowships"
+      url: "https://www.kaust.edu.sa"
+      frequency: "yearly"
+      data_type: "phd_funding"
+
+  qa_study:
+    - name: "Qatar University"
+      url: "https://www.qu.edu.qa"
+      frequency: "monthly"
+      data_type: "official_guidance"
+    - name: "Qatar Foundation"
+      url: "https://www.qf.org.qa"
+      frequency: "yearly"
+      data_type: "scholarships"
+    - name: "Qatar MFA - Visas"
+      url: "https://www.moi.gov.qa"
+      frequency: "as_needed"
+      data_type: "visa_policy"
+
+  fr_general_study:
+    - name: "Campus France"
+      url: "https://www.campusfrance.org"
+      frequency: "monthly"
+      data_type: "program_listings"
+    - name: "Eiffel Excellence Scholarship"
+      url: "https://www.campusfrance.org/en/eiffel-excellence-scholarship"
+      frequency: "yearly"
+      data_type: "scholarships"
+    - name: "CSC-China Scholarship Council (France)"
+      url: "https://www.campuschine.org"
+      frequency: "yearly"
+      data_type: "csc_programs"
+
+# ---------------------------------------------------------------------
+# 报告模板配置
+# ---------------------------------------------------------------------
+report_templates:
+  study_abroad_analysis:
+    name: "留学申请全景分析(8维度)"
+    sections:
+      - "教育体系架构与学位制度"
+      - "申请路径全景图与决策树"
+      - "院校筛选与认证核查"
+      - "费用全拆解（学费/生活费/隐性成本）"
+      - "时间轴与关键节点规划"
+      - "签证与居留政策"
+      - "就业分析与职业发展"
+      - "风险矩阵与避坑指南"
