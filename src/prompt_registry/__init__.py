@@ -77,7 +77,7 @@ class PromptDefinition:
             "re_": "realestate",
             "macro_": "macro",
             "visa_": "career",
-            "profession_": "profession",
+            "profession_": "career",
             "studyabroad_": "studyabroad",
             "industry_": "industry",
         }
@@ -88,7 +88,7 @@ class PromptDefinition:
         if self.source_path:
             parts = Path(self.source_path).parts
             for part in parts:
-                if part in ("tech", "realestate", "careers", "studyabroad", "macro", "industry", "profession"):
+                if part in ("tech", "realestate", "career", "studyabroad", "macro", "industry"):
                     return part
         return "other"
 
@@ -243,6 +243,7 @@ class PromptRegistry:
                 "tech": len(self.list_by_vertical("tech")),
                 "realestate": len(self.list_by_vertical("realestate")),
                 "career": len(self.list_by_vertical("career")),
+                "studyabroad": len(self.list_by_vertical("studyabroad")),
             },
         }
 

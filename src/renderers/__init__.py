@@ -3,11 +3,12 @@ Renderer — 报告渲染器
 
 根据 Prompt 的垂直赛道与模板,选择对应的渲染器生成最终报告.
 
-已实现的渲染器:
-- McKinseyTechRenderer: 科技/半导体/AI/网络安全 (通用麦肯锡风格)
-- MacroDashboardRenderer: 宏观经济仪表盘
-- RealEstateDashboardRenderer: 房地产深度分析
-- VisaTrackerRenderer: 移民签证追踪
+目录结构对齐 prompts/:
+  renderers/career/     签证/职业/移民生命周期报告
+  renderers/macro/      宏观经济仪表盘
+  renderers/realestate/ 房地产深度分析
+  renderers/studyabroad/ 留学申请分析
+  renderers/tech/       AI/网络安全/半导体 (麦肯锡风格)
 """
 
 from __future__ import annotations
@@ -16,24 +17,32 @@ from typing import Dict, Optional
 from loguru import logger
 
 from src.prompt_registry import PromptDefinition
-from src.renderers.mckinsey_tech import McKinseyTechRenderer
-from src.renderers.macro_dashboard import MacroDashboardRenderer
-from src.renderers.real_estate import RealEstateDashboardRenderer
-from src.renderers.visa_tracker import VisaTrackerRenderer
-from src.renderers.japan_driver import JapanDriverRenderer
-from src.renderers.migration_lifecycle import MigrationLifecycleRenderer
-from src.renderers.profession_analyzer import ProfessionAnalyzerRenderer
 
-# ── 渲染器注册表 ──
+# ── 导入各主题域渲染器 ──
+from src.renderers.career import (
+    VisaTrackerRenderer,
+    JapanDriverRenderer,
+    MigrationLifecycleRenderer,
+    ProfessionAnalyzerRenderer,
+)
+from src.renderers.macro import MacroDashboardRenderer
+from src.renderers.realestate import RealEstateDashboardRenderer
+from src.renderers.tech import McKinseyTechRenderer
+
+# ── 渲染器注册表 (模板名 → 渲染器类) ──
 
 _RENDERER_MAP: Dict[str, type] = {
-    "mckinsey_tech": McKinseyTechRenderer,
-    "macro_dashboard": MacroDashboardRenderer,
-    "real_estate_dashboard": RealEstateDashboardRenderer,
+    # Career 域
     "visa_tracker": VisaTrackerRenderer,
     "japan_driver": JapanDriverRenderer,
     "migration_lifecycle": MigrationLifecycleRenderer,
     "profession_analyzer": ProfessionAnalyzerRenderer,
+    # Macro 域
+    "macro_dashboard": MacroDashboardRenderer,
+    # Real Estate 域
+    "real_estate_dashboard": RealEstateDashboardRenderer,
+    # Tech 域
+    "mckinsey_tech": McKinseyTechRenderer,
 }
 
 
@@ -53,14 +62,13 @@ class RendererFactory:
         cls = _RENDERER_MAP.get(template)
         if not cls:
             # fallback: 基于 vertical 猜测
-            if prompt.vertical == "macro":
-                cls = MacroDashboardRenderer
-            elif prompt.vertical == "realestate":
-                cls = RealEstateDashboardRenderer
-            elif prompt.vertical == "careers":
-                cls = VisaTrackerRenderer
-            else:
-                cls = McKinseyTechRenderer
+            vertical_fallback = {
+                "macro": MacroDashboardRenderer,
+                "realestate": RealEstateDashboardRenderer,
+                "career": VisaTrackerRenderer,
+                "studyabroad": McKinseyTechRenderer,
+            }
+            cls = vertical_fallback.get(prompt.vertical, McKinseyTechRenderer)
 
         logger.info(f"选择渲染器: {cls.__name__} (template={template})")
         return cls(prompt)

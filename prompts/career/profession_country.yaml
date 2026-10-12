@@ -354,7 +354,7 @@ analysis_dimensions:
 
 report:
   template: profession_analyzer
-  output_dir: reports/profession
+  output_dir: reports/career
   style:
     primary_color: "#0b2545"
     accent_color: "#c8a24b"
