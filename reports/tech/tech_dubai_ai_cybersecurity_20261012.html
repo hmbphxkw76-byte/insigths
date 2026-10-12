@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迪拜AI网络安全行业发展深度报告 | McKinsey-Style Deep Dive</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        :root {
+            --primary: #0b2545;
+            --secondary: #3b506a;
+            --accent: #c8a24b;
+            --accent2: #00897b;
+            --bg: #f8f9fc;
+            --text: #1a1a2e;
+            --light-bg: #ffffff;
+            --border: #e2e8f0;
+            --success: #2e7d32;
+            --warning: #e65100;
+            --danger: #c62828;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .report-header {
+            background: linear-gradient(135deg, #0b2545, #13315c, #1e4d8c);
+            color: white;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(11,37,69,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(200,162,75,0.15) 0%, transparent 70%);
+        }
+        .report-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .report-header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.88;
+            margin-bottom: 0.5rem;
+            position: relative;
+            font-weight: 400;
+        }
+        .report-header .meta {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            opacity: 0.75;
+            position: relative;
+        }
+        .report-header .badge {
+            position: relative;
+            display: inline-block;
+            background: rgba(200,162,75,0.2);
+            border: 1px solid rgba(200,162,75,0.5);
+            color: #c8a24b;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .section { margin: 2.5rem 0; display: block; }
+        .section h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .section .section-en {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 1.2rem;
+            padding-left: 1.25rem;
+            font-style: italic;
+        }
+
+        .card {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            display: block;
+        }
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .insight-list {
+            list-style: none;
+            padding: 0;
+            display: block;
+        }
+        .insight-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .insight-list li:last-child { border-bottom: none; }
+        .insight-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            display: block;
+        }
+
+        .data-notice {
+            background: linear-gradient(135deg, #fff8e1, #fff3e0);
+            border: 1px solid #ffe0b2;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-size: 0.88rem;
+            color: #e65100;
+            display: block;
+        }
+        .data-notice strong { display: block; margin-bottom: 0.3rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.88rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th { background: var(--primary); color: white; padding: 0.8rem; text-align: left; font-weight: 600; }
+        td { padding: 0.75rem; border-bottom: 1px solid var(--border); }
+        tr:nth-child(even) { background: #f8fafc; }
+        tr:hover { background: #eef2ff; }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+        .tag.green { background: #e8f5e9; color: #2e7d32; }
+        .tag.blue { background: #e3f2fd; color: #1565c0; }
+        .tag.orange { background: #fff3e0; color: #e65100; }
+        .tag.red { background: #fce4ec; color: #c62828; }
+
+        .scenario-card {
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+            display: block;
+        }
+        .scenario-card.optimistic { background: #f8f9ff; border-left: 4px solid #2196f3; }
+        .scenario-card.baseline { background: #f8fdf8; border-left: 4px solid #4caf50; }
+        .scenario-card.pessimistic { background: #fff8f5; border-left: 4px solid #ff9800; }
+
+        .footer {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            font-size: 0.82rem;
+            color: #94a3b8;
+        }
+        .footer .sources {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1>迪拜AI网络安全行业发展深度报告</h1>
+            <div class="subtitle">Dubai AI Cybersecurity Industry Deep-Dive</div>
+            <div class="meta">
+                生成时间: 2026-10-12 08:30 |
+                覆盖地区: 阿联酋·迪拜 |
+                数据来源: 6 条管道
+            </div>
+            <span class="badge">麦肯锡风格深度分析</span>
+        </div>
+
+        <div class="data-notice">
+            <strong>数据说明 / Data Notice</strong>
+            本报告包含部分演示数据(fallback),实际部署时需接入真实 API / 爬虫 / 行业调研数据.
+            <strong>本分析不构成投资建议.</strong>
+        </div>
+
+        
+        <div class="section">
+            <h2>执行摘要 Executive Summary</h2>
+            <div class="card">
+                <ul class="insight-list">
+                    <li>本报告为迪拜AI网络安全行业发展深度报告的深度分析</li>
+<li>覆盖7个关键维度,基于6条数据管道</li>
+<li>► 市场规模与增长动力: AI Security市场当前TAM $15B,2030年预计$50B+</li>
+<li>► 政策监管框架与GCC对比: 美国:行业自律为主 + 行政令;欧盟:立法先行;中国:敏捷监管</li>
+<li>► 威胁态势与AI赋能安全运营: 乐观:AI安全治理促成$100B市场</li>
+<li>► 安全AI(Security-for-AI)新赛道: 算力层(芯片/IDC)捕获当前最大价值份额</li>
+<li>► 竞争格局与市场参与者: (通用分析 — market_share_analysis)基于可用数据的快速总结</li>
+<li>► 人才缺口与生态发展: AI计算需求维持供不应求,尤其是HBM和高性能GPU</li>
+<li>► 未来展望与情景分析(2027-2030): 乐观:AI安全治理促成$100B市场</li>
+                </ul>
+            </div>
+        </div>
+
+        
+        <div class="section" id="market_sizing">
+            <h2>市场规模与增长动力</h2>
+            <p class="section-en">Market Sizing & Growth Drivers</p>
+            <div class="card">
+                <ul class="insight-list"><li>AI Security市场当前TAM $15B,2030年预计$50B+</li>
+<li>LLM Guardrails是增长最快的子赛道</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>dubai_cybersecurity_market — year vs market_size_usd_m</h4>
+                <div id="chart_market_sizing_dubai_cybersecurity_market" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_market_sizing_dubai_cybersecurity_market", [{"x": [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030], "y": [420, 530, 670, 850, 1050, 1320, 1650, 2010, 2430, 2900], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+
+            <div class="chart-container">
+                <h4>dubai_smart_city_security — initiative vs launch_year</h4>
+                <div id="chart_market_sizing_dubai_smart_city_security" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_market_sizing_dubai_smart_city_security", [{"x": ["Smart Dubai (overall)", "Dubai Data Initiative", "Dubai Paperless Strategy", "Dubai Blockchain Strategy", "Dubai Autonomous Transport", "Dubai Cyber Security Center", "Dubai Digital Authority", "UAE Pass/Digital ID"], "y": [2014, 2015, 2018, 2016, 2019, 2020, 2022, 2021], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="policy_landscape">
+            <h2>政策监管框架与GCC对比</h2>
+            <p class="section-en">Policy & Regulatory Landscape vs GCC Peers</p>
+            <div class="card">
+                <ul class="insight-list"><li>美国:行业自律为主 + 行政令;欧盟:立法先行;中国:敏捷监管</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>uae_ai_policy_tracker — policy_name vs launch_year</h4>
+                <div id="chart_policy_landscape_uae_ai_policy_tracker" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_policy_landscape_uae_ai_policy_tracker", [{"x": ["UAE National AI Strategy 2031", "Dubai Cyber Security Strategy", "UAE National Cybersecurity Strategy", "Dubai AI Strategy (Smart Dubai)", "UAE PDPL (Data Protection)", "DIFC Data Protection Law", "NCA CII Guidelines", "Dubai AI Safety Certification", "GCC AI Regulatory Framework"], "y": [2021, 2017, 2019, 2017, 2021, 2020, 2022, 2025, 2024], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="threat_analysis">
+            <h2>威胁态势与AI赋能安全运营</h2>
+            <p class="section-en">Threat Landscape & AI-for-Security Operations</p>
+            <div class="card">
+                <ul class="insight-list"><li>乐观:AI安全治理促成$100B市场</li>
+<li>悲观:过度监管抑制创新,安全缺口扩大</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>gcc_threat_landscape — year vs apt_attacks_me</h4>
+                <div id="chart_threat_analysis_gcc_threat_landscape" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_threat_analysis_gcc_threat_landscape", [{"x": [2021, 2022, 2023, 2024, 2025, 2026], "y": [95, 135, 185, 250, 310, 375], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="security_for_ai">
+            <h2>安全AI(Security-for-AI)新赛道</h2>
+            <p class="section-en">Security-for-AI: Securing AI Systems</p>
+            <div class="card">
+                <ul class="insight-list"><li>算力层(芯片/IDC)捕获当前最大价值份额</li>
+<li>模型层赢家通吃,应用层机会分散但概率低</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>uae_ai_policy_tracker — policy_name vs launch_year</h4>
+                <div id="chart_security_for_ai_uae_ai_policy_tracker" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_security_for_ai_uae_ai_policy_tracker", [{"x": ["UAE National AI Strategy 2031", "Dubai Cyber Security Strategy", "UAE National Cybersecurity Strategy", "Dubai AI Strategy (Smart Dubai)", "UAE PDPL (Data Protection)", "DIFC Data Protection Law", "NCA CII Guidelines", "Dubai AI Safety Certification", "GCC AI Regulatory Framework"], "y": [2021, 2017, 2019, 2017, 2021, 2020, 2022, 2025, 2024], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+
+            <div class="chart-container">
+                <h4>dubai_cybersecurity_market — year vs market_size_usd_m</h4>
+                <div id="chart_security_for_ai_dubai_cybersecurity_market" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_security_for_ai_dubai_cybersecurity_market", [{"x": [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030], "y": [420, 530, 670, 850, 1050, 1320, 1650, 2010, 2430, 2900], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="competitive_landscape">
+            <h2>竞争格局与市场参与者</h2>
+            <p class="section-en">Competitive Landscape & Vendor Ecosystem</p>
+            <div class="card">
+                <ul class="insight-list"><li>(通用分析 — market_share_analysis)基于可用数据的快速总结</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>dubai_cybersecurity_market — year vs market_size_usd_m</h4>
+                <div id="chart_competitive_landscape_dubai_cybersecurity_market" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_competitive_landscape_dubai_cybersecurity_market", [{"x": [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030], "y": [420, 530, 670, 850, 1050, 1320, 1650, 2010, 2430, 2900], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="talent_ecosystem">
+            <h2>人才缺口与生态发展</h2>
+            <p class="section-en">Talent Gap & Innovation Ecosystem</p>
+            <div class="card">
+                <ul class="insight-list"><li>AI计算需求维持供不应求,尤其是HBM和高性能GPU</li>
+<li>数据中心电力约束成为2026年产能瓶颈</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>dubai_cyber_talent — year vs demand_headcount</h4>
+                <div id="chart_talent_ecosystem_dubai_cyber_talent" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_talent_ecosystem_dubai_cyber_talent", [{"x": [2021, 2022, 2023, 2024, 2025, 2026], "y": [18000, 21000, 24500, 28000, 31000, 34000], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="future_outlook">
+            <h2>未来展望与情景分析(2027-2030)</h2>
+            <p class="section-en">Future Outlook & Scenario Analysis (2027-2030)</p>
+            <div class="card">
+                <ul class="insight-list"><li>乐观:AI安全治理促成$100B市场</li>
+<li>悲观:过度监管抑制创新,安全缺口扩大</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>dubai_cybersecurity_market — year vs market_size_usd_m</h4>
+                <div id="chart_future_outlook_dubai_cybersecurity_market" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_future_outlook_dubai_cybersecurity_market", [{"x": [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030], "y": [420, 530, 670, 850, 1050, 1320, 1650, 2010, 2430, 2900], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+
+            <div class="chart-container">
+                <h4>uae_ai_policy_tracker — policy_name vs launch_year</h4>
+                <div id="chart_future_outlook_uae_ai_policy_tracker" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_future_outlook_uae_ai_policy_tracker", [{"x": ["UAE National AI Strategy 2031", "Dubai Cyber Security Strategy", "UAE National Cybersecurity Strategy", "Dubai AI Strategy (Smart Dubai)", "UAE PDPL (Data Protection)", "DIFC Data Protection Law", "NCA CII Guidelines", "Dubai AI Safety Certification", "GCC AI Regulatory Framework"], "y": [2021, 2017, 2019, 2017, 2021, 2020, 2022, 2025, 2024], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+
+            <div class="chart-container">
+                <h4>gcc_threat_landscape — year vs apt_attacks_me</h4>
+                <div id="chart_future_outlook_gcc_threat_landscape" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_future_outlook_gcc_threat_landscape", [{"x": [2021, 2022, 2023, 2024, 2025, 2026], "y": [95, 135, 185, 250, 310, 375], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:40,l:50,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>来源与方法论</h2>
+            <div class="card">
+                <p>本报告基于 6 条数据管道的采集结果,覆盖 7 个分析维度.</p>
+                <div class="footer">
+                    <strong>主要数据来源:</strong>
+                    <ul style="margin-top:0.5rem; padding-left: 1.5rem;">
+                        <li>(数据来源待补充 — 当前为演示模式)</li>
+                    </ul>
+                    <p style="margin-top:1rem; font-style: italic; color:#94a3b8;">
+                        Powered by IntelKB Prompt-Driven Intelligence Engine | McKinsey-Style Analysis
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
