@@ -6,8 +6,7 @@
 data/store/
 data/data_meta.json
 
-# ── 报告输出（生成物，非源码）──
-reports/
+
 
 # ── macOS / Windows 系统垃圾 ──
 .DS_Store

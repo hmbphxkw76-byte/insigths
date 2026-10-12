@@ -1,9 +1,10 @@
-# IntelKB — Prompt-Driven Intelligence Engine
+# Insights — Prompt-Driven Intelligence Engine
 
 ## 系统概述
 
-以**提示词（Prompt）**为核心驱动力的行业深度分析引擎。
-用户通过自然语言关键词触发分析任务，系统自动完成 **数据采集 → 分析计算 → 报告渲染** 全流程。
+以**提示词（Prompt）**为核心驱动力的多主题域深度分析引擎。
+系统自动采集英文权威数据源，覆盖宏观经济、海外留学、境外就业、房地产行业以及科技/AI/网络安全等领域，
+根据提示词配置生成专业的中文分析报告。
 
 **核心理念**：配置即代码（Config as Code）。所有分析意图、数据管道、报告格式均由 YAML 定义，代码仅负责解析和执行。
 
@@ -12,7 +13,7 @@
 ## 目录结构
 
 ```
-intelligence/
+insights/
 ├── main.py                  # CLI 入口（关键词驱动）
 ├── README.md                # 本文档
 ├── requirements.txt         # Python 依赖
@@ -24,20 +25,34 @@ intelligence/
 │   ├── prompt_schema.yaml   # Prompt YAML Schema 说明
 │   ├── macro/               # 宏观经济分析
 │   │   └── macro_global.yaml
-│   ├── tech/                # 科技行业（半导体 / AI / 网络安全）
-│   │   ├── tech_semiconductor.yaml
+│   ├── tech/                # 科技行业（AI / 网络安全 / 半导体）
 │   │   ├── tech_ai.yaml
+│   │   ├── tech_ai_cybersecurity.yaml
 │   │   ├── tech_cybersecurity.yaml
-│   │   └── tech_ai_cybersecurity.yaml
+│   │   ├── tech_dubai_ai_cybersecurity.yaml
+│   │   └── tech_semiconductor.yaml
 │   ├── realestate/          # 房地产
 │   │   └── re_dubai.yaml
 │   ├── studyabroad/         # 留学分析
-│   │   ├── study_abroad_au.yaml
-│   │   ├── study_abroad_ca.yaml
-│   │   ├── study_abroad_de.yaml
-│   │   └── ...
-│   └── migration/           # 移民签证
-│       └── visa_japan_hsp.yaml
+│   │   ├── study_abroad_au.yaml      # 澳洲
+│   │   ├── study_abroad_ca.yaml      # 加拿大
+│   │   ├── study_abroad_de.yaml      # 德国
+│   │   ├── study_abroad_fr_engineering.yaml
+│   │   ├── study_abroad_gb_master.yaml
+│   │   ├── study_abroad_hk.yaml      # 香港
+│   │   ├── study_abroad_jp.yaml      # 日本
+│   │   ├── study_abroad_nz.yaml      # 新西兰
+│   │   ├── study_abroad_sg.yaml      # 新加坡
+│   │   ├── study_abroad_uk.yaml      # 英国
+│   │   ├── study_abroad_us.yaml      # 美国
+│   │   └── ... (更多国家与学位层次)
+│   └── career/              # 海外就业与职业移民
+│       ├── visa_japan_driver.yaml     # 日本驾驶签证
+│       ├── visa_japan_hsp.yaml        # 日本高度人才
+│       ├── visa_nz_driver.yaml        # 新西兰驾驶签证
+│       ├── profession_country.yaml    # 职业清单国家对比
+│       ├── visa_profession_matrix.yaml
+│       └── _template_lifecycle.yaml   # 移民生命周期模板
 │
 ├── src/                     # 源代码（全部围绕 Prompt 展开）
 │   ├── __init__.py
@@ -46,33 +61,52 @@ intelligence/
 │   ├── prompt_runtime/      # 执行引擎（采集→分析→渲染）
 │   │   └── __init__.py      # PromptRuntime: 调度三阶段流水线
 │   ├── data_engine/         # 数据管道引擎
-│   │   ├── __init__.py      # PipeRunner: 并行执行、Parquet 缓存
-│   │   └── pipes/           # 各行业的 DataPipe 实现
+│   │   ├── __init__.py      # DataPipe, PipeRunner, DataBundle
+│   │   └── pipes/           # 各主题域的 DataPipe 实现
 │   │       ├── auto_register.py
-│   │       ├── macro_pipes.py
-│   │       ├── tech_pipes.py
-│   │       ├── cyber_pipes.py
-│   │       ├── realestate_pipes.py
-│   │       ├── migration_pipes.py
-│   │       └── study_abroad_pipes.py
-│   └── renderers/           # 报告渲染器
+│   │       ├── career/      # 海外就业·签证移民管道
+│   │       │   ├── extra_pipes.py
+│   │       │   ├── japan_visa_pipes.py
+│   │       │   ├── migration_pipes.py
+│   │       │   ├── nz_visa_pipes.py
+│   │       │   └── profession_pipes.py
+│   │       ├── macro/       # 宏观经济管道
+│   │       │   └── macro_pipes.py
+│   │       ├── realestate/  # 海外房地产管道
+│   │       │   └── realestate_pipes.py
+│   │       ├── studyabroad/ # 留学分析管道
+│   │       │   └── study_abroad_pipes.py
+│   │       └── tech/        # 科技(AI/网络安全/半导体)管道
+│   │           ├── cyber_pipes.py
+│   │           └── tech_pipes.py
+│   └── renderers/           # 报告渲染器（按主题域划分）
 │       ├── __init__.py      # RendererFactory
-│       ├── mckinsey_tech.py # 麦肯锡风格（科技/AI/半导体）
-│       ├── macro_dashboard.py
-│       ├── real_estate.py
-│       └── visa_tracker.py
+│       ├── career/          # 签证/职业/移民生命周期报告
+│       │   ├── japan_driver.py
+│       │   ├── migration_lifecycle.py
+│       │   ├── profession_analyzer.py
+│       │   └── visa_tracker.py
+│       ├── macro/           # 宏观经济仪表盘
+│       │   └── dashboard.py
+│       ├── realestate/      # 房地产深度分析
+│       │   └── dashboard.py
+│       ├── studyabroad/     # 留学申请分析
+│       │   └── __init__.py
+│       └── tech/            # AI/网络安全/半导体 (麦肯锡风格)
+│           └── mckinsey_style.py
 │
 ├── data/                    # 数据目录
 │   └── store/               # Pipe 引擎 parquet 仓库（运行时自动生成）
 │
 ├── reports/                 # 分析报告输出
-│   ├── industry/            # 职业/行业分析
-│   └── career/              # 海外职业移民生命周期
+│   ├── career/              # 海外职业移民生命周期
+│   ├── macro/               # 宏观经济
+│   ├── realestate/          # 房地产
+│   ├── studyabroad/         # 留学
+│   └── tech/                # 科技
 │
-├── docs/                    # 架构文档
-│   └── architecture_prompt_driven.md
-│
-└── logs/                    # 运行日志
+└── docs/                    # 架构文档
+    └── architecture_prompt_driven.md
 ```
 
 ---
@@ -110,21 +144,41 @@ python main.py --benchmark
 
 ---
 
+## 数据源原则
+
+系统严格遵循以下数据源策略（定义于 `prompt_schema.yaml`）：
+
+1. **英文权威优先**：所有数据采集必须来自英文权威机构（World Bank, IMF, 各国政府英文门户等）
+2. **中文输出**：最终报告统一以中文显示给终端用户
+3. **国家特定例外**：针对日本相关资料，允许参照日本日语语言官方网站（因信息更新更及时），但输出仍为中文
+
+---
+
 ## 架构设计
 
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌─────────────────┐
 │  prompts/    │────▶│  PromptRegistry  │────▶│  PromptRuntime  │
 │  *.yaml      │     │  (加载 + 匹配)    │     │  (执行引擎)      │
-└──────────────┘     └──────────────────┘     └────────┬────────┘
+└──────────────┘     └──────────────────┘     └────────�────────┘
                                                        │
-                                           ┌───────────┼───────────┐
+                                           �───────────�───────────�
                                            ▼           ▼           ▼
-                                      ┌────────┐ ┌─────────┐ ┌──────────┐
+                                      ┌────────┐ ┌─────────� ┌──────────┐
                                       │DataPipe│ │Analyzer │ │Renderer  │
                                       │(采集)  │ │(计算)   │ │(渲染HTML)│
-                                      └────────┘ └─────────┘ └──────────┘
+                                      └────────┘ └─────────┘ └──────────�
 ```
+
+### 主题域(Vertical)划分
+
+| 垂直域 | 目录 | 数据管道 | 渲染器 | 典型 Prompt |
+|--------|------|----------|--------|-------------|
+| **macro** | `pipes/macro/`, `renderers/macro/` | 宏观经济数据采集 | `MacroDashboardRenderer` | `macro_global` |
+| **tech** | `pipes/tech/`, `renderers/tech/` | 科技/AI/网络安全数据采集 | `McKinseyTechRenderer` | `tech_ai`, `tech_semiconductor` |
+| **realestate** | `pipes/realestate/`, `renderers/realestate/` | 房地产数据采集 | `RealEstateDashboardRenderer` | `re_dubai` |
+| **career** | `pipes/career/`, `renderers/career/` | 签证/职业数据采集 | `VisaTrackerRenderer`, `JapanDriverRenderer` | `visa_japan_hsp`, `visa_nz_driver` |
+| **studyabroad** | `pipes/studyabroad/`, `renderers/studyabroad/` | 留学数据采集 | `McKinseyTechRenderer` | `study_abroad_us`, `study_abroad_uk` |
 
 ### 核心组件
 
@@ -156,7 +210,7 @@ analysis_dimensions:
     method: quantitative_forecast
 report:
   template: mckinsey_tech
-  output_dir: reports/industry
+  output_dir: reports/tech
 schedule:
   cadence: monthly
   time: "08:00"
@@ -185,3 +239,4 @@ schedule:
 3. **目录结构清晰**：config / prompts / src / data / reports 各司其职
 4. **管道化数据源**：每个 DataPipe 是独立、可组合、可缓存的数据采集单元
 5. **多赛道渲染器**：针对不同行业定制 HTML 模板与可视化风格
+6. **主题域对齐**：`src/data_engine/pipes/` 与 `src/renderers/` 的子目录与 `prompts/` 主题域一一对应，便于动态扩展

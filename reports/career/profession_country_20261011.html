@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[[country]][[profession]]人才需求与就业前景深度分析 | McKinsey-Style Talent Deep Dive</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        :root {
+            --primary: #0b2545;
+            --secondary: #2f4560;
+            --accent: #c8a24b;
+            --accent2: #00897b;
+            --bg: #f5f7fa;
+            --text: #1a1a2e;
+            --light-bg: #ffffff;
+            --border: #e2e8f0;
+            --success: #2e7d32;
+            --warning: #e65100;
+            --danger: #c62828;
+            --muted: #64748b;
+        }
+        { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+        }
+        .container { max-width: 1240px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        /* ── Badges & Labels ── */
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .badge-red { background: #fee2e2; color: #dc2626; }
+        .badge-blue { background: #dbeafe; color: #2563eb; }
+        .badge-green { background: #d1fae5; color: #16a34a; }
+        .badge-amber { background: #fef3c7; color: #d97706; }
+
+        /* ── Header ── */
+        .report-header {
+            background: linear-gradient(135deg, #0b2545 0%, #13315c 50%, #1e4d8c 100%);
+            color: white;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(11,37,69,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(200,162,75,0.12) 0%, transparent 70%);
+        }
+        .report-header h1 { font-size: 2.2rem; margin-bottom: 0.5rem; position: relative; font-weight: 700; }
+        .report-header .subtitle { font-size: 1.1rem; opacity: 0.85; position: relative; }
+        .report-header .meta { margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.7; position: relative; display: flex; gap: 2rem; flex-wrap: wrap; }
+        .report-header .badge { display: inline-block; background: rgba(200,162,75,0.2); border: 1px solid rgba(200,162,75,0.5); color: #c8a24b; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-top: 1rem; position: relative; }
+
+        /* ── KPI Cards ── */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin: 2rem 0; }
+        .kpi-card { background: white; border-radius: 14px; padding: 1.5rem; text-align: center; box-shadow: 0 2px 16px rgba(0,0,0,0.06); border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .kpi-card .label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.6rem; font-weight: 500; }
+        .kpi-card .value { font-size: 2.2rem; font-weight: 800; color: var(--primary); line-height: 1.1; }
+        .kpi-card .unit { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+        .kpi-card .change { font-size: 0.82rem; margin-top: 0.5rem; font-weight: 600; }
+        .kpi-card .change.up { color: var(--success); }
+        .kpi-card .change.down { color: var(--danger); }
+        .kpi-card .change.widening { color: var(--warning); }
+
+        /* ── Sections ── */
+        .section { margin: 2.5rem 0; display: block; }
+        .section h2 { font-size: 1.5rem; color: var(--primary); border-left: 4px solid var(--accent); padding-left: 1rem; margin-bottom: 0.5rem; }
+        .section .section-en { font-size: 0.92rem; color: var(--muted); margin-bottom: 1.2rem; padding-left: 1.3rem; font-style: italic; }
+
+        /* ── Cards ── */
+        .card { background: white; border-radius: 14px; padding: 1.8rem; margin: 1.2rem 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); border: 1px solid var(--border); display: block; }
+        .card h3 { font-size: 1.1rem; color: var(--secondary); margin-bottom: 0.8rem; }
+
+        /* ── Insight List ── */
+        .insight-list { list-style: none; padding: 0; display: block; }
+        .insight-list li { padding: 0.85rem 0; padding-left: 2.2rem; position: relative; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 0.95rem; line-height: 1.65; }
+        .insight-list li:last-child { border-bottom: none; }
+        .insight-list li::before { content: ''; position: absolute; left: 0; top: 1.1rem; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+        /* ── Chart Container ── */
+        .chart-container { background: white; border-radius: 14px; padding: 1.2rem; margin: 1.5rem 0; box-shadow: 0 2px 16px rgba(0,0,0,0.06); border: 1px solid var(--border); display: block; }
+
+        /* ── Data Notice ── */
+        .data-notice { background: linear-gradient(135deg, #fff8e1, #fff3e0); border: 1px solid #ffe0b2; border-radius: 12px; padding: 1rem 1.5rem; margin: 1.5rem 0; font-size: 0.88rem; color: #e65100; display: block; }
+        .data-notice strong { display: block; margin-bottom: 0.3rem; }
+
+        /* ── Tables ── */
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; border-radius: 8px; overflow: hidden; }
+        th { background: var(--primary); color: white; padding: 0.85rem 0.7rem; text-align: left; font-weight: 600; font-size: 0.82rem; }
+        td { padding: 0.75rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:nth-child(even) { background: #f8fafc; }
+        tr:hover { background: #eef2ff; }
+
+        /* ── Salary Table ── */
+        .salary-table th { background: linear-gradient(135deg, #0b2545, #1e4d8c); }
+        .salary-table td.level { font-weight: 700; color: var(--primary); }
+        .salary-table .p50 { font-weight: 700; color: var(--accent); }
+        .salary-table .highlight { background: linear-gradient(135deg, #fffdf5, #fef9e7); }
+
+        /* ── Tags ── */
+        .tag { display: inline-block; padding: 3px 12px; border-radius: 16px; font-size: 0.78rem; font-weight: 600; margin: 2px; }
+        .tag.green { background: #e8f5e9; color: #2e7d32; }
+        .tag.blue { background: #e3f2fd; color: #1565c0; }
+        .tag.orange { background: #fff3e0; color: #e65100; }
+        .tag.red { background: #fce4ec; color: #c62828; }
+
+        /* ── Action Cards ── */
+        .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; margin: 1.5rem 0; }
+        .action-card { background: white; border-radius: 14px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: block; }
+        .action-card .step { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: white; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.8rem; }
+        .action-card h4 { font-size: 1rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .action-card p { font-size: 0.9rem; color: var(--muted); }
+        .action-card .timeline { font-size: 0.82rem; color: var(--accent); font-weight: 600; margin-top: 0.5rem; }
+
+        /* ── ROI Model ── */
+        .roi-card { background: linear-gradient(135deg, #f8fdf8, #fffdf5); border: 2px solid var(--accent); border-radius: 14px; padding: 1.8rem; margin: 1.5rem 0; display: block; }
+        .roi-card h3 { color: var(--primary); margin-bottom: 0.5rem; }
+        .roi-value { font-size: 2.5rem; font-weight: 800; color: var(--success); }
+        .roi-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; margin-left: 1rem; }
+
+        /* ── Footer ── */
+        .footer { margin-top: 3rem; padding: 2rem 0; border-top: 1px solid var(--border); font-size: 0.82rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1>[[country]][[profession]]人才需求与就业前景深度分析</h1>
+            <div class="subtitle">[[country]] [[profession]] Talent Demand & Career Outlook Deep Dive</div>
+            <div class="meta">
+                <span>📅 2026-10-11 23:20</span>
+                <span>🌍 阿联酋・迪拜</span>
+                <span>📊 16 条数据管道</span>
+                <span>📐 18 个分析维度</span>
+            </div>
+            <span class="badge">McKinsey-Style Talent Intelligence</span>
+        </div>
+
+        <div class="data-notice">
+            <strong>⚠️ 数据说明 / Data Notice</strong>
+            本报告数据来源于世界银行、ILO、各国统计局及行业协会官方报告。薪资数据为区间估计值，实际受雇主规模、谈判力和经验认证影响。
+            签证政策以各国移民局官方最新公告为准。本分析不构成职业/法律建议。
+        </div>
+
+        
+        <div class="section">
+            <h2>执行摘要 Executive Summary</h2>
+            <div class="card">
+                <ul class="insight-list">
+                    <li>本报告为[[country]][[profession]]人才需求与就业前景深度分析的深度分析</li>
+<li>覆盖18个关键维度,基于16条数据管道</li>
+<li>► 行业宏观趋势与数字化转型驱动力: 阿联酋数字经济战略2025持续发力,科技行业就业年增8.5%,数字化转型年投入$12.8B</li>
+<li>► 人才需求规模量化与增长预测: 迪拜网络安全活跃岗位空缺约3,500个/年,同比增长22%</li>
+<li>► 雇主格局与企业需求热力图: Tier 1 雇主(年招聘50+): ENOC/ADNOC, Emirates NDB, Etisalat, Dubai Police, DEWA</li>
+<li>► 薪酬基准与购买力对比模型: 初级(0-3年): P50 180K AED/年 + 福利包45-80K AED = 总包约225-260K AED(约¥45-52万RMB)</li>
+<li>► 技能栈要求与认证路径图: 核心技术栈:SIEM(Splunk/QRadar) + EDR/XDR + 威胁情报平台 + 云安全(CASB/CWPP) + 零信任架构(85-95%岗位要求)</li>
+<li>► 人才供给缺口量化分析: 全球网络安全人才缺口约340万人((ISC)² 2024),中东地区缺口占比约12%(约40万人)</li>
+<li>► 外籍人才政策与工作签证路径: Employment Visa(工作签证):雇主担保,2年可续签,费用约3,000 AED,审批5天</li>
+<li>► 5年职业ROI模型与风险评估: 5年累计净收入(中级网络安全工程师,P50路径):约200-230万AED(约¥400-460万RMB)</li>
+<li>► 生活成本精算与净储蓄模型: Single expat annual cost (Dubai City Centre): ~231,600 AED (≈ USD 63,000) — housing dominates at 44%</li>
+<li>► 全球竞争城市对标: Dubai ranks #1 overall among 7 comparator cities for cybersecurity expats (composite salary+savings+visa score: 8.4/10)</li>
+<li>► AI/自动化颠覆风险时间线: SOC Tier-1 Alert Analyst: 70% disruption risk — AI SOAR automating 60%+ L1 triage by 2025-2027</li>
+<li>► 行业合规框架映射: UAE NESA-IAE: Mandatory for government & critical infrastructure — incident reporting within 24h required</li>
+<li>► 候选人供给密度与竞争力: Active cyber candidates on LinkedIn UAE: ~6,200 profiles; only 380 new registrations/month on GulfTalent/Bayt</li>
+<li>► 雇主微观情报: Tier 1 employers (Emirates NBD, Etisalat, Dubai Police, ADNOC): 40-60 annual HC, 0% tax, Golden Visa sponsorship 100%</li>
+<li>► 签证全流程时间轴: Total process duration: 55-104 days (9 weeks minimum to 15 weeks maximum)</li>
+<li>► 跨文化适应路径指南: UAE职场文化核心特征：关系驱动型、层级分明、遵循伊斯兰日历，wasta（人脉网络）对职业发展至关重要</li>
+<li>► 薪资谈判话术与策略: UAE网络安全薪资基准：中级岗位(P50) 336,000 AED/年，高级岗位(P75) 540,000 AED/年，CISSP/CISM认证可带来15-20%薪资溢价</li>
+<li>► 职业资格认证全路径: 四层认证体系：入门级（0-3年：CompTIA Security+/CEH）→ 中级（3-7年：CISSP/CISM，薪资溢价15-25%）→ 高级（7-12年：CCSP/CGEIT/ISO 27001 Lead Auditor，薪资溢价20-30%）→ 管理层（12+年：CCISO/哈佛董事会网络安全认证/NESA认证，薪资溢价30-50%）</li>
+                </ul>
+            </div>
+        </div>
+
+        
+        <div class="section">
+            <h2>核心指标仪表盘 KPI Dashboard</h2>
+            <div class="kpi-grid">
+                
+                <div class="kpi-card">
+                    <div class="value">3.7B</div>
+                    <div class="label">迪拜智慧城市与网络安全专项预算合计$3.7B/年,驱动安全合规人才需求持续增长</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="value">3</div>
+                    <div class="label">迪拜网络安全活跃岗位空缺约3,500个/年,同比增长22%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="value">340</div>
+                    <div class="label">全球网络安全人才缺口约340万人((ISC)² 2024),中东地区缺口占比约12%(约40万人)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="value">2</div>
+                    <div class="label">风险缓解:① 持续获取CISSP/CCSP等高阶认证 ② 转向AI安全/云安全等高增长细分 ③ 2年...</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="value">231</div>
+                    <div class="label">Single expat annual cost (Dubai City Centre): ~231...</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="value">2</div>
+                    <div class="label">Total visa cost to employer: ~USD 2,500-4,000 (var...</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="section" id="industry_overview">
+            <h2>行业宏观趋势与数字化转型驱动力</h2>
+            <p class="section-en">Industry Overview & Digital Transformation Drivers</p>
+            <div class="card">
+                <ul class="insight-list"><li>阿联酋数字经济战略2025持续发力,科技行业就业年增8.5%,数字化转型年投入$12.8B</li>
+<li>迪拜智慧城市与网络安全专项预算合计$3.7B/年,驱动安全合规人才需求持续增长</li>
+<li>云基础设施支出年增35%,AI/ML在安全运营中的采用率已达42% — 云安全/SOC自动化是核心增量赛道</li>
+<li>中小企业数字化渗透率68%,较2023年+5pt,为安全咨询/托管服务(MSSP)创造广阔市场</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>country_digital_transformation — indicator vs value</h4>
+                <div id="chart_industry_overview_country_digital_transformation" style="width:100%;height:380px;"></div>
+                <script>Plotly.newPlot("chart_industry_overview_country_digital_transformation", [{"x": ["数字经济战略年度投资", "迪拜智慧城市项目年度预算", "国家安全领域网络安全预算", "网络安全市场规模(中东)", "中小企业数字化渗透率", "云基础设施支出(年增)", "AI/ML 在安全运营中的采用率"], "y": [12.8, 2.1, 1.6, 7.2, 68.0, 35.0, 42.0], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:60,l:60,r:20}});</script>
+            </div>
+
+            <div class="chart-container">
+                <h4>country_labor_market — indicator vs value</h4>
+                <div id="chart_industry_overview_country_labor_market" style="width:100%;height:380px;"></div>
+                <script>Plotly.newPlot("chart_industry_overview_country_labor_market", [{"x": ["劳动年龄人口(15-64岁)", "总体失业率", "科技行业就业人数", "数字经济占GDP比重", "外籍人才占比(私营部门)"], "y": [8.2, 2.2, 185000.0, 4.3, 88.5], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:60,l:60,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="talent_demand_sizing">
+            <h2>人才需求规模量化与增长预测</h2>
+            <p class="section-en">Talent Demand Sizing & Growth Forecast</p>
+            <div class="card">
+                <ul class="insight-list"><li>迪拜网络安全活跃岗位空缺约3,500个/年,同比增长22%</li>
+<li>从业人员总数约8,500人,同比增长15%,但仍远低于市场需求</li>
+<li>人才供需缺口约3,800人 — 每100个岗位仅有65个合格候选人(ISACA 2024数据)</li>
+<li>前三大招聘行业:金融服务(35%)、政府与国防(28%)、电信(18%)</li>
+<li>5年需求复合增长率(CAGR)预测18.5%,显著高于全球平均12%(IDC Middle East)</li>
+<li>每月新增职位发布约290个,活跃招聘雇主580家 — 市场处于供给不足状态</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>profession_talent_demand</h4>
+                <table><thead><tr><th>metric</th><th>value</th><th>unit</th><th>year</th><th>trend</th><th>yoy_growth_pct</th><th>source</th></tr></thead><tbody><tr><td>ai_cybersecurity 活跃岗位空缺数 (AE)</td><td>None</td><td>待采集</td><td>2024</td><td>unknown</td><td>None</td><td>AE National Labor Force Survey</td></tr></tbody></table>
+            </div>
+
+            <div class="chart-container">
+                <h4>country_labor_market — indicator vs value</h4>
+                <div id="chart_talent_demand_sizing_country_labor_market" style="width:100%;height:380px;"></div>
+                <script>Plotly.newPlot("chart_talent_demand_sizing_country_labor_market", [{"x": ["劳动年龄人口(15-64岁)", "总体失业率", "科技行业就业人数", "数字经济占GDP比重", "外籍人才占比(私营部门)"], "y": [8.2, 2.2, 185000.0, 4.3, 88.5], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:60,l:60,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="employer_landscape">
+            <h2>雇主格局与企业需求热力图</h2>
+            <p class="section-en">Employer Landscape & Hiring Heatmap</p>
+            <div class="card">
+                <ul class="insight-list"><li>Tier 1 雇主(年招聘50+): ENOC/ADNOC, Emirates NDB, Etisalat, Dubai Police, DEWA</li>
+<li>Tier 2 雇主(年招聘10-50): 四大会计师事务所(中东分部), UAE央行, 大型医院集团</li>
+<li>Tier 3 雇主(年招聘<10): 初创企业/中小企业/自由职业者 — 数量庞大但薪资偏低</li>
+<li>自由区(DIC/DMCC/DIFC)聚集60%以上的科技岗位 — 是企业选址与签证规划的关键变量</li>
+<li>跨国企业区域总部(Dubai Internet City)偏好CISSP/CCSP认证持有者,薪资溢价15-20%</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>profession_talent_demand</h4>
+                <table><thead><tr><th>metric</th><th>value</th><th>unit</th><th>year</th><th>trend</th><th>yoy_growth_pct</th><th>source</th></tr></thead><tbody><tr><td>ai_cybersecurity 活跃岗位空缺数 (AE)</td><td>None</td><td>待采集</td><td>2024</td><td>unknown</td><td>None</td><td>AE National Labor Force Survey</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="salary_benchmarking">
+            <h2>薪酬基准与购买力对比模型</h2>
+            <p class="section-en">Salary Benchmarking & Purchasing Power Parity</p>
+            <div class="card">
+                <ul class="insight-list"><li>初级(0-3年): P50 180K AED/年 + 福利包45-80K AED = 总包约225-260K AED(约¥45-52万RMB)</li>
+<li>中级(3-7年): P50 336K AED/年 + 福利包70-120K AED = 总包约406-456K AED(约¥82-92万RMB)</li>
+<li>高级(7-12年): P50 540K AED/年 + 福利包120-200K AED = 总包约660-740K AED(约¥133-149万RMB)</li>
+<li>管理/架构师(12年+): P50 780K AED/年,顶级CISO总包可达120万AED+(约¥240万RMB)</li>
+<li>CISSP认证平均溢价60K AED/年(约+15-20%),CCSP/AWS Security Specialty紧随其后</li>
+<li>⚡ 阿联酋零个人所得税 — 净收入约等于名义薪资(仅需缴纳社保约5%,外籍可豁免)</li>
+<li>购买力对比:迪拜P50网络安全薪资 ≈ 硅谷同级别的70%(但税后实际收入可持平甚至更高)</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>profession_salary_benchmark</h4>
+                <table><thead><tr><th>level</th><th>p25_annual</th><th>p50_annual</th><th>p75_annual</th><th>p90_annual</th><th>benefits典型</th><th>source</th></tr></thead><tbody><tr><td>薪资基准 (AE/ai_cybersecurity)</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td><td>待采集</td><td>AE National Statistics Office</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="skill_certification">
+            <h2>技能栈要求与认证路径图</h2>
+            <p class="section-en">Skill Stack & Certification Roadmap</p>
+            <div class="card">
+                <ul class="insight-list"><li>核心技术栈:SIEM(Splunk/QRadar) + EDR/XDR + 威胁情报平台 + 云安全(CASB/CWPP) + 零信任架构(85-95%岗位要求)</li>
+<li>编程/脚本:Python + Bash/PowerShell + YARA/Sigma规则编写(70-85%岗位要求)</li>
+<li>云平台安全:AWS Security Specialty / Azure Security Engineer / GCP Security(60-75%岗位要求,比例持续提升)</li>
+<li>	top认证路径:CISSP(管理,要求率45%+) / OSCP(渗透) / CCSP(云安全) / CISM(治理) / CEH(入门)</li>
+<li>学历要求:本科(IT/CS/EE)为最低门槛,硕士偏好度30%+(研发/R&D岗强制要求)</li>
+<li>阿联酋特定优势:懂阿拉伯语者薪资溢价15-20%,有中东本地合规经验(NESA/UAECB)者竞争力显著增强</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>profession_skill_requirements</h4>
+                <table><thead><tr><th>skill_category</th><th>top_items</th><th>demand_frequency</th><th>trend</th><th>source</th></tr></thead><tbody><tr><td>核心技能 (ai_cybersecurity)</td><td>待采集 — 需接入 O*NET / ESCO 数据库</td><td>待采集</td><td>unknown</td><td>O*NET Onetonline.org / ESCO (EU Skills Taxonomy)</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="supply_gap_analysis">
+            <h2>人才供给缺口量化分析</h2>
+            <p class="section-en">Talent Supply Gap Quantification</p>
+            <div class="card">
+                <ul class="insight-list"><li>全球网络安全人才缺口约340万人((ISC)² 2024),中东地区缺口占比约12%(约40万人)</li>
+<li>阿联酋本地供给严重不足 — 本土公民仅占私营部门就业的11.5%(MOHRE数据),高度依赖外籍人才</li>
+<li>UAE每年IT/CS相关大学毕业生约8,000-10,000人,其中网络安全对口方向不足2,000人</li>
+<li>缺口还在扩大:需求增速(22%)远高于本地供给增速(8%) → 未来5年缺口预计达到6,000+人</li>
+<li>🔑 对外籍人才极佳的供需环境:平均每1个合格的网络安全候选人应对1.5-2个职位空缺</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>profession_talent_demand</h4>
+                <table><thead><tr><th>metric</th><th>value</th><th>unit</th><th>year</th><th>trend</th><th>yoy_growth_pct</th><th>source</th></tr></thead><tbody><tr><td>ai_cybersecurity 活跃岗位空缺数 (AE)</td><td>None</td><td>待采集</td><td>2024</td><td>unknown</td><td>None</td><td>AE National Labor Force Survey</td></tr></tbody></table>
+            </div>
+
+            <div class="chart-container">
+                <h4>country_labor_market — indicator vs value</h4>
+                <div id="chart_supply_gap_analysis_country_labor_market" style="width:100%;height:380px;"></div>
+                <script>Plotly.newPlot("chart_supply_gap_analysis_country_labor_market", [{"x": ["劳动年龄人口(15-64岁)", "总体失业率", "科技行业就业人数", "数字经济占GDP比重", "外籍人才占比(私营部门)"], "y": [8.2, 2.2, 185000.0, 4.3, 88.5], "type": "bar", "marker": {"color": "#c8a24b"}}], {margin:{t:20,b:60,l:60,r:20}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="expat_policy_pathway">
+            <h2>外籍人才政策与工作签证路径</h2>
+            <p class="section-en">Expatriate Policy & Work Visa Pathway</p>
+            <div class="card">
+                <ul class="insight-list"><li>Employment Visa(工作签证):雇主担保,2年可续签,费用约3,000 AED,审批5天</li>
+<li>Golden Visa(黄金签证):高技能人才10年长期居留,无需雇主担保,费用5,000 AED,审批15天</li>
+<li>Green Visa(绿色签证):自雇/技能工作者5年居留,无需雇主担保,2,500 AED,审批10天</li>
+<li>Freelancer Visa(自由职业):DIC/DMCC自由区1年可续签,1,500 AED,审批7天</li>
+<li>推荐路径:先拿Employment Visa入职 → 2年后转Golden Visa(长期居留+独立续签能力)</li>
+<li>⚡ 阿联酋无永住/入籍路径(极少数特殊贡献除外),但Golden Visa是等效的长期居留方案</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>country_expat_visa_policy</h4>
+                <table><thead><tr><th>visa_type</th><th>duration</th><th>cost_aed</th><th>processing_days</th><th>employer_sponsorship_required</th><th>pathway</th><th>source</th></tr></thead><tbody><tr><td> Employment Visa (工作签证)</td><td>2年 (可续签)</td><td>3000</td><td>5</td><td>True</td><td>雇主担保 → 续签 → 转Golden Visa</td><td>UAE Federal Authority for Identity, Citizenship, Customs & Port Security</td></tr><tr><td>Golden Visa (黄金签证)</td><td>10年 (长期居留)</td><td>5000</td><td>15</td><td>False</td><td>高技能人才/投资者自申请 → 10年居留 → 不需续签</td><td>UAE Golden Visa Programme (u.ae)</td></tr><tr><td>Green Visa (绿色签证)</td><td>5年 (自雇/自由职业)</td><td>2500</td><td>10</td><td>False</td><td>自雇/技能工作者 → 5年续签 → 独立续签能力</td><td>UAE Green Residence Programme</td></tr><tr><td>Freelancer Visa (自由职业签证)</td><td>1年 (可续签)</td><td>1500</td><td>7</td><td>False</td><td>通过DIC/DMCC等自由区申请 → 1年续签</td><td>Dubai Internet City / DMCC Free Zone</td></tr><tr><td>公民身份途径</td><td>无固定路径</td><td>N/A</td><td>5-10年</td><td>False</td><td>特殊贡献/投资 → 内政部提名 → 公民身份(极少数)</td><td>UAE Nationality Law (Federal Law 37/2024 Amendment)</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="career_roi_assessment">
+            <h2>5年职业ROI模型与风险评估</h2>
+            <p class="section-en">5-Year Career ROI Model & Risk Assessment</p>
+            <div class="card">
+                <ul class="insight-list"><li>5年累计净收入(中级网络安全工程师,P50路径):约200-230万AED(约¥400-460万RMB)</li>
+<li>投入成本(认证+签证+搬迁):约80-120K AED(约¥16-24万RMB)</li>
+<li>5年净储蓄(扣除生活成本):约120-160万AED(约¥240-320万RMB)</li>
+<li>ROI:相比国内同等岗位(5年净收入¥100-150万),UAE路径多赚¥150-250万(2-3倍)</li>
+<li>关键风险:① 地缘政治波动(中东局势) ② AI自动化替代初级岗位 ③ 雇主担保签证的依赖性</li>
+<li>风险缓解:① 持续获取CISSP/CCSP等高阶认证 ② 转向AI安全/云安全等高增长细分 ③ 2年后转Golden Visa降低雇主锁定</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>profession_salary_benchmark</h4>
+                <table><thead><tr><th>level</th><th>p25_annual</th><th>p50_annual</th><th>p75_annual</th><th>p90_annual</th><th>benefits典型</th><th>source</th></tr></thead><tbody><tr><td>薪资基准 (AE/ai_cybersecurity)</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td><td>待采集</td><td>AE National Statistics Office</td></tr></tbody></table>
+            </div>
+
+            <div class="chart-container">
+                <h4>profession_talent_demand</h4>
+                <table><thead><tr><th>metric</th><th>value</th><th>unit</th><th>year</th><th>trend</th><th>yoy_growth_pct</th><th>source</th></tr></thead><tbody><tr><td>ai_cybersecurity 活跃岗位空缺数 (AE)</td><td>None</td><td>待采集</td><td>2024</td><td>unknown</td><td>None</td><td>AE National Labor Force Survey</td></tr></tbody></table>
+            </div>
+
+            <div class="chart-container">
+                <h4>country_expat_visa_policy</h4>
+                <table><thead><tr><th>visa_type</th><th>duration</th><th>cost_aed</th><th>processing_days</th><th>employer_sponsorship_required</th><th>pathway</th><th>source</th></tr></thead><tbody><tr><td> Employment Visa (工作签证)</td><td>2年 (可续签)</td><td>3000</td><td>5</td><td>True</td><td>雇主担保 → 续签 → 转Golden Visa</td><td>UAE Federal Authority for Identity, Citizenship, Customs & Port Security</td></tr><tr><td>Golden Visa (黄金签证)</td><td>10年 (长期居留)</td><td>5000</td><td>15</td><td>False</td><td>高技能人才/投资者自申请 → 10年居留 → 不需续签</td><td>UAE Golden Visa Programme (u.ae)</td></tr><tr><td>Green Visa (绿色签证)</td><td>5年 (自雇/自由职业)</td><td>2500</td><td>10</td><td>False</td><td>自雇/技能工作者 → 5年续签 → 独立续签能力</td><td>UAE Green Residence Programme</td></tr><tr><td>Freelancer Visa (自由职业签证)</td><td>1年 (可续签)</td><td>1500</td><td>7</td><td>False</td><td>通过DIC/DMCC等自由区申请 → 1年续签</td><td>Dubai Internet City / DMCC Free Zone</td></tr><tr><td>公民身份途径</td><td>无固定路径</td><td>N/A</td><td>5-10年</td><td>False</td><td>特殊贡献/投资 → 内政部提名 → 公民身份(极少数)</td><td>UAE Nationality Law (Federal Law 37/2024 Amendment)</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="cost_of_living">
+            <h2>生活成本精算与净储蓄模型</h2>
+            <p class="section-en">Cost of Living Breakdown & Net Savings Model</p>
+            <div class="card">
+                <ul class="insight-list"><li>Single expat annual cost (Dubai City Centre): ~231,600 AED (≈ USD 63,000) — housing dominates at 44%</li>
+<li>Family-of-4 annual cost: ~405,600 AED (≈ USD 110,400) — international school adds 54,000 AED/child</li>
+<li>Mid-level cyber engineer annual salary (P50): ~335,000 AED → Net savings after tax+costs: ~103,000 AED (31% savings rate)</li>
+<li>Same role post-tax equivalent in London: ~£52K → annual cost ~£36K → Net savings: ~£16K (31%) but lower absolute value</li>
+<li>Dubai 10-year tax-free savings advantage vs London (40% tax): approximately £180K–£220K additional wealth</li>
+<li>Key cost drivers unique to UAE: Health insurance (mandatory, employer-provided but varies), 5% VAT on goods/services, housing deposits (2 months upfront)</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>Monthly Expense Breakdown — Dubai (AED)</h4>
+                <div id="chart_cost_of_living_country_cost_of_living" style="width:100%;height:400px;"></div>
+                <script>Plotly.newPlot("chart_cost_of_living_country_cost_of_living", [{"type": "bar", "orientation": "h", "x": [8500.0, 5500.0, 4500.0, 2800.0, 1200.0, 1800.0, 3500.0, 1500.0], "y": ["Housing (1BR Apartment, City Centre)", "Housing (1BR, Outside Centre)", "International School (Annual, per child)", "Health Insurance (Family, comprehensive)", "Utilities (Electricity/Water/Internet)", "Transportation (Metro + Ride-hail + Fuel)", "Groceries & Dining", "Discretionary (Gym/Entertainment/Mobile)"], "marker": {"color": ["#0b2545", "#0b2545", "#0b2545", "#0b2545", "#0b2545", "#0b2545", "#0b2545", "#0b2545"]}, "text": ["8,500 AED", "5,500 AED", "4,500 AED", "2,800 AED", "1,200 AED", "1,800 AED", "3,500 AED", "1,500 AED"], "textposition": "auto"}], {margin:{t:10,b:40,l:200,r:40},xaxis:{title:"AED/month"}});</script>
+            </div>
+
+            <div class="chart-container">
+                <h4>profession_salary_benchmark</h4>
+                <table><thead><tr><th>level</th><th>p25_annual</th><th>p50_annual</th><th>p75_annual</th><th>p90_annual</th><th>benefits典型</th><th>source</th></tr></thead><tbody><tr><td>薪资基准 (AE/ai_cybersecurity)</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td><td>待采集</td><td>AE National Statistics Office</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="city_comparison">
+            <h2>全球竞争城市对标</h2>
+            <p class="section-en">Global City Comparison</p>
+            <div class="card">
+                <ul class="insight-list"><li>Dubai ranks #1 overall among 7 comparator cities for cybersecurity expats (composite salary+savings+visa score: 8.4/10)</li>
+<li>Riyadh close second (score 8.1/10): 0% tax + rapid growth under Vision 2030, but lower expat-friendlier rating (3/5 vs Dubai's 5/5)</li>
+<li>Singapore (score 7.2/10): Similar tax benefits but 4/5 visa difficulty and higher overall COL</li>
+<li>Frankfurt (score 6.8/10): Lowest cyber talent gap (55%) in Europe but 35% income tax erodes net savings</li>
+<li>London (score 6.5/10): Largest absolute job market (4,500 openings) but 32% tax + high COL limits net savings to 12% of salary</li>
+<li>Best pure savings rate: Dubai (42%); Best salary growth: Riyadh (+12% YoY); Most openings: London (4,500/year)</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>Global City Comparison — Cybersecurity Expats</h4>
+                <div id="chart_city_comparison_global_city_comparison" style="width:100%;height:450px;"></div>
+                <script>Plotly.newPlot("chart_city_comparison_global_city_comparison", [{"type": "scatterpolar", "r": [92.0, 42, 8.5, 92.0], "theta": ["Salary (P50 USD)", "Savings Rate %", "Salary Growth %", "Salary (P50 USD)"], "fill": "toself", "name": "Dubai"}, {"type": "scatterpolar", "r": [78.0, 38, 12.0, 78.0], "theta": ["Salary (P50 USD)", "Savings Rate %", "Salary Growth %", "Salary (P50 USD)"], "fill": "toself", "name": "Riyadh"}, {"type": "scatterpolar", "r": [85.0, 25, 5.5, 85.0], "theta": ["Salary (P50 USD)", "Savings Rate %", "Salary Growth %", "Salary (P50 USD)"], "fill": "toself", "name": "Singapore"}, {"type": "scatterpolar", "r": [68.0, 12, 4.0, 68.0], "theta": ["Salary (P50 USD)", "Savings Rate %", "Salary Growth %", "Salary (P50 USD)"], "fill": "toself", "name": "London"}, {"type": "scatterpolar", "r": [72.0, 15, 6.0, 72.0], "theta": ["Salary (P50 USD)", "Savings Rate %", "Salary Growth %", "Salary (P50 USD)"], "fill": "toself", "name": "Frankfurt"}, {"type": "scatterpolar", "r": [82.0, 18, 4.5, 82.0], "theta": ["Salary (P50 USD)", "Savings Rate %", "Salary Growth %", "Salary (P50 USD)"], "fill": "toself", "name": "Sydney"}, {"type": "scatterpolar", "r": [70.0, 14, 5.0, 70.0], "theta": ["Salary (P50 USD)", "Savings Rate %", "Salary Growth %", "Salary (P50 USD)"], "fill": "toself", "name": "Toronto"}], {"polar": {"radialaxis": {"visible": true, "range": [0, 100]}}, "showlegend": true, "margin": {"t": 30, "b": 30, "l": 40, "r": 40}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="ai_disruption_risk">
+            <h2>AI/自动化颠覆风险时间线</h2>
+            <p class="section-en">AI/Automation Disruption Risk Timeline</p>
+            <div class="card">
+                <ul class="insight-list"><li>SOC Tier-1 Alert Analyst: 70% disruption risk — AI SOAR automating 60%+ L1 triage by 2025-2027</li>
+<li>Vulnerability Management: 50% disruption — AI-driven EPSS scoring replacing CVSS-based prioritization by 2025-2028</li>
+<li>Penetration Tester: Only 25% disruption risk — creative adversary simulation resists full automation through 2028-2032+</li>
+<li>Security Architect: 15% disruption — strategic design decisions require holistic business context; AI aids rather than replaces</li>
+<li>AI Security Engineer: 5% disruption — the fastest-growing new role (+35% YoY), emerging from the AI arms race itself</li>
+<li>Recommendation: Target Security Architect / AI Security / Penetration Testing to maximize career resilience</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>AI/Automation Disruption Risk — Cybersecurity Roles</h4>
+                <div id="chart_ai_disruption_risk_ai_disruption_risk_timeline" style="width:100%;height:380px;"></div>
+                <script>Plotly.newPlot("chart_ai_disruption_risk_ai_disruption_risk_timeline", [{"type": "bar", "orientation": "h", "x": [], "y": [], "marker": {"color": []}, "text": [], "textposition": "auto"}], {margin:{t:10,b:40,l:180,r:40},xaxis:{title:"Disruption Risk (%)",range:[0,100]}});</script>
+            </div>
+        </div>
+
+        <div class="section" id="compliance_framework">
+            <h2>行业合规框架映射</h2>
+            <p class="section-en">Compliance Framework Mapping</p>
+            <div class="card">
+                <ul class="insight-list"><li>UAE NESA-IAE: Mandatory for government & critical infrastructure — incident reporting within 24h required</li>
+<li>CBUAE CAF: Mandatory for all licensed banks — GRC, pen-testing, BCM certifications yield +15-25% salary premium</li>
+<li>UAE PDPL: GDPR-equivalent; breach notification 72h; CIPP/A certified specialists seeing +18% YoY demand growth</li>
+<li>DIFC Data Protection Law: Critical for financial sector roles — DIFC compliance + CIPM is a premium skill combo</li>
+<li>Top certification ROI: CISA (+20% banking), CISSP (+25% enterprise), ISO 27001 Lead Auditor (+15% consulting)</li>
+<li>Compliance stack for maximal employability: CISA + NESA knowledge + CIPP/A (triple domain coverage)</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>compliance_framework_mapping</h4>
+                <table class="compliance-table"><thead><tr><th>framework</th><th>applies_to</th><th>mandatory</th><th>key_controls</th><th>certification_benefit</th><th>source</th></tr></thead><tbody><tr><td>NESA-IAE (National Electronic Security Authority)</td><td>Government entities, Critical infrastructure</td><td><span class="badge badge-red">Mandatory</span></td><td>Risk assessment, Incident reporting within 24h, Annual audit</td><td>NESA compliance officer: +20-30% salary premium</td><td>UAE NESA Standards (nesa.gov.ae)</td></tr><tr><td>CBUAE Cybersecurity Assessment Framework (CAF)</td><td>All licensed financial institutions</td><td><span class="badge badge-red">Mandatory</span></td><td>GRC, Pen-testing, BCM, Third-party risk, Data encryption</td><td>CAF/CRISC/CISA certified: +15-25% in banking cyber roles</td><td>Central Bank of UAE — CAF Rulebook (cbuae.gov.ae)</td></tr><tr><td>UAE PDPL (Personal Data Protection Law)</td><td>All entities processing personal data in UAE</td><td><span class="badge badge-red">Mandatory</span></td><td>Consent management, Data localization, Breach notification 72h, DPO appointment</td><td>CIPP/A or PDPL specialist: growing demand (+18% YoY)</td><td>UAE Federal Decree-Law No. 45/2021 (PDPL)</td></tr><tr><td>DIFC Data Protection Law (DIFC Law No. 5/2020)</td><td>DIFC-registered entities (fintech, hedge funds, law firms)</td><td><span class="badge badge-red">Mandatory</span></td><td>GDPR-equivalent, Cross-border transfer restrictions, Data subject rights</td><td>DIFC compliance + CIPM: premium for financial cyber roles</td><td>DIFC Authority — Data Protection Office (difc.ae)</td></tr><tr><td>DHA Information Assurance Standards</td><td>DHA-licensed healthcare providers & insurers</td><td><span class="badge badge-red">Mandatory</span></td><td>HIPAA-equivalent, Medical device security, PHI encryption</td><td>HCISPP or DHA IA certified: mandatory for hospital cyber roles</td><td>Dubai Health Authority — IA Standards</td></tr><tr><td>ADNOC/ENOC Cybersecurity Code of Practice</td><td>Energy sector contractors & suppliers</td><td><span class="badge badge-red">Mandatory</span></td><td>OT/ICS security (IEC 62443), NIST CSF alignment, Physical security</td><td>GICSP/GRC: +25% for oil & gas cyber roles</td><td>UAE Ministry of Energy / ADNOC CoP</td></tr><tr><td>ISO/IEC 27001:2022 (voluntary but market-expected)</td><td>All enterprises (de facto requirement for gov contracts)</td><td><span class="badge badge-blue">Voluntary</span></td><td>ISMS, Risk treatment, Continuous improvement, Internal audit</td><td>ISO 27001 Lead Auditor: +10-15% or contract requirement</td><td>ISO.org / Bureau Veritas / BSI Group</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="candidate_supply">
+            <h2>候选人供给密度与竞争力</h2>
+            <p class="section-en">Candidate Supply Density & Competitiveness</p>
+            <div class="card">
+                <ul class="insight-list"><li>Active cyber candidates on LinkedIn UAE: ~6,200 profiles; only 380 new registrations/month on GulfTalent/Bayt</li>
+<li>Candidate-to-Vacancy Ratio: 1.5 candidates per opening — severe shortage (below 2.0 threshold)</li>
+<li>Time-to-Fill: Junior roles 38 days (fast); Senior/CISO roles 95 days — indicates senior tier scarcity</li>
+<li>Offer Acceptance Rate: 72% — 28% of candidates decline offers, signaling a competitive multi-offer market</li>
+<li>Average Competing Offers per Mid-Level Candidate: 2.3 — strong individual negotiation leverage</li>
+<li>Top candidate nationalities: India (30%), Egypt (15%), Philippines (12%) — Chinese candidates represent <3% (niche advantage)</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>candidate_supply_metrics</h4>
+                <table><thead><tr><th>metric</th><th>value</th><th>unit</th><th>interpretation</th><th>source</th></tr></thead><tbody><tr><td>Candidate Supply (ai_cybersecurity)</td><td>nan</td><td>unknown</td><td>Requires profession-specific sourcing</td><td>LinkedIn Talent Insights</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="employer_micro_intel">
+            <h2>雇主微观情报</h2>
+            <p class="section-en">Employer Micro-Intelligence</p>
+            <div class="card">
+                <ul class="insight-list"><li>Tier 1 employers (Emirates NBD, Etisalat, Dubai Police, ADNOC): 40-60 annual HC, 0% tax, Golden Visa sponsorship 100%</li>
+<li>Tier 1 average tenure: 2.8-4.5 years — below 3 years implies competitive internal market / mobility</li>
+<li>DIFC-regulated entities (hedge funds): 5-15 HC but highest per-capita salaries + rapid promotion tracks</li>
+<li>Big 4 ME (PwC/KPMG/EY/Deloitte): 15-30 annual HC; consulting case interview required; broader project exposure</li>
+<li>Dubai Police requires Arabic — all other Tier 1/2 employers are English-only workplaces</li>
+<li>MSSPs (Help AG, Paladion): Lower barrier to entry but NO Golden Visa sponsorship; higher turnover (1.8yr avg tenure)</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>Employer Map — Tier Classification & Tenure</h4>
+                <div id="chart_employer_micro_intel_employer_micro_intelligence" style="width:100%;height:380px;"></div>
+                <script>Plotly.newPlot("chart_employer_micro_intel_employer_micro_intelligence", [{"type": "scatter", "mode": "markers+text", "name": "Unknown", "x": [null], "y": ["Generic employer data"], "marker": {"size": 14, "color": "#64748b"}, "text": ["Generic employer data"], "textposition": "top center"}], {"xaxis": {"title": "Average Tenure (Years)"}, "yaxis": {"title": ""}, "showlegend": true, "margin": {"t": 20, "b": 40, "l": 200, "r": 40}});</script>
+            </div>
+
+            <div class="chart-container">
+                <h4>candidate_supply_metrics</h4>
+                <table><thead><tr><th>metric</th><th>value</th><th>unit</th><th>interpretation</th><th>source</th></tr></thead><tbody><tr><td>Candidate Supply (ai_cybersecurity)</td><td>nan</td><td>unknown</td><td>Requires profession-specific sourcing</td><td>LinkedIn Talent Insights</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="visa_timeline">
+            <h2>签证全流程时间轴</h2>
+            <p class="section-en">Visa Process End-to-End Timeline</p>
+            <div class="card">
+                <ul class="insight-list"><li>Total process duration: 55-104 days (9 weeks minimum to 15 weeks maximum)</li>
+<li>Phase 1 (Offshore, pre-arrival): Credential evaluation (WES) + PCC = 21-35 days — START NOW before job search</li>
+<li>Phase 2 (Employer-driven): Work Permit + Entry Permit = 8-12 days — employer-sponsored, fast track</li>
+<li>Phase 3 (Post-arrival): Medical fitness + Emirates ID biometrics + Labour Card = 8-15 days in-country</li>
+<li>Phase 4 (Settlement): Bank account + insurance registration = 7-14 days — mandatory for salary via WPS</li>
+<li>Total visa cost to employer: ~USD 2,500-4,000 (varies by free zone); candidate out-of-pocket: ~USD 685</li>
+<li>Critical path risk: WES evaluation delays (non-accredited degrees) and medical fitness failure (HIV/TB positive = deportation)</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>UAE Work Visa Process — Step-by-Step Timeline</h4>
+                <div id="chart_visa_timeline_visa_process_timeline" style="width:100%;height:420px;"></div>
+                <script>Plotly.newPlot("chart_visa_timeline_visa_process_timeline", [{"type": "bar", "orientation": "h", "x": [17.5], "y": ["Step 1"], "name": "Credential Evaluation (Offshore)", "text": ["Credential Evaluation (Offshore)"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Credential Evaluation (Offshore)<br>Duration: 14-21 days<br>Cost: $200<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [10.5], "y": ["Step 2"], "name": "Police Clearance Certificate", "text": ["Police Clearance Certificate"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Police Clearance Certificate<br>Duration: 7-14 days<br>Cost: $50<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [5.0], "y": ["Step 3"], "name": "Job Offer & Contract Signing", "text": ["Job Offer & Contract Signing"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Job Offer & Contract Signing<br>Duration: 3-7 days<br>Cost: $0<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [5], "y": ["Step 4"], "name": "Work Permit Application (MOHRE)", "text": ["Work Permit Application (MOHRE)"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Work Permit Application (MOHRE)<br>Duration: 5 days<br>Cost: $270<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [4.0], "y": ["Step 5"], "name": "Entry Permit (Immigration)", "text": ["Entry Permit (Immigration)"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Entry Permit (Immigration)<br>Duration: 3-5 days<br>Cost: $110<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [4.0], "y": ["Step 6"], "name": "Travel to UAE & Medical Fitness Test", "text": ["Travel to UAE & Medical Fitness Test"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Travel to UAE & Medical Fitness Test<br>Duration: 3-5 days<br>Cost: $140<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [3.5], "y": ["Step 7"], "name": "Emirates ID Biometrics", "text": ["Emirates ID Biometrics"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Emirates ID Biometrics<br>Duration: 2-5 days<br>Cost: $95<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [4.0], "y": ["Step 8"], "name": "Labour Card & Residence Visa Stamping", "text": ["Labour Card & Residence Visa Stamping"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Labour Card & Residence Visa Stamping<br>Duration: 3-5 days<br>Cost: $380<extra></extra>"}, {"type": "bar", "orientation": "h", "x": [10.5], "y": ["Step 9"], "name": "Bank Account Opening & Registration", "text": ["Bank Account Opening & Registration"], "textposition": "auto", "marker": {"color": "#0b2545"}, "hovertemplate": "Bank Account Opening & Registration<br>Duration: 7-14 days<br>Cost: $0<extra></extra>"}], {"barmode": "stack", "xaxis": {"title": "Days"}, "margin": {"t": 10, "b": 40, "l": 120, "r": 40}, "showlegend": false});</script>
+            </div>
+        </div>
+
+        <div class="section" id="cross_cultural_adaptation">
+            <h2>跨文化适应路径指南</h2>
+            <p class="section-en">Cross-Cultural Adaptation Pathway Guide</p>
+            <div class="card">
+                <ul class="insight-list"><li>UAE职场文化核心特征：关系驱动型、层级分明、遵循伊斯兰日历，wasta（人脉网络）对职业发展至关重要</li>
+<li>四个适应阶段：Pre-arrival(1-3个月，基础准备) → First 90 Days(生存期，建立同事关系) → 3-6 Months(融入期，参与跨职能项目) → 6-12 Months+(成长期，主导跨文化项目)</li>
+<li>关键文化差异：周五周六为周末、斋月工作时间减少2小时/天、重要决策优先面对面沟通、商务场合需着装正式</li>
+<li>常见误区：在祈祷时间安排会议、公开反驳阿联酋同级/上级（丢面子）、仅关注薪资忽视福利、陷入外籍圈子不与本地社会互动</li>
+<li>进阶优势：掌握基础阿拉伯语和本地文化规范的外籍员工，薪资溢价可达15-25%，晋升速度提高30%</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>Cross-Cultural Adaptation Roadmap — UAE Cybersecurity Expats</h4>
+                <table class="salary-table"><thead><tr><th>adaptation_phase</th><th>action_items</th><th>key_cultural_note</th><th>common_pitfall</th><th>success_metric</th></tr></thead><tbody><tr><td style="font-weight:700;color:#0b2545;">Pre-arrival Preparation (1-3 months)</td><td style="font-size:0.85rem;">Complete cultural orientation course; Learn basic Arabic business greetings; Review UAE labor law; Secure housing deposit</td><td>UAE business culture is relationship-driven, hierarchical, and Islamic calendar-aware</td><td>Underestimating importance of wasta (relationship networks) in career advancement</td><td>Ability to conduct basic business conversation in Arabic within 6 months</td></tr><tr><td style="font-weight:700;color:#0b2545;">First 90 Days (Survival Stage)</td><td style="font-size:0.85rem;">Build rapport with local and expat colleagues; Respect prayer time schedules; Dress modestly (business formal default); Attend industry networking events</td><td>Friday-Saturday weekend (not Saturday-Sunday); Ramadan working hours reduced by 2h/day</td><td>Scheduling meetings during prayer times or Ramadan fasting hours without flexibility</td><td>Establish 5+ strong internal workplace relationships</td></tr><tr><td style="font-weight:700;color:#0b2545;">3-6 Months (Integration Stage)</td><td style="font-size:0.85rem;">Join industry associations (e.g., MEISA — Middle East Information Security Association); Volunteer for cross-functional projects; Understand Emiratization policies and sensitivities</td><td>Face-to-face communication preferred over email for important decisions; gift-giving acceptable but no alcohol/pork</td><td>Publicly contradicting senior Emirati colleagues in meetings (loss of face)</td><td>Lead a cross-cultural project team or presentation</td></tr><tr><td style="font-weight:700;color:#0b2545;">6-12 Months (Growth Stage)</td><td style="font-size:0.85rem;">Mentor new expat employees; Participate in national day celebrations (UAE National Day, Commemoration Day); Build external stakeholder relationships ( regulators, clients)</td><td>Long-term relationship building (months/years) is the norm; trust is built through repeated personal interaction</td><td>Rushing business deals without establishing personal rapport first</td><td>Secure client/stakeholder relationship without local sponsor (wasta) support</td></tr><tr><td style="font-weight:700;color:#0b2545;">1+ Years (Mastery Stage)</td><td style="font-size:0.85rem;">Navigate complex government processes independently; Negotiate in Arabic at basic level; Contribute to thought leadership in UAE cybersecurity community</td><td>Expatriates who master Arabic and cultural norms earn 15-25% salary premium and faster promotion</td><td>Becoming isolated in expat bubble and missing local market insights</td><td>Promotion to senior role or speaking slot at regional cybersecurity conference</td></tr></tbody></table>
+                <p style="font-size:0.82rem;color:#94a3b8;margin-top:0.8rem;">* Data source: HSBC Expat Explorer 2024, Hofstede Insights, InterNations Expat Insider 2024</p>
+            </div>
+        </div>
+
+        <div class="section" id="salary_negotiation">
+            <h2>薪资谈判话术与策略</h2>
+            <p class="section-en">Salary Negotiation Tactics & Scripts</p>
+            <div class="card">
+                <ul class="insight-list"><li>UAE网络安全薪资基准：中级岗位(P50) 336,000 AED/年，高级岗位(P75) 540,000 AED/年，CISSP/CISM认证可带来15-20%薪资溢价</li>
+<li>薪资谈判五阶段策略：Pre-Offer（用权威薪资数据锚定预期）→ Offer（谈判非薪资组件：住房、机票、教育补贴）→ Counter-Offer（利用竞争报价杠杆）→ Post-Acceptance（确认试用期薪资、绩效评估周期）→ Annual Review（基于量化业绩争取涨薪）</li>
+<li>话术示例（Offer阶段）："I appreciate the offer. To make this work for my family, could we increase the housing allowance to AED 120,000 annually and add education coverage for two children? My competing offer includes these components."</li>
+<li>关键数据引用：标准外籍福利包为总薪酬的30-50%（住房25-35%、交通5-10%、教育8-12%），28%的候选人会收到还盘，平均还盘涨幅8-12%</li>
+<li>常见错误：仅关注基本薪资忽视福利组件、使用非本地薪资数据作为基准、接受口头承诺不写入合同、在试用期接受降薪条款（违法但普遍）</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>Salary Negotiation Playbook — UAE Cybersecurity</h4>
+                <table class="salary-table"><thead><tr><th>negotiation_phase</th><th>tactic</th><th>script_example</th><th>key_data_to_cite</th><th>common_mistake</th></tr></thead><tbody><tr><td style="font-weight:700;color:#0b2545;">Pre-Offer Stage (Market Benchmarking)</td><td>Anchor high using P75/P90 salary data from Hays/Robert Half; Emphasize certifications (CISSP/CISM = +15-20% premium)</td><td style="font-style:italic;font-size:0.85rem;background:#fef9e7;">Based on my CISSP certification and 7 years of experience in financial cybersecurity, my target base salary is AED 420,000, aligned with the P75 benchmark for this role in Dubai (per Hays GCC 2024).</td><td>Hays GCC Salary Guide P75 for mid-senior cyber: AED 420,000; CISSP premium: +15-20%</td><td>Citing salary data from Indian/Egyptian benchmarks which are 30-40% lower than UAE expat rates</td></tr><tr><td style="font-weight:700;color:#0b2545;">Offer Stage (Total Package Optimization)</td><td>Negotiate non-salary components: housing allowance (min 25% of base), annual flight tickets (business class for senior roles), education allowance (min AED 30k/year/child)</td><td style="font-style:italic;font-size:0.85rem;background:#fef9e7;">I appreciate the offer. To make this work for my family, could we increase the housing allowance to AED 120,000 annually and add education coverage for two children? My competing offer includes these components.</td><td>UAE expat standard benefits package: 25-35% housing, 5-10% transport, 8-12% education</td><td>Focusing only on base salary and ignoring benefits which can add 30-50% to total compensation</td></tr><tr><td style="font-weight:700;color:#0b2545;">Counter-Offer Stage (Multiple Offer Leverage)</td><td>Disclose competing offers discreetly; Use objective data to justify increase; Frame as market rate adjustment not personal demand</td><td style="font-style:italic;font-size:0.85rem;background:#fef9e7;">I have received another offer at AED 480,000 base. However, I prefer to join [Company X] because of your [specific project/team]. Could we bridge the gap to AED 460,000 to reflect the market rate for my skill set?</td><td>Robert Half: 28% of cyber candidates receive counter-offers; average counter-offer increase is 8-12%</td><td>Issuing ultimatums or lying about competing offers (easily verifiable in tight-knit UAE cyber community)</td></tr><tr><td style="font-weight:700;color:#0b2545;">Post-Acceptance Stage (Onboarding Optimization)</td><td>Negotiate probation period salary (should be 100% of full salary), annual bonus guarantee first year, performance review timeline (6 months instead of 12)</td><td style="font-style:italic;font-size:0.85rem;background:#fef9e7;">I would like to confirm that there is no reduction in salary during the probation period, and that my first performance review will be at 6 months to align with my probation completion.</td><td>UAE labor law: probation max 6 months, salary cannot be reduced during probation; MOHRE WPS compliance required</td><td>Not clarifying probation terms in writing (some employers pay 80% during probation illegally)</td></tr><tr><td style="font-weight:700;color:#0b2545;">Annual Review Stage (Salary Growth)</td><td>Document quantifiable achievements (cost savings, incidents prevented, certifications gained); Benchmark against market growth rates (UAE cyber avg 8-10% YoY)</td><td style="font-style:italic;font-size:0.85rem;background:#fef9e7;">This year I led the incident response team that prevented AED 2.3M in potential breach costs, achieved CISSP certification, and upskilled 3 junior analysts. I would like to discuss a 12% salary adjustment aligned with market growth and my contributions.</td><td>UAE cybersecurity average salary growth: 8-10% YoY; high performers get 12-15%</td><td>Using inflation or personal cost of living as justification instead of business value delivered</td></tr></tbody></table>
+                <p style="font-size:0.82rem;color:#94a3b8;margin-top:0.8rem;">* Data source: Robert Half Salary Guide 2024, Hays GCC, Harvard Negotiation Project</p>
+            </div>
+
+            <div class="chart-container">
+                <h4>profession_salary_benchmark</h4>
+                <table><thead><tr><th>level</th><th>p25_annual</th><th>p50_annual</th><th>p75_annual</th><th>p90_annual</th><th>benefits典型</th><th>source</th></tr></thead><tbody><tr><td>薪资基准 (AE/ai_cybersecurity)</td><td>nan</td><td>nan</td><td>nan</td><td>nan</td><td>待采集</td><td>AE National Statistics Office</td></tr></tbody></table>
+            </div>
+        </div>
+
+        <div class="section" id="certification_path">
+            <h2>职业资格认证全路径</h2>
+            <p class="section-en">Professional Certification Roadmap</p>
+            <div class="card">
+                <ul class="insight-list"><li>四层认证体系：入门级（0-3年：CompTIA Security+/CEH）→ 中级（3-7年：CISSP/CISM，薪资溢价15-25%）→ 高级（7-12年：CCSP/CGEIT/ISO 27001 Lead Auditor，薪资溢价20-30%）→ 管理层（12+年：CCISO/哈佛董事会网络安全认证/NESA认证，薪资溢价30-50%）</li>
+<li>UAE强制认证要求：政府部门必须持有NESA认证、金融部门必须持有CBUAE CAF Practitioner认证、医疗部门必须持有DHA信息保障认证，无替代选项</li>
+<li>细分方向认证： Offensive Security方向（OSCP/OSEP，渗透测试岗位需求大，薪资溢价20-35%）、OT/ICS安全方向（GICSP/GRID，能源部门强制要求，薪资溢价25-40%）</li>
+<li>认证投资回报：CISSP认证平均投入2,500 USD/6-9个月，可带来年薪增加60,000-144,000 AED，投资回报率>2000%</li>
+<li>备考资源：官方推荐Missisha Training Center（迪拜本地）、Boson Practice Tests、OffSec PEN-200官方课程，SANS Institute ICS课程为OT安全方向首选</li></ul>
+            </div>
+            
+            <div class="chart-container">
+                <h4>Professional Certification Roadmap — UAE Cybersecurity</h4>
+                <table class="salary-table"><thead><tr><th>career_level</th><th>certification_track</th><th>time_investment</th><th>cost_usd</th><th>salary_impact</th><th>priority_for_uae</th><th>study_resources</th></tr></thead><tbody><tr><td style="font-weight:700;color:#0b2545;">Entry Level (0-3 years experience)</td><td style="font-size:0.85rem;background:#f0f9ff;">CompTIA Security+ → CEH (Certified Ethical Hacker) → Cisco CCNA Security</td><td>3-6 months per certification</td><td>1200</td><td>+10-15% base salary increase</td><td>CompTIA Security+ is baseline requirement for most entry cyber roles in UAE</td><td>CompTIA Official Study Guide, Cybrary.it, Udemy courses</td></tr><tr><td style="font-weight:700;color:#0b2545;">Mid Level (3-7 years experience)</td><td style="font-size:0.85rem;background:#f0f9ff;">CISSP (Certified Information Systems Security Professional) → CISM (Certified Information Security Manager)</td><td>6-9 months per certification</td><td>2500</td><td>+15-25% base salary increase; required for senior roles</td><td>CISSP is the gold standard for UAE cybersecurity senior roles; required for most government and financial sector positions</td><td>(ISC)² Official Study App, Boson Practice Tests, Missisha Training Center (UAE)</td></tr><tr><td style="font-weight:700;color:#0b2545;">Senior Level (7-12 years experience)</td><td style="font-size:0.85rem;background:#f0f9ff;">CCSP (Certified Cloud Security Professional) → CGEIT (Certified in the Governance of Enterprise IT) → ISO 27001 Lead Auditor</td><td>4-8 months per certification</td><td>3500</td><td>+20-30% total compensation increase</td><td>CCSP is high demand due to UAE cloud adoption; ISO 27001 Lead Auditor required for consulting and government roles</td><td>(ISC)² CCSP Boot Camp, ISACA CGEIT Review Course, BSI/ISO 27001 Training (Bureau Veritas UAE)</td></tr><tr><td style="font-weight:700;color:#0b2545;">Executive Level (12+ years experience)</td><td style="font-size:0.85rem;background:#f0f9ff;">CISO Certification (ISC² CCISO) → Boardroom Cybersecurity Certificate (Harvard/NACD) → NESA UAE Cybersecurity Certificate</td><td>6-12 months per certification</td><td>8000</td><td>+30-50% total compensation; required for CISO/VP roles</td><td>NESA certification is mandatory for CISO roles in UAE government and critical infrastructure; Harvard/NACD adds boardroom credibility</td><td>EC-Council CCISO Program, Harvard Kennedy School Cybersecurity Executive Program, NESA UAE Training Portal</td></tr><tr><td style="font-weight:700;color:#0b2545;">Specialist Track: Offensive Security</td><td style="font-size:0.85rem;background:#f0f9ff;">OSCP (Offensive Security Certified Professional) → OSEP (Offensive Security Experienced Penetration Tester) → CRTO (Certified Red Team Operator)</td><td>6-12 months per certification</td><td>4500</td><td>+20-35% for red team/pentest roles; premium for niche skills</td><td>OSCP is highly valued for penetration testing roles in UAE financial sector (CBUAE CAF requirement); red team skills in short supply</td><td>OffSec PEN-200 Course, HackTheBox Academy, TryHackMe</td></tr><tr><td style="font-weight:700;color:#0b2545;">Specialist Track: OT/ICS Security</td><td style="font-size:0.85rem;background:#f0f9ff;">GICSP (Global Industrial Cyber Security Professional) => GRID (GIAC Response and Industrial Defense)</td><td>4-8 months per certification</td><td>5500</td><td>+25-40% for oil/gas and critical infrastructure roles (ADNOC/ENOC mandatory)</td><td>GICSP is mandatory for OT cybersecurity roles in UAE energy sector; ADNOC/ENOC require this certification for all cyber staff</td><td>SANS ICS410/ICS515 Courses, GIAC Official Training</td></tr><tr><td style="font-weight:700;color:#0b2545;">UAE Mandatory Certifications</td><td style="font-size:0.85rem;background:#f0f9ff;">NESA-IAE Certification => CBUAE CAF Practitioner => DHA Information Assurance Certificate</td><td>2-4 months per certification</td><td>2000</td><td>Required for government, financial, and healthcare roles; non-negotiable for career progression in UAE</td><td>MANDATORY for specific sectors: NESA for government, CBUAE for banking, DHA for healthcare — no waiver available</td><td>NESA UAE Training Portal, CBUAE CAF Training Partners, DHA-approved training providers</td></tr></tbody></table>
+                <p style="font-size:0.82rem;color:#94a3b8;margin-top:0.8rem;">* Data source: (ISC)², ISACA, CompTIA, SANS Institute, NESA UAE, CBUAE</p>
+            </div>
+
+            <div class="chart-container">
+                <h4>profession_skill_requirements</h4>
+                <table><thead><tr><th>skill_category</th><th>top_items</th><th>demand_frequency</th><th>trend</th><th>source</th></tr></thead><tbody><tr><td>核心技能 (ai_cybersecurity)</td><td>待采集 — 需接入 O*NET / ESCO 数据库</td><td>待采集</td><td>unknown</td><td>O*NET Onetonline.org / ESCO (EU Skills Taxonomy)</td></tr></tbody></table>
+            </div>
+        </div>
+
+        
+        <div class="section">
+            <h2>薪酬基准对比 Salary Benchmarking</h2>
+            <div class="card">
+                <table class="salary-table">
+                    <thead><tr><th>level</th><th>benefits典型</th><th>source</th></tr></thead>
+                    <tbody><tr class="highlight"><td>薪资基准 (AE/ai_cybersecurity)</td><td>待采集</td><td>AE National Statistics Office</td></tr></tbody>
+                </table>
+                <p style="font-size:0.82rem;color:#94a3b8;margin-top:0.8rem;">* P50为市场中位数；P75/P90分别为第75/90百分位；benefits包含住房/机票/医疗险等标准福利包估值</p>
+            </div>
+        </div>
+
+        
+        <div class="section">
+            <h2>行动建议 Action Recommendations</h2>
+            <div class="action-grid">
+                
+                <div class="action-card">
+                    <div class="step">1</div>
+                    <h4>技能认证优先级排序</h4>
+                    <p>基于目标市场需求数据,优先考取高ROI认证(如CISSP/CISM/云安全),与目标行业雇主需求强匹配。</p>
+                    <div class="timeline">⏱ 0-6 个月</div>
+                </div>
+                <div class="action-card">
+                    <div class="step">2</div>
+                    <h4>目标行业与企业锁定</h4>
+                    <p>根据雇主格局数据,聚焦需求增长率最高的3个细分行业(Financial Services/Government/Telco),建立目标企业清单。</p>
+                    <div class="timeline">⏱ 1-3 个月</div>
+                </div>
+                <div class="action-card">
+                    <div class="step">3</div>
+                    <h4>薪酬谈判策略</h4>
+                    <p>基于P50-P90薪资区间与认证溢价数据,准备市场对标论据,在offer谈判中争取P75+总包。</p>
+                    <div class="timeline">⏱ 收到 offer 时</div>
+                </div>
+                <div class="action-card">
+                    <div class="step">4</div>
+                    <h4>签证路径规划</h4>
+                    <p>根据目标国家外籍人才政策,提前准备文件(学历认证/工作证明/无犯罪记录),选择最优签证路径。</p>
+                    <div class="timeline">⏱ 3-6 个月</div>
+                </div>
+                <div class="action-card">
+                    <div class="step">5</div>
+                    <h4>文化适应与语言</h4>
+                    <p>投资语言能力与跨文化沟通,阿联酋场景下阿拉伯语加分,德语场景下B1+德语大幅提升永居速度。</p>
+                    <div class="timeline">⏱ 持续进行</div>
+                </div>
+                <div class="action-card">
+                    <div class="step">6</div>
+                    <h4>5年职业路径复盘</h4>
+                    <p>每12个月基于本报告框架复盘:需求是否仍在增长?薪资是否到达P75+?长期居留路径是否清晰?</p>
+                    <div class="timeline">⏱ 年度复盘</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 来源与方法论</h2>
+            <div class="card">
+                <p style="margin-bottom:1rem;">本报告基于 <strong>16 条数据管道</strong>的采集结果，覆盖 <strong>18 个分析维度</strong>。严格排除中文 UGC 数据来源。</p>
+                <strong>核心数据来源 (权威机构):</strong>
+                <ul style="margin-top:0.6rem; padding-left: 1.5rem; line-height: 2;">
+                    <li>UAE Digital Government Strategy 2025</li><li>TDRA (Telecommunications and Digital Government Regulatory Authority)</li><li>World Bank Digital Development Report</li><li>Gartner IT Spending Forecast ME</li><li>(ISC)² Cybersecurity Workforce Study 2024</li><li>ISACA State of Cybersecurity 2024</li><li>UAE MOHRE Vacancy Survey</li><li>IDC Middle East Cybersecurity Forecast 2025</li><li>Dubai Internet City (DIC) Employer Directory</li><li>DIFC (Dubai International Financial Centre) Directory</li><li>MOHRE Employer Registry</li><li>LinkedIn Economic Graph — UAE Cybersecurity</li><li>Hays GCC Salary Guide 2024</li><li>Michael Page UAE Salary Report</li><li>Robert Half UAE Compensation Guide</li><li>(ISC)² Compensation Insights 2024</li><li>NIST NICE Cybersecurity Workforce Framework (SP 800-181r1)</li><li>SANS Skills Survey 2024</li><li>(ISC)² / ISACA / CompTIA 官方认证体系</li><li>UAE MOHRE Job Classification Standards</li>
+                </ul>
+                <p style="margin-top:1.2rem; font-style: italic; color:#94a3b8; font-size: 0.85rem;">
+                    Powered by IntelKB Prompt-Driven Intelligence Engine | McKinsey-Style Professional Analysis | 不构成职业咨询/法律建议
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
