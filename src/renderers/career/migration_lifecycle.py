@@ -20,6 +20,7 @@ from loguru import logger
 
 from src.prompt_registry import PromptDefinition
 from src.prompt_runtime import AnalysisResult, SectionResult
+from src.renderers.source_links import render_source_list_as_html, render_source_ul_as_html
 
 
 class MigrationLifecycleRenderer:
@@ -525,6 +526,10 @@ class MigrationLifecycleRenderer:
                     <div style="font-size:0.8rem;color:#64748b;">扣除全部投入后的净储蓄</div>
                 </div>
             </div>
+            <p style="font-size:0.8rem;color:#c62828;margin-top:0.5rem;">
+                ⚠ 成本与收益说明：上述人民币金额为基于公开信息的<strong>分析师估算值（推断，非官方统计）</strong>，
+                汇率、物价与在留资格审批结果会导致实际数值偏离，仅供规划参考。精确数据请以各维度章节的来源链接为准。
+            </p>
         </div>"""
 
     def _render_sections_by_phase(self, analysis: AnalysisResult) -> str:
@@ -592,8 +597,8 @@ class MigrationLifecycleRenderer:
             items = "\n".join(f'<li>{i}</li>' for i in s.insights)
             sources_html = ""
             if s.source_attribution:
-                tags = "\n".join(f'<span class="source-tag">{src}</span>' for src in s.source_attribution)
-                sources_html = f'<div style="margin-top:1rem;">{tags}</div>'
+                links = render_source_list_as_html(s.source_attribution, separator=" ")
+                sources_html = f'<div style="margin-top:1rem;line-height:2;">{links}</div>'
 
             risk_badge = ""
             if hasattr(s, 'risk_level'):
@@ -624,8 +629,8 @@ class MigrationLifecycleRenderer:
             items = "\n".join(f'<li>{i}</li>' for i in s.insights)
             sources_html = ""
             if s.source_attribution:
-                tags = "\n".join(f'<span class="source-tag">{src}</span>' for src in s.source_attribution)
-                sources_html = f'<div style="margin-top:1rem;">{tags}</div>'
+                links = render_source_list_as_html(s.source_attribution, separator=" ")
+                sources_html = f'<div style="margin-top:1rem;line-height:2;">{links}</div>'
 
             chunks.append(f"""
         <div class="section" id="{s.dimension_id}">
@@ -643,13 +648,13 @@ class MigrationLifecycleRenderer:
         for s in analysis.sections:
             all_sources.extend(s.source_attribution)
         unique_sources = list(dict.fromkeys(all_sources))
-        tags = "\n".join(f'<span class="source-tag">{src}</span>' for src in unique_sources)
+        links = render_source_ul_as_html(unique_sources) if unique_sources else ""
 
         return f"""
         <div class="section">
             <h2>数据来源 Source Attribution</h2>
             <div class="card">
-                <p style="margin-bottom:1rem;">本报告所有数据均来源于以下官方机构与国际组织：</p>
-                <div>{tags}</div>
+                <p style="margin-bottom:1rem;">本报告所有数据均来源于以下官方机构与国际组织（点击可跳转验证）：</p>
+                <div>{links}</div>
             </div>
         </div>"""

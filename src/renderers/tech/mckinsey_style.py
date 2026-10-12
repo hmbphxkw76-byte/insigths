@@ -15,6 +15,7 @@ from loguru import logger
 
 from src.prompt_registry import PromptDefinition
 from src.prompt_runtime import AnalysisResult
+from src.renderers.source_links import render_source_ul_as_html
 
 
 class McKinseyTechRenderer:
@@ -259,6 +260,15 @@ class McKinseyTechRenderer:
             font-size: 0.82rem;
             color: #94a3b8;
         }}
+        .source-list a {{
+            color: #1565c0;
+            text-decoration: none;
+            border-bottom: 1px dotted #1565c0;
+        }}
+        .source-list a:hover {{
+            color: #0b2545;
+            border-bottom-style: solid;
+        }}
         .footer .sources {{
             margin-top: 1rem;
         }}
@@ -293,11 +303,11 @@ class McKinseyTechRenderer:
                 <p>本报告基于 {len(analysis.data_bundle.data)} 条数据管道的采集结果,覆盖 {len(analysis.sections)} 个分析维度.</p>
                 <div class="footer">
                     <strong>主要数据来源:</strong>
-                    <ul style="margin-top:0.5rem; padding-left: 1.5rem;">
-                        {''.join(f'<li>{s}</li>' for s in source_list)}
+                    <ul style="margin-top:0.5rem; padding-left: 1.5rem;" class="source-list">
+                        {render_source_ul_as_html(source_list)}
                     </ul>
                     <p style="margin-top:1rem; font-style: italic; color:#94a3b8;">
-                        Powered by IntelKB Prompt-Driven Intelligence Engine | McKinsey-Style Analysis
+                        Powered by IntelKB Prompt-Driven Intelligence Engine | McKinsey-Style Analysis (sources clickable)
                     </p>
                 </div>
             </div>

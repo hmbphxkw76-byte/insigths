@@ -27,7 +27,7 @@ from src.renderers.career import (
 )
 from src.renderers.macro import MacroDashboardRenderer
 from src.renderers.realestate import RealEstateDashboardRenderer
-from src.renderers.tech import McKinseyTechRenderer
+from src.renderers.tech import McKinseyTechRenderer, McKinseyTechV2Renderer
 
 # ── 渲染器注册表 (模板名 → 渲染器类) ──
 
@@ -43,6 +43,9 @@ _RENDERER_MAP: Dict[str, type] = {
     "real_estate_dashboard": RealEstateDashboardRenderer,
     # Tech 域
     "mckinsey_tech": McKinseyTechRenderer,
+    "mckinsey_tech_v2": McKinseyTechV2Renderer,
+    # 留学域 (复用麦肯锡风格渲染器,与 src/renderers/studyabroad 约定一致)
+    "study_abroad_analysis": McKinseyTechRenderer,
 }
 
 

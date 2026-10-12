@@ -259,7 +259,7 @@ analysis_dimensions:
   - japan_ssw_policy
   - japan_trucking_industry_stats
 report:
-  template: migration_lifecycle
+  template: japan_driver
   output_dir: reports/career
   style:
     primary_color: '#c62828'

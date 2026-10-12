@@ -12,7 +12,7 @@ data_source_policy:
     - NVIDIA IR
     - TSMC
     - Company IR / SEC filings
-    -_pitchBook
+    - PitchBook
     - Crunchbase
     - Bloomberg
     - Reuters

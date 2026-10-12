@@ -39,6 +39,12 @@ from src.data_engine.pipes.tech.cyber_pipes import (
     DubaiCyberTalentPipe,
     MEACybersecurityVendorsPipe,
     DubaiSmartCitySecurityPipe,
+    # ── P0/P1 新增管道 (v2 升级) ──
+    DubaiCompetitorBenchmarkPipe,
+    MEACybersecurityFundingPipe,
+    DubaiComplianceCostPipe,
+    SecurityForAIValueChainPipe,
+    DubaiCustomerCaseStudiesPipe,
 )
 
 __all__ = [
@@ -69,4 +75,10 @@ __all__ = [
     "DubaiCyberTalentPipe",
     "MEACybersecurityVendorsPipe",
     "DubaiSmartCitySecurityPipe",
+    # ── P0/P1 新增管道 (v2 升级) ──
+    "DubaiCompetitorBenchmarkPipe",
+    "MEACybersecurityFundingPipe",
+    "DubaiComplianceCostPipe",
+    "SecurityForAIValueChainPipe",
+    "DubaiCustomerCaseStudiesPipe",
 ]

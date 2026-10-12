@@ -6,5 +6,6 @@ Tech Renderers — 科技行业报告渲染器
 """
 
 from src.renderers.tech.mckinsey_style import McKinseyTechRenderer
+from src.renderers.tech.mckinsey_v2 import McKinseyTechV2Renderer
 
-__all__ = ["McKinseyTechRenderer"]
+__all__ = ["McKinseyTechRenderer", "McKinseyTechV2Renderer"]

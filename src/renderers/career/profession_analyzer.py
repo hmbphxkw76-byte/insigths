@@ -14,6 +14,8 @@
 
 from __future__ import annotations
 
+from src.renderers.source_links import render_source_ul_as_html
+
 import json
 from datetime import datetime
 from typing import List, Optional
@@ -202,6 +204,8 @@ class ProfessionAnalyzerRenderer:
 
         /* ── Footer ── */
         .footer {{ margin-top: 3rem; padding: 2rem 0; border-top: 1px solid var(--border); font-size: 0.82rem; color: #94a3b8; }}
+        .source-list a {{ color: #1565c0; text-decoration: none; border-bottom: 1px dotted #1565c0; }}
+        .source-list a:hover {{ color: #0b2545; border-bottom-style: solid; }}
     </style>
 </head>
 <body>
@@ -239,8 +243,8 @@ class ProfessionAnalyzerRenderer:
             <div class="card">
                 <p style="margin-bottom:1rem;">本报告基于 <strong>{len(analysis.data_bundle.data)} 条数据管道</strong>的采集结果，覆盖 <strong>{len(analysis.sections)} 个分析维度</strong>。严格排除中文 UGC 数据来源。</p>
                 <strong>核心数据来源 (权威机构):</strong>
-                <ul style="margin-top:0.6rem; padding-left: 1.5rem; line-height: 2;">
-                    {''.join(f'<li>{s}</li>' for s in source_list)}
+                <ul style="margin-top:0.6rem; padding-left: 1.5rem; line-height: 2;" class="source-list">
+                    {render_source_ul_as_html(source_list)}
                 </ul>
                 <p style="margin-top:1.2rem; font-style: italic; color:#94a3b8; font-size: 0.85rem;">
                     Powered by IntelKB Prompt-Driven Intelligence Engine | McKinsey-Style Professional Analysis | 不构成职业咨询/法律建议

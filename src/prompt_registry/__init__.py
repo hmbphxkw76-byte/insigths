@@ -63,6 +63,7 @@ class PromptDefinition:
     schedule_time: str = "08:00"
     quality_min_freshness_days: int = 30
     quality_min_sources: int = 2
+    allowed_sources: List[str] = field(default_factory=list)
     country_specific_exceptions: Dict = field(default_factory=dict)
     raw: Dict = field(default_factory=dict, repr=False)
     source_path: str = ""
@@ -256,8 +257,15 @@ class PromptRegistry:
             return
 
         yaml_files = sorted(self.prompts_dir.rglob("*.yaml"))
-        # 跳过 schema 文件
-        yaml_files = [f for f in yaml_files if "schema" not in f.name]
+        # 跳过: schema 定义文件、下划线前缀的模板文件 (如 _template_lifecycle.yaml)、
+        # 以及名称含 "template" 的参考模板文件 (如 template_generic.yaml)。
+        # 这些不是可执行的 Prompt 定义,误加载会产生噪声或占位符 Prompt。
+        yaml_files = [
+            f for f in yaml_files
+            if "schema" not in f.name.lower()
+            and not f.name.startswith("_")
+            and "template" not in f.name.lower()
+        ]
 
         for path in yaml_files:
             try:
@@ -351,6 +359,7 @@ class PromptRegistry:
             schedule_time=schedule.get("time", "08:00"),
             quality_min_freshness_days=quality.get("min_data_freshness_days", 30),
             quality_min_sources=quality.get("min_sources_per_section", 2),
+            allowed_sources=data_source_policy.get("allowed_sources", []),
             country_specific_exceptions=country_exceptions,
             raw=raw,
             source_path=str(path),

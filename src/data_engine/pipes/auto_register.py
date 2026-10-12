@@ -129,6 +129,12 @@ from src.data_engine.pipes.tech.cyber_pipes import (
     DubaiCyberTalentPipe,
     MEACybersecurityVendorsPipe,
     DubaiSmartCitySecurityPipe,
+    # ── P0/P1 v2 升级管道 ──
+    DubaiCompetitorBenchmarkPipe,
+    MEACybersecurityFundingPipe,
+    DubaiComplianceCostPipe,
+    SecurityForAIValueChainPipe,
+    DubaiCustomerCaseStudiesPipe,
 )
 
 # realestate - 海外房地产 (realestate_pipes)
@@ -210,7 +216,7 @@ _ALL_STATIC_PIPE_CLASSES = [
     NewsFinancialPipe,
     BenchmarkPipe,
     TechGiantsPipe,
-    # 网络安全 (18)
+    # 网络安全 (18 + 5 = 23)
     ThreatIntelligencePipe,
     CybersecurityMarketPipe,
     CyberMAPipe,
@@ -229,6 +235,12 @@ _ALL_STATIC_PIPE_CLASSES = [
     DubaiCyberTalentPipe,
     MEACybersecurityVendorsPipe,
     DubaiSmartCitySecurityPipe,
+    # ── P0/P1 v2 升级管道 ──
+    DubaiCompetitorBenchmarkPipe,
+    MEACybersecurityFundingPipe,
+    DubaiComplianceCostPipe,
+    SecurityForAIValueChainPipe,
+    DubaiCustomerCaseStudiesPipe,
     # ── Real Estate 域 (房地产, 6) ──
     DLDTransactionsPipe,
     ValustratIndexPipe,

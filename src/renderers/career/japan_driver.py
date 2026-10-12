@@ -14,6 +14,7 @@ from loguru import logger
 
 from src.prompt_registry import PromptDefinition
 from src.prompt_runtime import AnalysisResult, SectionResult
+from src.renderers.source_links import render_source_list_as_html, render_source_ul_as_html
 
 
 class JapanDriverRenderer:
@@ -266,6 +267,10 @@ class JapanDriverRenderer:
                     依据：2024年問題导致司机缺口扩大 + 特定技能司机认证年增46% + 中国驾照换发路径清晰
                 </p>
             </div>
+            <p style="font-size:0.8rem;color:#c62828;margin-top:0.5rem;">
+                ⚠ 评级说明：上述星级为分析师基于公开政策的<strong>综合推断（置信度：中等偏高）</strong>，并非日本政府官方指标；
+                实际可行性受个人日语水平、驾驶经验与在留资格审批影响，请以官方公告为准。
+            </p>
         </div>"""
 
     def _render_timeline(self) -> str:
@@ -337,6 +342,13 @@ class JapanDriverRenderer:
                     对比基准：国内同等岗位5年收入约¥30-40万 | 净收益差：¥15-25万
                 </p>
             </div>
+            <p style="font-size:0.8rem;color:#c62828;margin-top:0.5rem;">
+                ⚠ 成本与收益说明：上述人民币金额为基于公开信息（语言学校官网学费、在日生活调研、厚生労働省賃金統計换算）的
+                <strong>分析师估算值（推断，非官方统计）</strong>，汇率与物价波动会导致实际数值偏离，仅供规划参考。
+                来源：<a href="https://www.mhlw.go.jp/toukei/list/roudou_ginginkyoukai.html" target="_blank" rel="noopener noreferrer" style="color:#1565c0;">厚生労働省賃金統計</a> |
+                <a href="https://www.jta.or.jp/" target="_blank" rel="noopener noreferrer" style="color:#1565c0;">全日本トラック協会</a> |
+                <a href="https://www.moj.go.jp/isa/" target="_blank" rel="noopener noreferrer" style="color:#1565c0;">出入国在留管理庁</a>
+            </p>
         </div>"""
 
     def _render_sections(self, analysis: AnalysisResult) -> str:
@@ -345,8 +357,8 @@ class JapanDriverRenderer:
             items = "\n".join(f'<li>{i}</li>' for i in s.insights)
             sources_html = ""
             if s.source_attribution:
-                tags = "\n".join(f'<span class="source-tag">{src}</span>' for src in s.source_attribution)
-                sources_html = f'<div style="margin-top:1rem;">{tags}</div>'
+                links = render_source_list_as_html(s.source_attribution, separator=" ")
+                sources_html = f'<div style="margin-top:1rem;line-height:2;">{links}</div>'
 
             chunks.append(f"""
         <div class="section" id="{s.dimension_id}">
@@ -366,14 +378,14 @@ class JapanDriverRenderer:
             all_sources.extend(s.source_attribution)
         unique_sources = list(dict.fromkeys(all_sources))  # 去重保序
 
-        tags = "\n".join(f'<span class="source-tag">{src}</span>' for src in unique_sources)
+        links = render_source_ul_as_html(unique_sources) if unique_sources else ""
 
         return f"""
         <div class="section">
             <h2>数据来源 Source Attribution</h2>
             <div class="card">
-                <p style="margin-bottom:1rem;">本报告所有数据均来源于以下官方机构与国际组织：</p>
-                <div>{tags}</div>
+                <p style="margin-bottom:1rem;">本报告所有数据均来源于以下官方机构与国际组织（点击可跳转验证）：</p>
+                <div>{links}</div>
                 <h4 style="margin-top:1.5rem;">关键参考URL</h4>
                 <ul style="font-size:0.85rem; color:#64748b;">
                     <li>出入国在留管理庁(特定技能政策): https://www.moj.go.jp/isa/policy/ssw/</li>

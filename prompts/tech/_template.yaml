@@ -1,0 +1,177 @@
+# ═══════════════════════════════════════════════════════════════════
+# Tech 领域 Prompt 标准模板 v2
+# 使用方法: 复制此文件 → 按实际研究主题修改 → 注册到 PromptRegistry
+#
+# 核心设计原则:
+#   1. 数据驱动 — 每个分析维度必须有对应 data_pipes 支撑
+#   2. 来源可溯 — 每个 DataPipe 必须附带 source_attribution
+#   3. 分析分层 — P0(核心) + P1(增强) + P2(前瞻) 三级维度
+#   4. 权威数据 — 仅引用 Gartner/IDC/Frost & Sullivan/Hays/PitchBook/Deloitte 等
+#   5. 方法论透明 — 每个方法声明具体技术方法(非泛称)
+#
+# 输出渲染器:
+#   mckinsey_tech_v2 — 支持气泡图/雷达图/桑基图/热力图 + 风险标签 + 置信度
+# ═══════════════════════════════════════════════════════════════════
+
+id: tech_{topic_id}           # 格式: tech_{子领域}_{地区}_{视角}
+version: 2                     # v2 = 升级版架构
+enabled: true
+
+# ── 数据来源合规策略 (强制) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Gartner                   # 市场预测(Market Guide, Hype Cycle, Magic Quadrant)
+    - IDC                       # 市场规模(Market Forecast, MarketScape)
+    - Frost & Sullivan          # 增长机会(MEA区域报告)
+    - {地区} Statistics Center  # 当地统计局
+    - Company IR filings        # 上市公司财报(10-Q/20-F)
+    - PitchBook / Crunchbase    # VC融资数据
+    - Hays / Robert Half        # 薪资基准
+    - (ISC)² / ISACA            # 人才认证数据
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台(Reddit/知乎/CSDN)
+    - 非官方社交媒体账号
+  output_language: zh
+
+label:
+  zh: "{报告中文标题}"
+  en: "{Report English Title}"
+
+description:
+  zh: "聚焦{地区}的{领域}行业 — {N}个核心维度"
+  en: "{Region} {Industry}: {N} core dimensions"
+
+# ── 触发关键词 (中英文混合,覆盖用户各种输入) ──
+triggers:
+  - "{中文触发词1}"
+  - "{中文触发词2}"
+  - "{English trigger 1}"
+  - "{English trigger 2}"
+
+# ── 研究时间域 ──
+horizon:
+  type: future_years
+  value: 5
+
+# ── 地理定位 ──
+geo:
+  region_zh: "地区名"
+  region_en: "Region EN"
+  country_code: "{ISO 3166-1 alpha-2}"
+  peers: ["对标区域1", "对标区域2"]
+  focus_regions: ["核心城市/地区"]
+
+# ── 数据管道声明 (≥3条) ──
+data_pipes:
+  - pipe: {pipe_id}
+    params:
+      key1: value1
+      # params必须完整,支持Pipe参数校验
+
+  - pipe: {pipe_id_2}
+    params:
+      key2: value2
+
+# ── 分析维度 (≤15个,分P0/P1/P2优先级) ──
+analysis_dimensions:
+  # ── P0: 核心维度 (必须包含) ──
+  - id: market_sizing
+    label_zh: "市场规模与增长动力"
+    label_en: "Market Sizing & Growth Drivers"
+    method: tam_sam_somer_model
+    required_data: [{pipe_id}]
+
+  - id: competitive_landscape
+    label_zh: "竞争格局与厂商矩阵"
+    label_en: "Competitive Landscape & Vendor Matrix"
+    method: vendor_competitive_matrix
+    required_data: [{pipe_id}]
+
+  - id: talent_ecosystem
+    label_zh: "人才缺口与认证路径"
+    label_en: "Talent Gap & Certification Roadmap"
+    method: talent_gap_certification_analysis
+    required_data: [{pipe_id}]
+
+  # ── P1: 增强维度 (推荐包含) ──
+  - id: policy_landscape
+    label_zh: "政策监管框架对标"
+    label_en: "Policy & Regulatory Landscape"
+    method: policy_comparison
+    required_data: [{pipe_id}]
+
+  - id: threat_analysis
+    label_zh: "威胁态势深度分析"
+    label_en: "Threat Landscape Deep-Dive"
+    method: threat_landscape_analysis
+    required_data: [{pipe_id}]
+
+  - id: future_outlook
+    label_zh: "未来展望与情景分析(2027-2030)"
+    label_en: "Future Outlook & Scenario Analysis"
+    method: weighted_scenario_modeling
+    required_data: [{pipe_id}]
+
+  # ── P2: 前瞻维度 (选择性包含) ──
+  - id: funding_ma
+    label_zh: "区域融资与并购生态"
+    label_en: "Regional VC/M&A and Startup Ecosystem"
+    method: vc_ma_tracker
+    required_data: [{pipe_id}]
+
+# ── 报告配置 ──
+report:
+  template: mckinsey_tech_v2     # 必须使用 v2 及以上渲染器
+  output_dir: reports/tech
+  style:
+    primary_color: "#0b2545"
+    accent_color: "#c8a24b"
+    accent_secondary: "#00897b"
+  include_methodology_footer: true
+  include_freshness_labels: true
+  include_disclaimer: true
+
+# ── 调度配置 ──
+schedule:
+  cadence: quarterly
+  month: [2, 5, 8, 11]
+  day_of_week: monday
+  week_of_month: 1
+  time: "08:00"
+
+# ── 质量配置 ──
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 3
+  required_disclaimers:
+    - "本分析不构成投资建议 | This analysis does NOT constitute investment advice"
+    - "市场规模数据综合自Gartner/IDC/Frost & Sullivan公开预测"
+  methodology_notes: |
+    市场规模采用Top-Down + Bottom-Up双重验证。
+    所有数据标注最近更新日期。
+    三情景概率赋值基于德尔菲法(PEST压力测试)。
+
+# ═══════════════════════════════════════════════════════════════════
+# 可扩展方法清单 (analysis_dimensions.method 可选):
+# ──────────────────────────────────────────────────────────────────
+# P0 核心方法:
+#   tam_sam_somer_model          TAM/SAM/SOM三层市场模型 (增强版)
+#   vendor_competitive_matrix    厂商竞争矩阵(产品×交付)
+#   talent_gap_certification_analysis  人才缺口+认证路径
+#   benchmark_quadrant           对标雷达(四象限加权评分)
+#   weighted_scenario_modeling   概率加权三情景
+#   threat_landscape_analysis    深度威胁分析(APT+TTP)
+#   vc_ma_tracker                区域融资并购追踪
+#   compliance_roi_model         合规成本ROI模型
+#   case_study_deep_dive         客户案例深度拆解
+#   security_for_ai_value_chain  Security-for-AI价值链
+# ──────────────────────────────────────────────────────────────────
+# P2 前瞻方法:
+#   heat_map_analysis            热力图优先级
+#   cross_country_cross_analysis 跨国家对比
+#   technology_readiness_assessment TRL技术成熟度
+#   regulatory_compliance_matrix 监管合规矩阵
+#   supply_chain_mapping         供应链/生态图谱
+# ═══════════════════════════════════════════════════════════════════

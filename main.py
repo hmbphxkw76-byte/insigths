@@ -80,10 +80,11 @@ def cmd_list(args):
     console.print(table)
 
     s = registry.summary()
+    bv = s['by_vertical']
     console.print(
         f"\n[dim]共 {s['total']} 个 Prompt ({s['enabled']} 个启用) | "
-        f"宏观 {s['by_vertical']['macro']} 科技 {s['by_vertical']['tech']} "
-        f"房地产 {s['by_vertical']['realestate']} 移民 {s['by_vertical']['migration']}[/dim]"
+        f"宏观 {bv['macro']} 科技 {bv['tech']} 房地产 {bv['realestate']} "
+        f"职业移民 {bv['career']} 留学 {bv['studyabroad']}[/dim]"
     )
 
 
@@ -260,7 +261,7 @@ def _collect_prompts(args, registry: PromptRegistry):
         for kw in args.keyword:
             add(registry.resolve(kw, vertical=args.vertical))
 
-    # --macro/--tech/--realestate/--migration 赛道批量
+    # --macro/--tech/--realestate/--career/--studyabroad 赛道批量
     if args.macro:
         for p in registry.list_by_vertical("macro"):
             add(p)
@@ -270,8 +271,11 @@ def _collect_prompts(args, registry: PromptRegistry):
     if args.realestate:
         for p in registry.list_by_vertical("realestate"):
             add(p)
-    if args.migration:
-        for p in registry.list_by_vertical("migration"):
+    if args.career:
+        for p in registry.list_by_vertical("career"):
+            add(p)
+    if args.studyabroad:
+        for p in registry.list_by_vertical("studyabroad"):
             add(p)
 
     return prompts
@@ -290,7 +294,9 @@ def build_parser() -> argparse.ArgumentParser:
   python main.py --keyword 半导体 --run           # 执行半导体分析
   python main.py --keyword 迪拜 房产 --run        # 组合关键词
   python main.py --prompt tech_ai --run          # 直接指定 Prompt ID
-  python main.py --vertical tech --run           # 执行科技赛道全部
+  python main.py --vertical tech --run            # 执行科技赛道全部
+  python main.py --vertical career --run          # 执行职业移民赛道全部
+  python main.py --vertical studyabroad --run     # 执行留学赛道全部
   python main.py --health                        # 健康检查
   python main.py --benchmark                     # 基准测试
         """,
@@ -301,12 +307,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--prompt", "-p", nargs="+", action="append",
                         help="直接指定 Prompt ID")
     parser.add_argument("--vertical", "-v",
-                        choices=["macro", "tech", "realestate", "migration"],
+                        choices=["macro", "tech", "realestate", "career", "studyabroad"],
                         help="赛道筛选")
     parser.add_argument("--macro", action="store_true", help="运行宏观 Prompt")
     parser.add_argument("--tech", action="store_true", help="运行科技 Prompt")
     parser.add_argument("--realestate", action="store_true", help="运行房地产 Prompt")
-    parser.add_argument("--migration", action="store_true", help="运行移民 Prompt")
+    parser.add_argument("--career", action="store_true", help="运行职业移民 Prompt")
+    parser.add_argument("--studyabroad", action="store_true", help="运行留学 Prompt")
 
     parser.add_argument("--list", action="store_true", help="列出所有 Prompt")
     parser.add_argument("--enabled", action="store_true", help="仅显示已启用 Prompt")
@@ -339,7 +346,11 @@ def main():
         cmd_show(argparse.Namespace(prompt_id=args.show, yaml=args.yaml))
         return
 
-    has_filter = args.keyword or args.prompt or args.vertical or args.macro or args.tech or args.realestate or args.migration
+    has_filter = (
+        args.keyword or args.prompt or args.vertical
+        or args.macro or args.tech or args.realestate
+        or args.career or args.studyabroad
+    )
     has_action = args.run
 
     if has_filter and has_action:

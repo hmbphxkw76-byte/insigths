@@ -795,3 +795,148 @@ insights/
 > **架构演进**: 从"流程驱动"到"提示词驱动",本质上是将系统的"变化点"从代码(compiled artifact)转移到了配置(Human-readable YAML). 每次业务扩展 = 添加/修改一个 Prompt 定义,不经代码发布. 这就是 Prompt-Driven Architecture 的工程价值.
 >
 > **主题域对齐**: 新增主题域只需在 `prompts/`、`src/data_engine/pipes/`、`src/renderers/` 下添加同名子目录,实现"配置-管道-渲染"三位一体的清晰组织.
+
+---
+
+## 九、v2 方法论升级: 行业研究级报告架构 (2026-10)
+
+### 9.1 升级动机
+
+v1 架构存在以下局限:
+- **分析维度偏少**: 每个报告仅有 3-5 个维度,缺乏竞品对标、合规成本、价值链等关键章节
+- **数据来源标注不足**: 未标注各图表的具体来源和日期,无法追溯和验证
+- **图表类型单一**: 仅支持柱状图,无法展示竞争矩阵、合规热力图、价值链桑基图等高级可视化
+- **情景分析简单**: 仅有乐观/悲观两极,缺乏概率加权和触发条件
+
+v2 标准(参考 McKinsey/BCG 行业研究框架)对此做了全面升级.
+
+### 9.2 三级分析维度体系
+
+```
+P0 — 核心维度 (必须包含)                └─ 构成研报骨架
+  ├─ market_sizing      市场规模 TAM/SAM/SOM + 垂直拆解
+  ├─ competitive_landscape 竞争格局 Vendor Matrix
+  ├─ talent_ecosystem   人才缺口 + 认证路径 + 薪资套利
+  └─ policy_landscape   监管框架 + 对标城市执法力度
+
+P1 — 增强维度 (推荐包含,对标行业研究标准)    └─ 构成研报差异化价值
+  ├─ threat_landscape   深度威胁分析(APT组织档案 + TTP + 攻击趋势)
+  ├─ security_for_ai     Security-for-AI 价值链四层拆解
+  ├─ compliance_cost     合规成本量化模型(按法规 × 企业规模)
+  ├─ customer_cases      客户落地案例(BFSI/电信/政府/能源)
+  └─ funding_ma          区域 VC/M&A 生态追踪
+
+P2 — 前瞻维度 (锦上添花)                └─ 展示研究深度
+  ├─ city_competitiveness 对标城市加权复合评分(四象限)
+  ├─ weighted_scenario   概率加权三情景(Baseline/Optimistic/Pessimistic)
+  └─ supply_chain        供应链/生态系统图谱
+```
+
+### 9.3 数据来源权威性分级
+
+```
+Tier-1 (直接引用,无需验证):
+  Gartner (Market Guide, Magic Quadrant, Hype Cycle)
+  IDC (Market Forecast, MarketScape, FutureScape)
+  Frost & Sullivan (Growth Opportunity, Competitive Benchmark)
+  各国家统计局 + Central Bank
+
+Tier-2 (需交叉验证,可引用):
+  Hays / Robert Half (薪资基准)
+  PitchBook / Crunchbase (融资数据)
+  (ISC)² / ISACA (人才报告)
+  Deloitte / PwC / KPMG (行业调研)
+  上市公司 IR filings (10-Q, 20-F)
+
+Tier-3 (仅作参考,需标注局限性):
+  厂商公开案例研究(Customer Success)
+  卫星数据/另类数据(Alternative Data)
+  行业媒体综合研判
+```
+
+每个 DataPipe 必须附带 `source_attribution`,列出所引用的实际来源机构.
+每张图表底部标注 `Source: [机构名, 发布日期]`.
+
+### 9.4 方法论透明度
+
+每个分析维度声明具体 method 名称,映射到实现分析逻辑的方法:
+
+| method 名称 | 用途 | 引用的方法论 |
+|-------------|------|-------------|
+| `tam_sam_somer_model` | TAM/SAM/SOM三层市场模型 | Top-Down + Bottom-Up 双重验证 |
+| `vendor_competitive_matrix` | 厂商竞争象限 | Gartner Magic Quadrant / IDC MarketScape |
+| `talent_gap_certification_analysis` | 人才缺口+认证体系 | (ISC)² Workforce Study + ISACA State |
+| `benchmark_quadrant` | 对标城市加权评分 | 加权复合评分法(5维度×权重) |
+| `threat_landscape_analysis` | 深度威胁分析 | MITRE ATT&CK + APT组织档案 |
+| `weighted_scenario_modeling` | 概率加权三情景 | 德尔菲法(PEST压力测试) |
+| `vc_ma_tracker` | 区域融资并购追踪 | PitchBook + Crunchbase Deal Data |
+| `compliance_roi_model` | 合规成本ROI | Forrester TEI 框架 |
+| `case_study_deep_dive` | 客户案例拆解 | Vendor Case Study + KPI指标 |
+| `security_for_ai_value_chain` | AI安全价值链 | 四层价值链映射(Model → App) |
+
+### 9.5 标准模板
+
+所有新 Prompts 必须遵循 `prompts/tech/_template.yaml` 标准模板.
+模板中已预填:
+- 三级分析维度骨架(P0/P1/P2)
+- 权威数据源白名单(allowed_sources)
+- 必需免责声明(required_disclaimers)
+- 方法论脚注(methodology_notes)
+- v2 渲染器配置(mckinsey_tech_v2)
+- 数据新鲜度标签开关(include_freshness_labels)
+
+### 9.6 v2 渲染器特性
+
+`McKinseyTechV2Renderer` 相比 v1 增加:
+
+| 特性 | 用途 | 对应维度 |
+|------|------|---------|
+| **气泡图(Bubble Chart)** | 厂商竞争矩阵(市场份额 × 创新能力) | competitive_landscape |
+| **雷达图(Radar Chart)** | 对标城市竞争力五维评分 | city_competitiveness |
+| **桑基图(Sankey)** | Security-for-AI 价值链流动分布 | security_for_ai_value_chain |
+| **分组柱状图** | GCC 多维度威胁态势并列对比 | threat_analysis |
+| **风险等级标签** | 关键威胁/市场/政策风险可视标注 | 所有含 risk_level 的维度 |
+| **置信度指标** | 每条分析结论的置信度(0-100%) | 所有维度 |
+| **图表来源脚注** | 每张图表底部标注具体来源 | 全部图表 |
+| **方法论脚注区块** | 报告末尾声明估算方法/TAM计算逻辑 | 仅方法论页 |
+| **免责声明区块** | 合规要求的免责声明列表 | 方法论页 |
+
+### 9.7 数据管道扩展原则
+
+新增 DataPipe 时必须遵循:
+
+1. **命名**: `{地域}_{主题}_{度量维度}` (如 `dubai_cyber_talent`)
+2. **数据质量**: `source()` 字段标注数据来源机构 + 发布日期
+3. **来源归因**: `source_attribution()` 返回 Tier-1/2/3 分类的来源列表
+4. **数据列设计**: 至少包含趋势指标、绝对值、占比、变化率四类字段
+5. **数据量**: 趋势数据 ≥6 年,横截面数据 ≥5 条记录
+
+示例:
+```python
+class DubaiCompetitorBenchmarkPipe(DataPipe):
+    pipe_id = "dubai_competitor_benchmark"
+
+    def collect(self, params: Dict) -> pd.DataFrame:
+        return _fallback_df(
+            ["city", "regulatory_maturity_score", ...],
+            [...],
+            source="McKinsey Global Institute / Gartner / IMD — 2025"
+        )
+
+    def source_attribution(self):
+        return [
+            "McKinsey Global Institute — Middle East Digital Report 2025",
+            "IMD World Competitiveness Center — Digital Rankings 2025",
+            ...
+        ]
+```
+
+---
+
+## 十、合规与免责
+
+10.1 所有报告必须在头部标注 `Data Notice`,说明当前数据状态(演示/真实).
+10.2 市场规模数据必须标注引用的机构(Gartner/IDC/Frost & Sullivan).
+10.3 薪资基准必须标注来源(Hays/Robert Half等).
+10.4 必须包含免责声明: "本分析不构成投资建议".
+10.5 数据来源更新频率由 `quality.min_data_freshness_days` 控制(默认30天).
