@@ -280,7 +280,8 @@ class McKinseyTechRenderer:
             <h1>{prompt.display_name}</h1>
             <div class="subtitle">{prompt.label_en}</div>
             <div class="meta">
-                生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M')} |
+                生成时间: {analysis.context.format_date('%Y-%m-%d %H:%M')} |
+                数据基准: {analysis.context.format_date('%Y-%m-%d')} |
                 覆盖地区: {prompt.region_zh} |
                 数据来源: {len(analysis.data_bundle.data)} 条管道
             </div>

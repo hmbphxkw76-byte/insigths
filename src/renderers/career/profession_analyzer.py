@@ -214,7 +214,7 @@ class ProfessionAnalyzerRenderer:
             <h1>{prompt.display_name}</h1>
             <div class="subtitle">{prompt.label_en}</div>
             <div class="meta">
-                <span>📅 {datetime.now().strftime('%Y-%m-%d %H:%M')}</span>
+                <span>📅 {analysis.context.format_date('%Y-%m-%d %H:%M')} | 基准: {analysis.context.format_date('%Y-%m-%d')}</span>
                 <span>🌍 {prompt.region_zh}</span>
                 <span>📊 {len(analysis.data_bundle.data)} 条数据管道</span>
                 <span>📐 {len(analysis.sections)} 个分析维度</span>

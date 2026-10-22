@@ -1,0 +1,186 @@
+# 法国(France)本科留学申请全景分析 — Prompt 定义（区别于工程师学院）
+# 触发关键词: 法国本科, 法国留学, 法国公立大学, 法国高商本科, Licence, L1, Campus France, 法国留学
+id: fr_undergraduate_study
+version: 1
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - Campus France (campusfrance.org)
+    - France-Visas (france-visas.gouv.fr)
+    - Études en France / EEF
+    - French Ministry of Higher Education
+    - QS World University Rankings
+    - Times Higher Education
+    - Financial Times (Business School Rankings)
+  forbidden_sources:
+    - 任何中文网站
+    - 任何中文留学中介网站
+  output_language: zh
+
+label:
+  zh: 法国本科留学申请全景分析报告
+  en: France Undergraduate Study Application Analysis
+
+description:
+  zh: 高中毕业→法国(France)的本科留学路径分析。覆盖公立大学Licence(180 ECTS/LMD体系)、高等商学院(BBA/本科项目)、IUT大学技术学院(DUT 2年制)、艺术/设计学院四大路径。包含Campus France/Etudes en France申请平台、差额学费(droits différenciés)、Eiffel/埃菲尔奖学金、签证VLS-TS、毕业后APS居留与人才护照路径。
+  en: Undergraduate study in France for Chinese high school graduates. Covers public university Licence, Grande École BBA, IUT (2-year DUT), and art/design schools. Includes EEF platform, tuition, Eiffel scholarship, VLS-TS visa, and post-study pathways.
+
+triggers:
+  - "法国本科"
+  - "法国留学"
+  - "法国公立大学"
+  - "法国高商本科"
+  - "Licence"
+  - "L1"
+  - "LMD"
+  - "Campus France"
+  - "EEF"
+  - "Etudes en France"
+  - "巴黎大学"
+  - "索邦大学"
+  - "巴黎萨克雷"
+  - "PSL"
+  - "里昂高商"
+  - "EDHEC"
+  - "emlyon"
+  - "法国IUT"
+  - "DUT"
+  - "法国艺术学院"
+
+horizon:
+  type: future_years
+  value: 5
+
+geo:
+  region_zh: 法国
+  region_en: France
+  country_code: FR
+  peers:
+    - "Germany (TU9)"
+    - "Netherlands (Research Universities)"
+    - "Canada (Québec Francophone)"
+    - "Switzerland (ETH)"
+    - "中国(211/双一流)"
+  focus_schools:
+    - "Sorbonne University / Sorbonne Université"
+    - "Université Paris Cité"
+    - "Université Paris-Saclay"
+    - "PSL (Paris Sciences & Lettres)"
+    - "Aix-Marseille Université"
+    - "Université de Bordeaux"
+    - "Université de Lyon (UCBL)"
+    - "HEC Paris (BBA)"
+    - "ESSEC (Global BBA)"
+    - "ESCP Business School"
+    - "EDHEC (Lille/Nice)"
+    - "emlyon (BBA)"
+    - "Grenoble École de Management"
+    - "INSA Lyon (5年制工程师)"
+    - "ENSAD / Beaux-Arts"
+
+data_pipes:
+  - pipe: fr_bachelor
+    params:
+      fields: ["university_zh", "university_en", "qs_2025", "program_type", "language", "tuition_eur", "city", "top_programs", "moe_ok"]
+      source_url: "https://www.campusfrance.org/en"
+  - pipe: fr_scholarships
+    params:
+      fields: ["name", "provider", "benefit", "level", "amount", "coverage", "deadline", "comp"]
+      source_url: "https://www.campusfrance.org/en/scholarship-programmes"
+  - pipe: fr_visa_policy
+    params:
+      source_url: "https://france-visas.gouv.fr"
+      fields: ["visa_category", "duration", "work_rights", "requirements", "path_to_pr"]
+  - pipe: study_abroad_official_ranking
+    params:
+      ranking_source: "QS_by_subject"
+      year: 2025
+      country: "France"
+      top_n: 30
+
+analysis_dimensions:
+  - id: fr_education_system_overview
+    label_zh: 法国高等教育体系架构(LMD/ECTS)与本科定位
+    label_en: French Higher Education System (LMD/ECTS) & Undergraduate Positioning
+    method: institutional_comparison
+    required_data: [fr_bachelor]
+
+  - id: fr_admission_pathways
+    label_zh: 申请路径全景图(公立Licence/BBA/IUT/艺术学院)
+    label_en: Admission Pathway Decision Map (Licence/BBA/IUT/Arts)
+    method: pathway_analysis
+    required_data: [fr_bachelor]
+
+  - id: fr_campus_france_platform
+    label_zh: Campus France / Etudes en France (EEF) 申请流程
+    label_en: Campus France / EEF Application Process
+    method: process_analysis
+    required_data: [fr_bachelor, fr_visa_policy]
+
+  - id: fr_tuition_and_cost
+    label_zh: 学费与费用全拆解(差额学费/生活费/奖学金)
+    label_en: Tuition & Cost Breakdown (Differentiated Fees/Living/Scholarships)
+    method: cost_model
+    required_data: [fr_bachelor, fr_scholarships]
+
+  - id: fr_language_requirements
+    label_zh: 语言要求与路径(法语TCF/DELF vs 英语IELTS/TOEFL)
+    label_en: Language Requirements (TCF/DELF vs IELTS/TOEFL)
+    method: language_pathway_analysis
+    required_data: [fr_bachelor]
+
+  - id: fr_application_timeline
+    label_zh: 申请时间轴与关键节点(DAP Blanche/ Hors-DAP/ Parcoursup)
+    label_en: Application Timeline (DAP/Hors-DAP/Parcoursup)
+    method: timeline_projection
+    required_data: [fr_bachelor]
+
+  - id: fr_visa_and_post_study
+    label_zh: 签证/居留政策(VLS-TS/APS/人才护照/永居)
+    label_en: Visa & Residency Policy (VLS-TS/APS/Talent Passport/PR)
+    method: policy_scan
+    required_data: [fr_visa_policy]
+
+  - id: fr_employment_and_outcomes
+    label_zh: 就业分析与职业发展(留法/回国/第三国)
+    label_en: Employment Analysis & Career Development
+    method: career_outcome_analysis
+    required_data: [fr_bachelor, fr_visa_policy]
+
+  - id: fr_risk_assessment
+    label_zh: 风险矩阵与避坑指南(中国高中生典型风险)
+    label_en: Risk Matrix & Pitfalls Guide
+    method: risk_analysis
+    required_data: [fr_bachelor, fr_visa_policy, fr_scholarships]
+
+report:
+  template: study_abroad_analysis
+  output_dir: reports/studyabroad/fr_undergraduate
+  style:
+    primary_color: "#002395"
+    accent_color: "#ed2939"
+    flag_emoji: "🇫🇷"
+    badge: "France Undergraduate Study Analysis"
+    subtitle: "Licence / BBA / IUT / Écoles d'Art — Campus France EEF 路径全解析"
+  format:
+    type: html
+
+schedule:
+  cadence: quarterly
+  month: [1, 4, 7, 10]
+  day_of_week: monday
+  week_of_month: 1
+  time: "09:00"
+
+quality:
+  min_data_freshness_days: 90
+  min_sources_per_section: 3
+  required_disclaimers:
+    - not_legal_or_immigration_advice
+    - verify_accreditation_independently
+    - tuition_policies_may_change_annually
+    - visa_policy_subject_to_change
+    - engineering_grande_ecole_uses_separate_pathway

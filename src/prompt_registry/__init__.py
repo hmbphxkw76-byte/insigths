@@ -151,10 +151,16 @@ class PromptRegistry:
         1. 精确匹配 trigger
         2. 子串匹配 trigger
         3. 模糊匹配(id 包含关键词)
+
+        ★ 后处理: 若匹配到 profession_* 模板,自动填充 [[country]]/[[profession]] 占位符。
         """
         if not keyword or not isinstance(keyword, str):
             return None
         kw_lower = keyword.lower().strip()
+
+        # 内部函数: 返回前统一做职业模板填充
+        def _finalize(prompt: PromptDefinition) -> PromptDefinition:
+            return self._fill_career_template_if_needed(prompt, keyword)
 
         # 策略1: 精确匹配 trigger
         for prompt in self._registry.values():
@@ -165,7 +171,7 @@ class PromptRegistry:
                 if trigger.lower() == kw_lower:
                     if vertical is None or prompt.vertical == vertical:
                         logger.info(f"[匹配] 精确命中: '{keyword}' -> {prompt.id}")
-                        return prompt
+                        return _finalize(prompt)
 
         # 策略2: 子串匹配 trigger
         best_score = 0
@@ -184,7 +190,7 @@ class PromptRegistry:
                             best_prompt = prompt
         if best_prompt:
             logger.info(f"[匹配] 子串命中: '{keyword}' -> {best_prompt.id}")
-            return best_prompt
+            return _finalize(best_prompt)
 
         # 策略3: 模糊匹配 id / label
         for prompt in self._registry.values():
@@ -192,10 +198,10 @@ class PromptRegistry:
                 continue
             if kw_lower in prompt.id.lower():
                 logger.info(f"[匹配] ID命中: '{keyword}' -> {prompt.id}")
-                return prompt
+                return _finalize(prompt)
             if kw_lower in prompt.label_zh.lower() or kw_lower in prompt.label_en.lower():
                 logger.info(f"[匹配] 标签命中: '{keyword}' -> {prompt.id}")
-                return prompt
+                return _finalize(prompt)
 
         logger.warning(f"[未匹配] 找不到与 '{keyword}' 相关的 Prompt")
         return None
@@ -226,6 +232,24 @@ class PromptRegistry:
     def get(self, prompt_id: str) -> Optional[PromptDefinition]:
         """根据 ID 直接获取."""
         return self._registry.get(prompt_id)
+
+    def _fill_career_template_if_needed(
+        self, prompt: PromptDefinition, keyword: str
+    ) -> PromptDefinition:
+        """
+        若 Prompt 为 profession_* 模板,自动填充 [[country]]/[[profession]] 占位符。
+        符合宪法第 5.4 节「职业赛道路由命名规范」。
+        """
+        # 判断是否为职业模板 (id 含 "profession_" 或 label 含占位符)
+        if "profession_" not in prompt.id and "[[country]]" not in prompt.label_zh:
+            return prompt
+
+        try:
+            from src.utils.career_naming import fill_career_prompt_template
+            return fill_career_prompt_template(prompt, keyword)
+        except Exception as e:
+            logger.warning(f"职业模板填充失败 [{prompt.id}]: {e}, 返回原始 Prompt")
+            return prompt
 
     def show_detail(self, prompt_id: str) -> Dict:
         """获取 Prompt 的详细信息(用于 CLI --show)."""

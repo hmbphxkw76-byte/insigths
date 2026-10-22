@@ -42,11 +42,11 @@ data_source_policy:
   output_language: zh
 
 label:
-  zh: "[[country]][[profession]]人才需求与就业前景深度分析"
+  zh: "[[country]] [[profession]] 人才需求与就业前景深度分析"
   en: "[[country]] [[profession]] Talent Demand & Career Outlook Deep Dive"
 
 description:
-  zh: "面向[[country]]的[[profession]]岗位，以麦肯锡咨询风格输出人才市场深度分析报告。覆盖18大维度：(1)行业宏观趋势与数字化转型驱动 (2)人才需求规模与增长预测 (3)雇主格局与企业需求热力图 (4)薪酬基准与购买力对比 (5)技能栈要求与认证路径 (6)人才供给缺口量化 (7)外籍人才政策与工作签证路径 (8)风险评估与5年职业ROI模型 (9)生活成本精算与净储蓄模型 (10)全球竞争城市对标 (11)AI/自动化颠覆风险时间线 (12)行业合规框架映射 (13)候选人供给密度与竞争力 (14)雇主微观情报 (15)签证全流程时间轴 (16)跨文化适应路径指南 (17)薪资谈判话术与策略 (18)职业资格认证全路径。数据来源于世界银行/ILO/MERCER/Numbeo/(ISC)²/ISACA/Gartner/SANS/Hays/MOHRE/各国统计局/行业协会/官方劳动力调查，排除任何中文网站来源。"
+  zh: "面向 [[country]] 的 [[profession]] 岗位，以麦肯锡咨询风格输出人才市场深度分析报告。覆盖18大维度：(1)行业宏观趋势与数字化转型驱动 (2)人才需求规模与增长预测 (3)雇主格局与企业需求热力图 (4)薪酬基准与购买力对比 (5)技能栈要求与认证路径 (6)人才供给缺口量化 (7)外籍人才政策与工作签证路径 (8)风险评估与5年职业ROI模型 (9)生活成本精算与净储蓄模型 (10)全球竞争城市对标 (11)AI/自动化颠覆风险时间线 (12)行业合规框架映射 (13)候选人供给密度与竞争力 (14)雇主微观情报 (15)签证全流程时间轴 (16)跨文化适应路径指南 (17)薪资谈判话术与策略 (18)职业资格认证全路径。数据来源于世界银行/ILO/MERCER/Numbeo/(ISC)²/ISACA/Gartner/SANS/Hays/MOHRE/各国统计局/行业协会/官方劳动力调查，排除任何中文网站来源。"
   en: "McKinsey-style deep-dive analysis of [[profession]] talent market in [[country]]. 18 dimensions: industry trends, talent demand sizing, employer landscape, salary benchmarking, skill requirements, talent supply gap, expat/visa policies, 5-year career ROI, cost of living & net savings model, global city comparison, AI disruption risk timeline, compliance framework mapping, candidate supply metrics, employer micro-intelligence, visa process timeline, cross-cultural adaptation guide, salary negotiation tactics, professional certification roadmap. Data from World Bank, ILO, MERCER, Numbeo, (ISC)², ISACA, Gartner, SANS, Hays, MOHRE, national statistics, industry associations."
 
 triggers:

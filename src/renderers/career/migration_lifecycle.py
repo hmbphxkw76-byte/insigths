@@ -349,7 +349,7 @@ class MigrationLifecycleRenderer:
         <div class="report-header">
             <h1>{prompt.display_name}</h1>
             <div class="subtitle">移民律师 × 人力资源顾问 × 行业分析师 | 三重视角 × 三阶段闭环全析</div>
-            <div class="meta">生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M')} | 数据来源: {len(analysis.data_bundle.data)} 条官方管道 | 闭环覆盖: 国内准备 → 到达 → 扎根留</div>
+            <div class="meta">生成时间: {analysis.context.format_date('%Y-%m-%d %H:%M')} | 数据基准: {analysis.context.format_date('%Y-%m-%d')} | 数据来源: {len(analysis.data_bundle.data)} 条官方管道 | 闭环覆盖: 国内准备 → 到达 → 扎根留</div>
         </div>
 
         <div class="data-notice">

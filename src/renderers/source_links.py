@@ -139,6 +139,21 @@ SOURCE_URL_MAP: List[Tuple[str, str, str]] = [
     ("nta.go.jp", "国税庁 (NTA)", "https://www.nta.go.jp"),
     ("jasso.go.jp", "JASSO (日本学生支援機構)", "https://www.jasso.go.jp"),
     ("e-gov", "e-Gov Japan", "https://www.e-gov.go.jp"),
+
+    # ── 法国留学官方 ──
+    ("Campus France", "Campus France (法国高等教育署)", "https://chine.campusfrance.org"),
+    ("France-Visas", "France-Visas (法国签证官网)", "https://france-visas.gouv.fr"),
+    ("OFII", "OFII (法国移民局)", "https://www.ofii.fr"),
+    ("CROUS", "CROUS (法国学生事务中心)", "https://www.etudiant.gouv.fr"),
+    ("法国高教部", "法国高教部 (MESR)", "https://www.enseignementsup-recherche.gouv.fr"),
+    ("INSEE", "INSEE (法国国家统计)", "https://www.insee.fr"),
+    ("CIEP", "France Éducation International", "https://www.france-education-international.fr"),
+    ("DAAP", "DAAP (法国艺术预科)", "https://www.campusart.org"),
+    ("中留服", "中国教育部留学服务中心", "https://www.cscse.edu.cn"),
+    ("法国劳工部", "法国劳工部 (Travail)", "https://travail-emploi.gouv.fr"),
+    ("Pôle Emploi", "France Travail (就业中心)", "https://www.francetravail.fr"),
+    ("QC", " Québec Immigration", "https://www.quebecimmigration.com"),
+    ("法语联盟", "Alliance Française", "https://www.alliancefr.org"),
 ]
 
 # 编译嵌入 URL 检测正则

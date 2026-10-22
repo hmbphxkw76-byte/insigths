@@ -17,11 +17,18 @@ module:
 # 各国 Prompt 定义文件注册 — 共13国 × (本科+硕士+博士) = 39条 + 法国工程师专项
 # ---------------------------------------------------------------------
 prompts:
-  # ═══════════════ 法国 FR — 3条 ═══════════════
+  # ═══════════════ 法国 FR — 4条 ═══════════════
+  - file: study_abroad_fr.yaml
+    id: fr_undergraduate_study
+    enabled: true
+    priority: "critical"
+    country_code: FR
+    fr_name: "法国本科留学(公立大学/高商BBA/IUT/艺术)"
+
   - file: study_abroad_fr_engineering.yaml
     id: fr_engineering_grande_ecole
     enabled: true
-    priority: "critical"
+    priority: "high"
     country_code: FR
     fr_name: "法国工程师学院(Grande École)"
 

@@ -1,0 +1,293 @@
+# 日本经济深度分析 — Prompt 定义 (增强版 v2.0)
+# 触发关键词: 日本经济, Japan economy, 日本宏观, 日元, BOJ
+id: macro_japan
+version: 2
+enabled: true
+
+# ── 数据来源合规策略 (强制字段) ──
+data_source_policy:
+  mode: english_authoritative_only
+  allowed_sources:
+    - IMF World Economic Outlook
+    - Bank of Japan (BoJ)
+    - Japan Ministry of Finance (MOF)
+    - Japan Cabinet Office
+    - Japan Ministry of Economy, Trade and Industry (METI)
+    - Japan Ministry of Health, Labour and Welfare (MHLW)
+    - Japan Statistics Bureau
+    - Organisation for Economic Co-operation and Development (OECD)
+  forbidden_sources:
+    - 任何中文网站
+    - 任何 UGC 平台
+  output_language: zh
+  country_specific_exceptions:
+    JP:
+      enabled: true
+      language: ja
+      official_sources:
+        - Bank of Japan (boj.or.jp)
+        - Ministry of Finance Japan (mof.go.jp)
+        - Cabinet Office Japan (cao.go.jp)
+        - METI (meti.go.jp)
+        - MHLW (mhlw.go.jp)
+        - Statistics Bureau Japan (stat.go.jp)
+        - e-Gov Japan (e-gov.go.jp)
+        - Financial Services Agency Japan (fsa.go.jp)
+      note: 允许日语官方数据来源（信息更新更及时），输出仍为中文
+
+label:
+  zh: 日本经济深度分析报告 (增强版)
+  en: Japan Economy Deep-Dive Analysis (Enhanced)
+
+description:
+  zh: 聚焦日本经济的全方位深度分析 — 覆盖增长周期、BoJ政策、工资-日元螺旋、贸易结构、人口挑战、财政可持续性、金融体系稳定性、TFP分解、房地产市场、能源转型、企业微观结构、劳动力Beveridge曲线、世代间会计与国际投资头寸
+  en: Comprehensive deep-dive analysis of Japan's economy covering growth, BoJ, wage-yen dynamics, trade, demographics, fiscal sustainability, financial stability, TFP decomposition, real estate, energy transition, firm microstructure, labor Beveridge curve, generational accounting & NIIP
+
+triggers:
+  # 中文触发词
+  - "日本经济"
+  - "日本宏观"
+  - "日元"
+  - "日本央行"
+  - "BOJ"
+  - "日本通胀"
+  - "日本加息"
+  - "日股"
+  - "Japan economy"
+  - "Japanese economy"
+  - "Japan macro"
+  - "BOJ policy"
+  - "yen"
+  - "Nikkei"
+  - "Japan GDP"
+  - "日本金融"
+  - "日本房地产"
+  - "日股分析"
+
+indicators:
+  primary:
+    - japan_gdp
+    - japan_cpi_core
+    - japan_unemployment
+    - japan_policy_rate
+    - jpy_usd
+  secondary:
+    - japan_current_account
+    - japan_trade_balance
+    - japan_industrial_production
+    - japan_retail_sales
+    - japan_wage_growth
+    - japan_pmi
+    - japan_government_debt_gdp
+    - japan_working_age_population
+    # 以下新增指标 (v2.0)
+    - japan_tfp_growth
+    - japan_banking_npl_ratio
+    - japan_cre_price_index
+    - japan_carbon_price
+    - japan_niip_gdp_ratio
+    - japan_beveridge_index
+    - japan_gen_account_ratio
+
+geo:
+  region_zh: 日本
+  region_en: Japan
+  country_code: JP
+  peers:
+    - US
+    - CN
+    - EU
+    - DE
+    - KR
+    - TW
+  focus_regions:
+    - Tokyo
+    - Osaka
+    - Aichi
+    - Fukuoka
+
+horizon:
+  type: rolling
+  value: 12
+  unit: months
+
+data_pipes:
+  - pipe: boj_policy
+    params:
+      indicators: ["policy_rate", "yield_curve_control", "qe_tapering", "forward_guidance"]
+  - pipe: japan_macro_stats
+    params:
+      indicators: ["gdp", "cpi_core", "unemployment", "industrial_production", "retail_sales", "pmi"]
+  - pipe: japan_fx_market
+    params:
+      pairs: ["USD/JPY", "EUR/JPY"]
+      data: ["spot_rate", "real_effective_exchange_rate", "volatility"]
+  - pipe: japan_trade_balance
+    params:
+      partners: ["US", "CN", "EU", "KR"]
+      products: ["automobiles", "electronics", "machinery", "semiconductors"]
+  - pipe: japan_demographics
+    params:
+      indicators: ["working_age_population", "birth_rate", "elderly_ratio", "labor_force_participation"]
+  - pipe: imf_weo
+    params:
+      database: WEO
+      indicators: ["NGDP_RPCH", "PCPIPCH", "LUR", "GGXWDG_NGDP", "NGDPD"]
+      economies: ["JP", "US", "CN", "DE", "KR"]
+  # 以下为 v2.0 新增管道
+  - pipe: japan_financial_stability
+    params:
+      indicators: ["npl_ratio", "banking_sector_capital", "jgb_spread_banking", "cre_exposure"]
+  - pipe: japan_tfp_growth
+    params:
+      indicators: ["tfp_contribution", "capital_deepening", "labor_quality", "sectoral_tfp"]
+  - pipe: japan_real_estate
+    params:
+      indicators: ["land_price_index", "cre_price_office", "housing_starts", "real_estate_loan_growth"]
+  - pipe: japan_energy_transition
+    params:
+      indicators: ["carbon_price_japan", "renewable_share", "energy_import_dependency", "gx_bond_issuance"]
+  - pipe: japan_niip
+    params:
+      indicators: ["total_niip", "direct_investment_assets", "portfolio_liabilities", "niip_gdp_ratio"]
+  - pipe: japan_generational_account
+    params:
+      indicators: ["gen_account_ratio", "fiscal_gap", "age_related_spending_2050", "tax_burden_by_cohort"]
+  - pipe: news_financial
+    params:
+      keywords: ["Bank of Japan", "Japan inflation", "yen", "Nikkei", "Japan economy", "Ueda", "Japan bank", "TFP", "Japanese real estate"]
+
+analysis_dimensions:
+  # ── 原有 9 个维度 (已验证) ──
+  - id: japan_growth_cycle
+    label_zh: 增长周期与前瞻
+    label_en: Growth Cycle & Outlook
+    method: japan_growth_outlook
+    required_data: [japan_macro_stats, imf_weo]
+  - id: boj_monetary_policy
+    label_zh: 日本央行政策路径
+    label_en: Bank of Japan Policy Trajectory
+    method: boj_policy_analysis
+    required_data: [boj_policy, japan_fx_market, japan_macro_stats]
+  - id: inflation_wage_spiral
+    label_zh: 通胀动态与工资螺旋
+    label_en: Inflation Dynamics & Wage Spiral
+    method: japan_inflation_analysis
+    required_data: [japan_macro_stats, boj_policy]
+  - id: fx_yen_dynamics
+    label_zh: 日元汇率与资本流动
+    label_en: JPY Exchange Rate & Capital Flows
+    method: japan_fx_analysis
+    required_data: [japan_fx_market, japan_trade_balance, boj_policy]
+  - id: trade_competitiveness
+    label_zh: 贸易结构与竞争力
+    label_en: Trade Structure & Competitiveness
+    method: japan_trade_analysis
+    required_data: [japan_trade_balance]
+  - id: demographics_labor
+    label_zh: 人口挑战与劳动力市场
+    label_en: Demographics & Labor Market
+    method: japan_demographics_analysis
+    required_data: [japan_demographics, japan_macro_stats]
+  - id: fiscal_sustainability
+    label_zh: 财政空间与债务可持续性
+    label_en: Fiscal Space & Debt Sustainability
+    method: japan_fiscal_analysis
+    required_data: [imf_weo, japan_macro_stats, japan_generational_account]
+  - id: stock_market_outlook
+    label_zh: 日股展望与企业治理
+    label_en: Nikkei Outlook & Corporate Governance
+    method: japan_equity_analysis
+    required_data: [japan_fx_market, japan_macro_stats, boj_policy]
+  # ── v2.0 新增 8 个维度 ──
+  - id: financial_stability
+    label_zh: 金融体系稳定性压力测试
+    label_en: Financial System Stability Stress Test
+    method: japan_financial_stability_analysis
+    required_data: [japan_financial_stability, boj_policy, japan_macro_stats]
+  - id: tfp_productivity
+    label_zh: 全要素生产率(TFP)与Baumol病
+    label_en: Total Factor Productivity & Baumol's Cost Disease
+    method: japan_tfp_analysis
+    required_data: [japan_tfp_growth, japan_macro_stats, imf_weo]
+  - id: real_estate_market
+    label_zh: 房地产市场与土地价格
+    label_en: Real Estate Market & Land Prices
+    method: japan_real_estate_analysis
+    required_data: [japan_real_estate, japan_macro_stats, boj_policy]
+  - id: energy_transition
+    label_zh: 能源转型与碳定价
+    label_en: Energy Transition & Carbon Pricing
+    method: japan_energy_analysis
+    required_data: [japan_energy_transition, japan_macro_stats, imf_weo]
+  - id: firm_microstructure
+    label_zh: 企业部门微观结构与僵尸企业
+    label_en: Firm Microstructure & Zombie Firms
+    method: japan_firm_micro_analysis
+    required_data: [japan_macro_stats, japan_tfp_growth, japan_financial_stability]
+  - id: labor_beveridge
+    label_zh: 劳动力市场Beveridge曲线分析
+    label_en: Labor Market Beveridge Curve Analysis
+    method: japan_beveridge_analysis
+    required_data: [japan_macro_stats, japan_demographics]
+  - id: generational_account
+    label_zh: 世代间会计与长期财政负担
+    label_en: Generational Accounting & Long-Term Fiscal Burden
+    method: japanese_gen_account_analysis
+    required_data: [japan_generational_account, japan_demographics, imf_weo]
+  - id: niip_position
+    label_zh: 国际投资头寸(NIIP)与对外资产负债
+    label_en: NIIP & External Asset-Liability Structure
+    method: japan_niip_analysis
+    required_data: [japan_niip, japan_trade_balance, japan_fx_market]
+  # ── 风险矩阵 (汇总) ──
+  - id: risk_matrix_jp
+    label_zh: 日本经济综合风险矩阵
+    label_en: Japan Economic Risk Dashboard
+    method: japan_risk_matrix
+    required_data: [japan_macro_stats, japan_fx_market, japan_demographics, japan_financial_stability]
+
+report:
+  template: japan_economy_dashboard
+  output_dir: reports/macro
+  style:
+    primary_color: "#c41e3a"
+    accent_color: "#1a1a2e"
+  format:
+    type: html
+    sections:
+      - executive_summary
+      - macro_dashboard_card
+      - growth_cycle_section
+      - monetary_policy_section
+      - inflation_section
+      - fx_section
+      - trade_section
+      - demographic_section
+      - fiscal_section
+      - equity_section
+      - # v2.0 新增章节
+      - financial_stability_section
+      - tfp_section
+      - real_estate_section
+      - energy_section
+      - firm_microstructure_section
+      - labor_beveridge_section
+      - generational_account_section
+      - niip_section
+      - risk_matrix_section
+      - methodology
+
+schedule:
+  cadence: monthly
+  day_of_week: monday
+  week_of_month: 2
+  time: "09:00"
+  timezone: "Asia/Tokyo"
+
+quality:
+  min_data_freshness_days: 30
+  min_sources_per_section: 2
+  required_disclaimers:
+    - not_investment_advice
+    - data_accuracy

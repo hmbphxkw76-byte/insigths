@@ -606,6 +606,49 @@ _SA_DATA["au_visa_poststudy"] = _d("au_visa_poststudy",
     "https://immi.homeaffairs.gov.au/visas/working-in-australia",
      "poststudy", "AU", ["Australian Dept. of Home Affairs", "Skills Australian Government"])
 
+# ====== 法国 FR — 本科(通用) ======
+_SA_DATA["fr_bachelor"] = _d("fr_bachelor",
+    ["university_zh", "university_en", "qs_2025", "program_type", "language",
+     "tuition_eur", "city", "top_programs", "moe_ok"],
+    [
+        ["索邦大学", "Sorbonne Université", 59, "公立Licence", "法语为主", 2770, "巴黎", "人文/理学/医学/工程", "是"],
+        ["巴黎西岱大学", "Université Paris Cité", 236, "公立Licence", "法语为主", 2770, "巴黎", "医学/法学/心理学/社科", "是"],
+        ["巴黎萨克雷大学", "Université Paris-Saclay", 78, "公立Licence", "法语/部分英语", 2770, "巴黎(南)", "理学/工程/医学/法学", "是"],
+        ["PSL巴黎文理研究大学", "PSL University", 24, "公立Licence(LMD)", "法语/英语", 2770, "巴黎", "理学/人文/艺术/社科", "是"],
+        ["艾克斯-马赛大学", "Aix-Marseille Université", 387, "公立Licence", "法语为主", 2770, "马赛", "法学/社科/理学/体育", "是"],
+        ["波尔多大学", "Université de Bordeaux", 465, "公立Licence", "法语为主", 2770, "波尔多", "葡萄酒/法学/理学/医学", "是"],
+        ["里昂一大(UCBL)", "Université Claude Bernard Lyon 1", 387, "公立Licence", "法语为主", 2770, "里昂", "医学/理学/工程/体育", "是"],
+        ["HEC Paris BBA", "HEC Paris", "—(QS商科Top1)", "高商BBA本科", "英语", 22000, "巴黎(茹伊)", "管理/金融/创业/数字", "是"],
+        ["ESSEC Global BBA", "ESSEC Business School", "—(QS商科Top3)", "高商BBA本科", "英语/法语", 14500, "巴黎(塞尔吉)", "管理/金融/市场营销/咨询", "是"],
+        ["ESCP BBA", "ESCP Business School", "—(QS商科Top5)", "高商BBA本科", "英语/多语", 13500, "巴黎(多校区)", "管理/金融/跨文化/咨询", "是"],
+        ["EDHEC Int BBA", "EDHEC Business School", "—(QS商科Top10)", "高商BBA本科", "英语", 12000, "里尔/尼斯", "管理/全球商务/金融/分析", "是"],
+        ["emlyon BBA", "emlyon Business School", "—(QS商科Top15)", "高商BBA本科", "英语", 11500, "里昂/巴黎", "管理/创业/数字/奢侈品", "是"],
+        ["格勒诺布尔高商", "GEM", "—(QS商科Top30)", "高商BBA本科", "英语", 11000, "格勒诺布尔", "管理/科技/金融/国际商务", "是"],
+        ["INSA Lyon (5年制)", "INSA Lyon", "—(QS工程Top)", "工程师本硕连读", "法语/英语", 3770, "里昂", "工程/机械/CS/材料", "是"],
+    ],
+    "Campus France / 各大学官网 / QS 2024",
+    "https://www.campusfrance.org/en", "bachelor", "FR",
+    ["Campus France官方", "各大学招生办", "法国高教部"])
+
+# 法国奖学金(本科适用)
+_SA_DATA["fr_scholarships"] = _d("fr_scholarships",
+    ["name", "provider", "benefit", "level", "amount", "coverage", "deadline", "comp"],
+    [
+        ["Eiffel Excellence(埃菲尔奖)", "法国外交部", "+生活费+机票+文化", "本科/硕士", "1181EUR/月+全cover", "全额(免学费+津贴)", "1月", "极高(约1500名/全层次)"],
+        ["Campus France Excellence(校奖)", "各法国大学", "免学费或学费减免", "本科", "学费减免/部分", "部分", "各大学不同", "中"],
+        ["法兰西共和国助学金(CROUS)", "CROUS/政府", "+住房补贴+餐补", "本科", "最高5556EUR/年", "生活费+住房", "7-10月", "中(需居留+收入条件)"],
+        ["中国政府奖学金(CSC)", "国家留学基金委", "+生活费+往返机票", "本科", "full", "全额", "3-4月", "高(中法9+9等项目)"],
+        ["Erasmus+/Erasmus Mundus", "欧盟委员会", "+生活费+旅费+学费", "本科/硕士", "最高25000EUR/年", "全额", "各大学不同", "高"],
+        ["EDHEC Scholarship", "EDHEC高商", "最高全额学费", "本科BBA", "最高full", "学费", "Rolling", "中-高(merit-based)"],
+        ["emlyon Early Bird", "emlyon高商", "最高30%学费减免", "本科BBA", "最高30%", "学费", "12-3月", "中"],
+        ["ESSEC Excellence", "ESSEC高商", "最高全额学费", "本科BBA", "最高full", "学费", "1-3月", "高"],
+        ["HEC Paris Scholarship", "HEC Paris", "need-based+merit", "本科BBA", "最高full", "学费+生活费", "与申请同时", "高"],
+        ["地方政府奖学金(区域奖)", "法国大区政府", "+住房+交通优惠", "本科", "500-2000EUR/年", "部分", "各区域不同", "低-中"],
+    ],
+    "Campus France / CSC / 各大学 2024",
+    "https://www.campusfrance.org/en/scholarship-programmes", "all", "FR",
+    ["Campus France", "法国外交部", "各大学国际处", "CSC"])
+
 # 法国留学签证政策
 _SA_DATA["fr_visa_policy"] = _d("fr_visa_policy",
     ["visa_category", "duration", "work_rights", "requirements", "path_to_pr"],

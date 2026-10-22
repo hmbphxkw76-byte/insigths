@@ -98,6 +98,25 @@ from src.data_engine.pipes.macro.macro_pipes import (
     EconomicCalendarPipe,
 )
 
+# macro - 日本经济专属管道 (japan_macro_pipes)
+from src.data_engine.pipes.macro.japan_macro_pipes import (
+    BoJPolicyPipe,
+    JapanMacroStatsPipe,
+    JapanFXMarketPipe,
+    JapanTradeBalancePipe,
+    JapanDemographicsPipe,
+)
+
+# macro - 日本经济增强版管道 (japan_enhanced_pipes v2.0)
+from src.data_engine.pipes.macro.japan_enhanced_pipes import (
+    JapanFinancialStabilityPipe,
+    JapanTFPGrowthPipe,
+    JapanRealEstatePipe,
+    JapanEnergyTransitionPipe,
+    JapanNIIPPipe,
+    JapanGenerationalAccountPipe,
+)
+
 # tech - AI & 通用科技 (tech_pipes)
 from src.data_engine.pipes.tech.tech_pipes import (
     SemiconductorSalesPipe,
@@ -207,6 +226,18 @@ _ALL_STATIC_PIPE_CLASSES = [
     WorldBankPipe,
     OECDCLIPipe,
     EconomicCalendarPipe,
+    # ── 日本经济专属管道 (5 + 6新增) ──
+    BoJPolicyPipe,
+    JapanMacroStatsPipe,
+    JapanFXMarketPipe,
+    JapanTradeBalancePipe,
+    JapanDemographicsPipe,
+    JapanFinancialStabilityPipe,
+    JapanTFPGrowthPipe,
+    JapanRealEstatePipe,
+    JapanEnergyTransitionPipe,
+    JapanNIIPPipe,
+    JapanGenerationalAccountPipe,
     # ── Tech 域 (科技) ──
     # AI & 通用科技 (7)
     SemiconductorSalesPipe,

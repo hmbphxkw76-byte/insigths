@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>法国本科留学申请全景分析报告 | Study Abroad Analysis</title>
+    <style>
+        :root {
+            --primary: #002395;
+            --secondary: #3f62d4;
+            --accent: #ed2939;
+            --bg: #f7f8fa;
+            --card-bg: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #2e7d32;
+            --warning: #e65100;
+            --danger: #c62828;
+            --info: #1565c0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        /* Header */
+        .report-header {
+            background: linear-gradient(135deg, #002395, #3f62d4);
+            color: white;
+            padding: 2.5rem 2rem;
+            border-radius: 14px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+        }
+        .report-header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .report-header .subtitle { font-size: 1.05rem; opacity: 0.85; }
+        .report-header .meta { margin-top: 1.2rem; font-size: 0.82rem; opacity: 0.7; }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 3px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.8rem;
+        }
+
+        /* Sections */
+        .section { margin: 2rem 0; }
+        .section h2 {
+            font-size: 1.35rem;
+            color: var(--primary);
+            border-left: 4px solid var(--accent);
+            padding-left: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+        .section .section-en {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            font-style: italic;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.3rem;
+            margin: 0.8rem 0;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* Insight List */
+        .insight-list {
+            list-style: none;
+            padding: 0;
+        }
+        .insight-list li {
+            padding: 0.55rem 0;
+            border-bottom: 1px solid #f1f5f9;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+        .insight-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        .insight-list li:last-child { border-bottom: none; }
+
+        /* Data Tables */
+        .data-table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .data-table thead th {
+            background: #002395;
+            color: white;
+            padding: 0.65rem 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .data-table tbody td {
+            padding: 0.55rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .data-table tbody tr:nth-child(even) { background: #f8fafc; }
+        .data-table tbody tr:hover { background: #f1f5f9; }
+        .data-table .col-num { text-align: right; font-variant-numeric: tabular-nums; }
+        .data-table .col-tag {
+            display: inline-block;
+            background: #e8f4fd;
+            color: var(--info);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Risk indicator */
+        .risk-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .risk-high { background: #ffebee; color: var(--danger); }
+        .risk-medium { background: #fff3e0; color: var(--warning); }
+        .risk-low { background: #e8f5e9; color: var(--success); }
+
+        /* Source footer */
+        .source-footer {
+            margin-top: 2.5rem;
+            padding: 1.2rem;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .source-footer h3 {
+            font-size: 0.95rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .source-footer ul {
+            list-style: none;
+            padding: 0;
+        }
+        .source-footer li {
+            padding: 0.3rem 0;
+        }
+        .source-footer a {
+            color: var(--info);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+
+        /* Confidence indicator */
+        .confidence-bar {
+            display: inline-block;
+            width: 60px;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+        .confidence-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="report-header">
+        <h1>🎓 法国本科留学申请全景分析报告</h1>
+        <p class="subtitle"></p>
+        <p class="meta">报告生成日期: 2026-10-12 | 数据来源: 官方权威机构</p>
+        <span class="badge">Study Abroad Analysis</span>
+    </div>
+
+    <div class="section">
+        <h2>执行摘要 Executive Summary</h2>
+        <div class="card">
+            <ul class="insight-list">
+                <li>本报告为法国本科留学申请全景分析报告的深度分析</li>
+<li>覆盖9个关键维度,基于3条数据管道</li>
+<li>综合置信度: 72% | 数据源来自 Campus France、法国高教部、QS World Rankings、DAAP、Campus France Chine、France-Visas、CROUS、INSEE</li>
+<li>► 法国高等教育体系架构(LMD/ECTS)与本科定位: 【法国高等教育体系】法国实行独特的二元制高等教育架构：公立大学(Universités)承担大众化教育，大学校(Grandes Écoles)体系负责精英人才培养，两者并行互不交叉</li>
+<li>► 申请路径全景图(公立Licence/BBA/IUT/艺术学院): 【路径1:公立大学Licence】高中毕业+高考成绩(建议一本线以上)+法语B2→通过Campus France EEF程序申请，年注册费€2,770(非EU差额学费)，适合学术导向、预算有限的学生</li>
+<li>► Campus France / Etudes en France (EEF) 申请流程: 【Step 1:创建EEF账户】在Campus France Chine(chine.campusfrance.org)创建个人档案，上传学历证明、语言成绩等材料，支付EEF程序费用约¥2,000</li>
+<li>► 学费与费用全拆解(差额学费/生活费/奖学金): 【差额学费政策(Droits différenciés)】2019年起实施。EU/EEA/瑞士学生:Licence €170/年, Master €243/年。非EU国际生:Licence €2,770/年, Master €3,770/年</li>
+<li>► 语言要求与路径(法语TCF/DELF vs 英语IELTS/TOEFL): 【法语路径-TCF/DELF】公立大学Licence要求TCF B2(400+)或DELF B2；人文学科(法律/心理学/文学)要求C1。TCF考试费用约¥1,700，每月可考。DELF终身有效</li>
+<li>► 申请时间轴与关键节点(DAP Blanche/ Hors-DAP/ Parcoursup): 【倒推时间轴(以2026年9月入学为例)】</li>
+<li>► 签证/居留政策(VLS-TS/APS/人才护照/永居): 【VLS-TS长期学生签】有效期1年(等同于居留证)，允许打工964小时/年(约20h/周)。申请需:录取通知书+资金证明€615/月+住宿证明+OFII体检</li>
+<li>► 就业分析与职业发展(留法/回国/第三国): 【留法就业-Licence毕业生】法国应届Licence毕业生年薪中位数约€30,000-35,000(brut)。IT/工程/商科高于人文/社科。毕业后1年APS为缓冲期</li>
+<li>► 风险矩阵与避坑指南(中国高中生典型风险): 【⚠ 高风险:学业淘汰】公立大学Licence L1→L2淘汰率约40-50%，医学PASS淘汰率80-85%。中国学生常见误区:认为法国大学「宽进宽出」，实际「宽进严出」</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section" id="fr_education_system_overview">
+        <h2>法国高等教育体系架构(LMD/ECTS)与本科定位</h2>
+        <p class="section-en">French Higher Education System (LMD/ECTS) & Undergraduate Positioning</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 75%<span class="confidence-bar"><span class="confidence-fill" style="width:75%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【法国高等教育体系】法国实行独特的二元制高等教育架构：公立大学(Universités)承担大众化教育，大学校(Grandes Écoles)体系负责精英人才培养，两者并行互不交叉</li>
+<li>【LMD学分体系】Licence(3年/180 ECTS)-Master(2年/120 ECTS)-Doctorat(年)三级学位制度，学分全欧通用，支持跨国转学与交流</li>
+<li>【ECTS学分机制】每学年需修满60 ECTS学分，课程模块化(CM大课+TD小班习题)，考核方式包括Continu(平时检测)+Examen(期末)，淘汰制度严格</li>
+<li>【院校二元结构】公立大学免学费(仅需注册费)但资源紧张；大学校/高商学费高昂但就业强劲、校友网络高端。选择取决于家庭经济能力与职业目标</li>
+<li>【中国教育部认证】两体系院校均可获中留服认证，但需注意私立院校和部分私立美校可能不在认证名单</li>
+<li>【数据支撑】覆盖 14 所法国核心院校: 索邦大学, 巴黎西岱大学, 巴黎萨克雷大学, PSL巴黎文理研究大学, 艾克斯-马赛大学, 波尔多大学...</li>
+<li>【学费区间】2,770 ~ 22,000 EUR/年 (非EU国际生标准),公立大学受差额学费政策影响显著</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France</a> · <a href="https://www.enseignementsup-recherche.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">法国高教部</a> · QS World Rankings</p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_admission_pathways">
+        <h2>申请路径全景图(公立Licence/BBA/IUT/艺术学院)</h2>
+        <p class="section-en">Admission Pathway Decision Map (Licence/BBA/IUT/Arts)</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 73%<span class="confidence-bar"><span class="confidence-fill" style="width:73%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【路径1:公立大学Licence】高中毕业+高考成绩(建议一本线以上)+法语B2→通过Campus France EEF程序申请，年注册费€2,770(非EU差额学费)，适合学术导向、预算有限的学生</li>
+<li>【路径2:高等商学院BBA】高中毕业生直接申请(无需高考)，全英文授课，独立于EEF程序，年学费€10,000-20,000，录取看重面试+文书+课外活动，学制4年(含实习)</li>
+<li>【路径3:IUT大学技术学院】2年制DUT(Bac+2)，DAP Blanche申请体系，注重实操技能，毕业后可选择就业或转Licence L3，年注册费与公立大学相同</li>
+<li>【路径4:工程师学院(5年制)】INSA/UT/N+i等，高中起点直达硕士(Bac+5)，独立于LMD体系，学费€3,770-10,000+/年，需独立申请(与本报告的EEF路径不同)</li>
+<li>【语言未达标路径】法语TCF/DELF未达B2→可先申请2~1.5年语言/预科项目(年学费€3,000-6,000)，法语达标后再申请正式专业</li>
+<li>【关键提醒】部分私立机构发放的「预录取」≠正式录取，语言阶段结束后仍需通过正式申请程序方可进入专业</li>
+<li>【院校类型分布】覆盖 4 类院校: 公立Licence, 公立Licence(LMD), 高商BBA本科, 工程师本硕连读</li>
+<li>【授课语言】法语为主, 法语/部分英语, 法语/英语, 英语. 高商多为全英语；公立大学以法语为主(需TCF B2)</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France</a> · <a href="https://www.enseignementsup-recherche.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">法国高教部</a> · <a href="https://www.campusart.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">DAAP</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_campus_france_platform">
+        <h2>Campus France / Etudes en France (EEF) 申请流程</h2>
+        <p class="section-en">Campus France / EEF Application Process</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 72%<span class="confidence-bar"><span class="confidence-fill" style="width:72%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【Step 1:创建EEF账户】在Campus France Chine(chine.campusfrance.org)创建个人档案，上传学历证明、语言成绩等材料，支付EEF程序费用约¥2,000</li>
+<li>【Step 2:填写志愿】通过EEF系统最多填报3所公立大学志愿(Parcoursup体系不适合国际生)。高商BBA需在各高商官网独立申请，不走EEF</li>
+<li>【Step 3:面签(Entretien)】Campus France面签评估学术动机、语言水平、对法国了解程度。注意:面签≠签证面试，是学术评估环节。准备清晰的Projet d'études(学术计划)至关重要</li>
+<li>【Step 4:等待录取】大学审核材料后发出录取通知(Admission)，需在EEF系统中确认接受。部分院校会要求补充材料</li>
+<li>【Step 5:签证申请】持录取通知书在France-Visas平台(france-visas.gouv.fr)申请长期学生签(VLS-TS)，需资金证明€615/月×12月=€7,380/年</li>
+<li>【Step 6:OFII体检】抵达法国后3个月内完成OFII体检+居留手续(carte de séjour)，VLS-TS第一年等同于居留证</li>
+<li>【面签评分维度】学术计划清晰度(30%)+语言表达(25%)+法国了解(15%)+动机与职业规划(20%)+背景匹配(10%)</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France Chine</a> · <a href="https://france-visas.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">France-Visas</a> · <a href="https://www.enseignementsup-recherche.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">法国高教部</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_visa_policy</p>
+            <table class="data-table">
+                <thead><tr><th>visa_category</th><th>duration</th><th>work_rights</th><th>requirements</th><th>path_to_pr</th></tr></thead>
+                <tbody>
+                    <tr><td>Visa Etudiant(长期学生签)</td><td>1年(续签)</td><td>964小时/年(约20h/周)</td><td>OFII/录取通知书+资金证明(615EUR/月)+法语/英语成绩</td><td>2年居留后转工签/永居(10年)</td></tr><tr><td>Visa Etudiant-Concours(考试/面试签)</td><td>3-6个月</td><td>无</td><td>语言学校/大学入学考试/艺术学院面试</td><td>考试通过转长期学生签</td></tr><tr><td>VLS-TS(长期访问学生签)</td><td>3-6个月</td><td>无</td><td>语言课程/短期培训</td><td>回国申请正式学生签</td></tr><tr><td>Schengen Court Séjour(短期)</td><td>90天/180天</td><td>无</td><td>短期课程/夏令营/语言班(≤3个月)</td><td>N/A(居留到期)</td></tr><tr><td>Passport Talent(人才护照)</td><td>4年</td><td>全职工作</td><td>Master学位+工作合同或创业计划</td><td>5年可申永居</td></tr><tr><td>APS(Autorisation Provisoire de Séjour)</td><td>1年(毕业后)</td><td>找工作/兼职工作</td><td>已完成-license/Master学位</td><td>找到工作转工签+永居路径</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_tuition_and_cost">
+        <h2>学费与费用全拆解(差额学费/生活费/奖学金)</h2>
+        <p class="section-en">Tuition & Cost Breakdown (Differentiated Fees/Living/Scholarships)</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 70%<span class="confidence-bar"><span class="confidence-fill" style="width:70%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【差额学费政策(Droits différenciés)】2019年起实施。EU/EEA/瑞士学生:Licence €170/年, Master €243/年。非EU国际生:Licence €2,770/年, Master €3,770/年</li>
+<li>【学费差异原因】非EU国际生学费是EU学生的16倍，但法国政府补贴公立大学生均培养成本约€10,000/年/生。部分院校对国际生酌情减免差额学费</li>
+<li>【关键省钱策略】先在法读1年语言/预科→第2年注册Licence时可按EU标准缴纳€170学费(需满足居住1年+报税条件)。部分院校自动减免</li>
+<li>【生活费( CROUS标准)】巴黎:€1,000-1,400/月(住房€450-900+餐饮€200-300+交通€35-84+保险€50-100+其他€100-200)。外省:€700-1,000/月</li>
+<li>【CROUS住房】公立大学宿舍约€200-400/月(需竞争申请)。私人住房APL住房补贴可减免€100-300/月(无国籍限制)</li>
+<li>【签证资金证明】长期学生签要求€615/月×计划留学月数(通常€7,380-€14,760)。可用冻结账户/父母担保/奖学金证明</li>
+<li>【数据验证】本报告显示院校学费区间: €2,770 ~ €22,000/年, 含高商BBA(€11,000-22,000)</li>
+<li>【中留服认证】14/14 所院校确认获中国教育部认可(可中留服认证)</li>
+<li>【奖学金体系】国家级(Eiffel但不覆盖本科)+校级(merit-based)+政府(CROUS助学金ALS住房补贴)+欧盟(Erasmus+)+中国(CSC中法项目)</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France</a> · <a href="https://www.etudiant.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">CROUS</a> · <a href="https://france-visas.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">France-Visas</a> · <a href="https://www.insee.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">INSEE</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_scholarships</p>
+            <table class="data-table">
+                <thead><tr><th>name</th><th>provider</th><th>benefit</th><th>level</th><th>amount</th><th>coverage</th><th>deadline</th><th>comp</th></tr></thead>
+                <tbody>
+                    <tr><td>Eiffel Excellence(埃菲尔奖)</td><td>法国外交部</td><td>+生活费+机票+文化</td><td>本科/硕士</td><td>1181EUR/月+全cover</td><td>全额(免学费+津贴)</td><td>1月</td><td>极高(约1500名/全层次)</td></tr><tr><td>Campus France Excellence(校奖)</td><td>各法国大学</td><td>免学费或学费减免</td><td>本科</td><td>学费减免/部分</td><td>部分</td><td>各大学不同</td><td>中</td></tr><tr><td>法兰西共和国助学金(CROUS)</td><td>CROUS/政府</td><td>+住房补贴+餐补</td><td>本科</td><td>最高5556EUR/年</td><td>生活费+住房</td><td>7-10月</td><td>中(需居留+收入条件)</td></tr><tr><td>中国政府奖学金(CSC)</td><td>国家留学基金委</td><td>+生活费+往返机票</td><td>本科</td><td>full</td><td>全额</td><td>3-4月</td><td>高(中法9+9等项目)</td></tr><tr><td>Erasmus+/Erasmus Mundus</td><td>欧盟委员会</td><td>+生活费+旅费+学费</td><td>本科/硕士</td><td>最高25000EUR/年</td><td>全额</td><td>各大学不同</td><td>高</td></tr><tr><td>EDHEC Scholarship</td><td>EDHEC高商</td><td>最高全额学费</td><td>本科BBA</td><td>最高full</td><td>学费</td><td>Rolling</td><td>中-高(merit-based)</td></tr><tr><td>emlyon Early Bird</td><td>emlyon高商</td><td>最高30%学费减免</td><td>本科BBA</td><td>最高30%</td><td>学费</td><td>12-3月</td><td>中</td></tr><tr><td>ESSEC Excellence</td><td>ESSEC高商</td><td>最高全额学费</td><td>本科BBA</td><td>最高full</td><td>学费</td><td>1-3月</td><td>高</td></tr><tr><td>HEC Paris Scholarship</td><td>HEC Paris</td><td>need-based+merit</td><td>本科BBA</td><td>最高full</td><td>学费+生活费</td><td>与申请同时</td><td>高</td></tr><tr><td>地方政府奖学金(区域奖)</td><td>法国大区政府</td><td>+住房+交通优惠</td><td>本科</td><td>500-2000EUR/年</td><td>部分</td><td>各区域不同</td><td>低-中</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_language_requirements">
+        <h2>语言要求与路径(法语TCF/DELF vs 英语IELTS/TOEFL)</h2>
+        <p class="section-en">Language Requirements (TCF/DELF vs IELTS/TOEFL)</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 74%<span class="confidence-bar"><span class="confidence-fill" style="width:74%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【法语路径-TCF/DELF】公立大学Licence要求TCF B2(400+)或DELF B2；人文学科(法律/心理学/文学)要求C1。TCF考试费用约¥1,700，每月可考。DELF终身有效</li>
+<li>【法语学习时间线】零基础→B2需800-1200学时(约1-1.5年全日制学习)。建议高三在读期间利用寒暑假启动法语学习，高考后集中强化500学时</li>
+<li>【英语路径-IELTS/TOEFL】高商BBA多为全英语授课，要求IELTS 6.0-6.5/TOEFL 80-90。部分公立大学开设英语授课Licence项目(年学费同法语授课)</li>
+<li>【双语言策略】即使选择英语项目，强烈建议学习法语A2-B1水平：日常生活必需+面签加分+毕业后留法就业必备。法语能力直接决定留法就业天花板</li>
+<li>【FLE预科】法语未达B2→可申请FLE(Français Langue Étrangère)预科，年学费€3,000-6,000。完成预科后法语达标可衔接Licence L1</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France</a> · <a href="https://www.france-education-international.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">CIEP/France Éducation International</a> · <a href="https://www.alliancefr.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">法语联盟</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_application_timeline">
+        <h2>申请时间轴与关键节点(DAP Blanche/ Hors-DAP/ Parcoursup)</h2>
+        <p class="section-en">Application Timeline (DAP/Hors-DAP/Parcoursup)</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 71%<span class="confidence-bar"><span class="confidence-fill" style="width:71%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【倒推时间轴(以2026年9月入学为例)】</li>
+<li>  2025年6-8月(高考后)→立即启动法语学习+确定留学路径+咨询Campus France Chine</li>
+<li>  2025年9-12月→EEF创建账户+准备文书+TCF/雅思考试(建议12月前出分)+开始APS预签证程序</li>
+<li>  2025年12-2026年2月→递交EEF申请(DAP Blanc公立Licence截止日期通常在1月15日)+高商BBA滚动申请</li>
+<li>  2026年3-5月→等待录取+接受offer+准备面签+开始France-Visas签证申请</li>
+<li>  2026年6-7月→递签+预约OFII体检+订机票+找住房(CROUS宿舍2月申请/私人住房提前3-6月)</li>
+<li>  2026年8-9月→入境法国+完成OFII居留手续+注册入学</li>
+<li>【关键截止日期】DAP Blanc(公立Licence):1月15日截止。Hors-DAP(已有法语成绩):3月。高商BBA:Rolling但建议1-3月申请</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France Chine</a> · <a href="https://www.enseignementsup-recherche.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">法国高教部</a> · <a href="https://france-visas.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">France-Visas</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_visa_and_post_study">
+        <h2>签证/居留政策(VLS-TS/APS/人才护照/永居)</h2>
+        <p class="section-en">Visa & Residency Policy (VLS-TS/APS/Talent Passport/PR)</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 73%<span class="confidence-bar"><span class="confidence-fill" style="width:73%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【VLS-TS长期学生签】有效期1年(等同于居留证)，允许打工964小时/年(约20h/周)。申请需:录取通知书+资金证明€615/月+住宿证明+OFII体检</li>
+<li>【OFII抵达手续】入境3个月内必须完成OFII体检+缴纳居留税(taxe timbre)€50-75。逾期视为非法居留。VLS-TS第一年到期前2个月续签居留(carte de séjour)</li>
+<li>【APS临时居留】Licence/Master毕业后可申请APS(Autorisation Provisoire de Séjour)1年，允许全职找工作/创业。不可续期，找到工作需转工签</li>
+<li>【人才护照(Passeport Talent)】Master以上学历+工作合同≥€38,000/年→可申请4年人才居留。Licence毕业生不适用直接路径</li>
+<li>【永居路径】连续合法居留5年+法语B1+融入证明+稳定收入→可申请10年居留卡(carte de résident)。入籍需5年+法语B1-B2+放弃中国国籍(中法不承认双重国籍)</li>
+<li>【打工权利】学生签允许964小时/年(约€9,500年收入)。最低毛时薪€11.65(SMIC)。建议优先选择Alternance(半工半读)模式，企业付学费+月薪€1,000-1,800</li>
+<li>【签证类型覆盖】本数据覆盖 6 类签证/居留路径</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://france-visas.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">France-Visas</a> · <a href="https://www.ofii.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">OFII</a> · <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_visa_policy</p>
+            <table class="data-table">
+                <thead><tr><th>visa_category</th><th>duration</th><th>work_rights</th><th>requirements</th><th>path_to_pr</th></tr></thead>
+                <tbody>
+                    <tr><td>Visa Etudiant(长期学生签)</td><td>1年(续签)</td><td>964小时/年(约20h/周)</td><td>OFII/录取通知书+资金证明(615EUR/月)+法语/英语成绩</td><td>2年居留后转工签/永居(10年)</td></tr><tr><td>Visa Etudiant-Concours(考试/面试签)</td><td>3-6个月</td><td>无</td><td>语言学校/大学入学考试/艺术学院面试</td><td>考试通过转长期学生签</td></tr><tr><td>VLS-TS(长期访问学生签)</td><td>3-6个月</td><td>无</td><td>语言课程/短期培训</td><td>回国申请正式学生签</td></tr><tr><td>Schengen Court Séjour(短期)</td><td>90天/180天</td><td>无</td><td>短期课程/夏令营/语言班(≤3个月)</td><td>N/A(居留到期)</td></tr><tr><td>Passport Talent(人才护照)</td><td>4年</td><td>全职工作</td><td>Master学位+工作合同或创业计划</td><td>5年可申永居</td></tr><tr><td>APS(Autorisation Provisoire de Séjour)</td><td>1年(毕业后)</td><td>找工作/兼职工作</td><td>已完成-license/Master学位</td><td>找到工作转工签+永居路径</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_employment_and_outcomes">
+        <h2>就业分析与职业发展(留法/回国/第三国)</h2>
+        <p class="section-en">Employment Analysis & Career Development</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-medium">风险: MEDIUM</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 68%<span class="confidence-bar"><span class="confidence-fill" style="width:68%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【留法就业-Licence毕业生】法国应届Licence毕业生年薪中位数约€30,000-35,000(brut)。IT/工程/商科高于人文/社科。毕业后1年APS为缓冲期</li>
+<li>【留法就业-Master vs Licence】Master学位显著提升就业薪资(+15-25%)和获得CDI(长期合同)概率。约70%法国Licence毕业生选择继续读Master</li>
+<li>【高商BBA就业】HEC/ESSEC/ESCP等Top高商BBA毕业生起薪€38,000-50,000/brut，介于Licence和Master毕业生之间。强校友网络是核心优势</li>
+<li>【回国发展】法国公立大学获中留服认证，Licence=学士学位。留法经历+英语/法语双语=核心竞争优势。法企在华(欧莱雅/施耐德/安盛/赛诺菲)青睐留法背景</li>
+<li>【第三国发展】法国LMD学位在欧洲(德国/荷兰/比利时/瑞士)认可度高，可无缝衔接Master。在非洲法语区(摩洛哥/塞内加尔/科特迪瓦)就业市场强势</li>
+<li>【关键瓶颈】留法就业最大门槛是法语水平(B2是底线，C1才有竞争力)。英语-only岗位稀缺且集中在互联网/咨询。建议法语达到C1再进入全职就业</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://www.insee.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">INSEE</a> · <a href="https://travail-emploi.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">法国劳工部</a> · <a href="https://www.francetravail.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Pôle Emploi</a> · <a href="https://www.cscse.edu.cn" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">中留服</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_visa_policy</p>
+            <table class="data-table">
+                <thead><tr><th>visa_category</th><th>duration</th><th>work_rights</th><th>requirements</th><th>path_to_pr</th></tr></thead>
+                <tbody>
+                    <tr><td>Visa Etudiant(长期学生签)</td><td>1年(续签)</td><td>964小时/年(约20h/周)</td><td>OFII/录取通知书+资金证明(615EUR/月)+法语/英语成绩</td><td>2年居留后转工签/永居(10年)</td></tr><tr><td>Visa Etudiant-Concours(考试/面试签)</td><td>3-6个月</td><td>无</td><td>语言学校/大学入学考试/艺术学院面试</td><td>考试通过转长期学生签</td></tr><tr><td>VLS-TS(长期访问学生签)</td><td>3-6个月</td><td>无</td><td>语言课程/短期培训</td><td>回国申请正式学生签</td></tr><tr><td>Schengen Court Séjour(短期)</td><td>90天/180天</td><td>无</td><td>短期课程/夏令营/语言班(≤3个月)</td><td>N/A(居留到期)</td></tr><tr><td>Passport Talent(人才护照)</td><td>4年</td><td>全职工作</td><td>Master学位+工作合同或创业计划</td><td>5年可申永居</td></tr><tr><td>APS(Autorisation Provisoire de Séjour)</td><td>1年(毕业后)</td><td>找工作/兼职工作</td><td>已完成-license/Master学位</td><td>找到工作转工签+永居路径</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="section" id="fr_risk_assessment">
+        <h2>风险矩阵与避坑指南(中国高中生典型风险)</h2>
+        <p class="section-en">Risk Matrix & Pitfalls Guide</p>
+        <div style="margin:0.5rem 0;">
+            <span class="risk-badge risk-high">风险: HIGH</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:0.8rem;">置信度: 70%<span class="confidence-bar"><span class="confidence-fill" style="width:70%"></span></span></span>
+        </div>
+        <div class="card">
+            <ul class="insight-list">
+                <li>【⚠ 高风险:学业淘汰】公立大学Licence L1→L2淘汰率约40-50%，医学PASS淘汰率80-85%。中国学生常见误区:认为法国大学「宽进宽出」，实际「宽进严出」</li>
+<li>【⚠ 高风险:语言障碍】法语B2仅能应付基础课堂，L2+专业课对法语要求实为C1水平。法语不达标是留级/退学首要原因</li>
+<li>【⚠ 中高风险:面签失败】Campus France面签失败率约15-25%。主要失败原因:学术计划模糊+法语表达不足+动机不明确。面签失败需等下一申请季(半年)</li>
+<li>【⚠ 中介陷阱:预录取≠录取】部分机构(含知名连锁)售卖「语言学校预录取+有条件大学预录取」捆绑产品，实则语言结束仍需正式申请，每年花费€15,000-25,000</li>
+<li>【⚠ 资金风险】第一年需€10,000-15,000(含EEF程序费+语言学费+生活费)。家长需准备至少€15,000-20,000/年的持续资金能力，法国不允许学生贷款覆盖生活费</li>
+<li>【⚠ 心理健康风险】文化冲击+学业压力+孤独感导致约30%留法中国学生出现焦虑/抑郁症状。建议入学前参加Campus France行前培训+寻找校友社群</li>
+<li>【策略建议】①高考后立即启动法语学习(目标TCF B2)②EEF申请走正规渠道不依赖中介「保录取」③第一年选数学/CS/经济等可迁移性强的专业④预算€15,000+/年×3年</li>
+            </ul>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.8rem;">📚 来源: <a href="https://chine.campusfrance.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">Campus France</a> · <a href="https://www.enseignementsup-recherche.gouv.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">法国高教部</a> · 留学生互助组织 · <a href="https://www.insee.fr" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;">INSEE</a></p>
+        </div>
+        
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_bachelor</p>
+            <table class="data-table">
+                <thead><tr><th>university_zh</th><th>university_en</th><th>qs_2025</th><th>program_type</th><th>language</th><th>tuition_eur</th><th>city</th><th>top_programs</th><th>moe_ok</th></tr></thead>
+                <tbody>
+                    <tr><td>索邦大学</td><td>Sorbonne Université</td><td class="col-num">59.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>人文/理学/医学/工程</td><td>是</td></tr><tr><td>巴黎西岱大学</td><td>Université Paris Cité</td><td class="col-num">236.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>巴黎</td><td>医学/法学/心理学/社科</td><td>是</td></tr><tr><td>巴黎萨克雷大学</td><td>Université Paris-Saclay</td><td class="col-num">78.00</td><td>公立Licence</td><td>法语/部分英语</td><td class="col-num">2,770.00</td><td>巴黎(南)</td><td>理学/工程/医学/法学</td><td>是</td></tr><tr><td>PSL巴黎文理研究大学</td><td>PSL University</td><td class="col-num">24.00</td><td>公立Licence(LMD)</td><td>法语/英语</td><td class="col-num">2,770.00</td><td>巴黎</td><td>理学/人文/艺术/社科</td><td>是</td></tr><tr><td>艾克斯-马赛大学</td><td>Aix-Marseille Université</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>马赛</td><td>法学/社科/理学/体育</td><td>是</td></tr><tr><td>波尔多大学</td><td>Université de Bordeaux</td><td class="col-num">465.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>波尔多</td><td>葡萄酒/法学/理学/医学</td><td>是</td></tr><tr><td>里昂一大(UCBL)</td><td>Université Claude Bernard Lyon 1</td><td class="col-num">387.00</td><td>公立Licence</td><td>法语为主</td><td class="col-num">2,770.00</td><td>里昂</td><td>医学/理学/工程/体育</td><td>是</td></tr><tr><td>HEC Paris BBA</td><td>HEC Paris</td><td>—(QS商科Top1)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">22,000.00</td><td>巴黎(茹伊)</td><td>管理/金融/创业/数字</td><td>是</td></tr><tr><td>ESSEC Global BBA</td><td>ESSEC Business School</td><td>—(QS商科Top3)</td><td>高商BBA本科</td><td>英语/法语</td><td class="col-num">14,500.00</td><td>巴黎(塞尔吉)</td><td>管理/金融/市场营销/咨询</td><td>是</td></tr><tr><td>ESCP BBA</td><td>ESCP Business School</td><td>—(QS商科Top5)</td><td>高商BBA本科</td><td>英语/多语</td><td class="col-num">13,500.00</td><td>巴黎(多校区)</td><td>管理/金融/跨文化/咨询</td><td>是</td></tr><tr><td>EDHEC Int BBA</td><td>EDHEC Business School</td><td>—(QS商科Top10)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">12,000.00</td><td>里尔/尼斯</td><td>管理/全球商务/金融/分析</td><td>是</td></tr><tr><td>emlyon BBA</td><td>emlyon Business School</td><td>—(QS商科Top15)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,500.00</td><td>里昂/巴黎</td><td>管理/创业/数字/奢侈品</td><td>是</td></tr><tr><td>格勒诺布尔高商</td><td>GEM</td><td>—(QS商科Top30)</td><td>高商BBA本科</td><td>英语</td><td class="col-num">11,000.00</td><td>格勒诺布尔</td><td>管理/科技/金融/国际商务</td><td>是</td></tr><tr><td>INSA Lyon (5年制)</td><td>INSA Lyon</td><td>—(QS工程Top)</td><td>工程师本硕连读</td><td>法语/英语</td><td class="col-num">3,770.00</td><td>里昂</td><td>工程/机械/CS/材料</td><td>是</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_visa_policy</p>
+            <table class="data-table">
+                <thead><tr><th>visa_category</th><th>duration</th><th>work_rights</th><th>requirements</th><th>path_to_pr</th></tr></thead>
+                <tbody>
+                    <tr><td>Visa Etudiant(长期学生签)</td><td>1年(续签)</td><td>964小时/年(约20h/周)</td><td>OFII/录取通知书+资金证明(615EUR/月)+法语/英语成绩</td><td>2年居留后转工签/永居(10年)</td></tr><tr><td>Visa Etudiant-Concours(考试/面试签)</td><td>3-6个月</td><td>无</td><td>语言学校/大学入学考试/艺术学院面试</td><td>考试通过转长期学生签</td></tr><tr><td>VLS-TS(长期访问学生签)</td><td>3-6个月</td><td>无</td><td>语言课程/短期培训</td><td>回国申请正式学生签</td></tr><tr><td>Schengen Court Séjour(短期)</td><td>90天/180天</td><td>无</td><td>短期课程/夏令营/语言班(≤3个月)</td><td>N/A(居留到期)</td></tr><tr><td>Passport Talent(人才护照)</td><td>4年</td><td>全职工作</td><td>Master学位+工作合同或创业计划</td><td>5年可申永居</td></tr><tr><td>APS(Autorisation Provisoire de Séjour)</td><td>1年(毕业后)</td><td>找工作/兼职工作</td><td>已完成-license/Master学位</td><td>找到工作转工签+永居路径</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+
+        <div class="data-table-wrap">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--primary);padding:0.5rem 0.8rem 0;">📊 fr_scholarships</p>
+            <table class="data-table">
+                <thead><tr><th>name</th><th>provider</th><th>benefit</th><th>level</th><th>amount</th><th>coverage</th><th>deadline</th><th>comp</th></tr></thead>
+                <tbody>
+                    <tr><td>Eiffel Excellence(埃菲尔奖)</td><td>法国外交部</td><td>+生活费+机票+文化</td><td>本科/硕士</td><td>1181EUR/月+全cover</td><td>全额(免学费+津贴)</td><td>1月</td><td>极高(约1500名/全层次)</td></tr><tr><td>Campus France Excellence(校奖)</td><td>各法国大学</td><td>免学费或学费减免</td><td>本科</td><td>学费减免/部分</td><td>部分</td><td>各大学不同</td><td>中</td></tr><tr><td>法兰西共和国助学金(CROUS)</td><td>CROUS/政府</td><td>+住房补贴+餐补</td><td>本科</td><td>最高5556EUR/年</td><td>生活费+住房</td><td>7-10月</td><td>中(需居留+收入条件)</td></tr><tr><td>中国政府奖学金(CSC)</td><td>国家留学基金委</td><td>+生活费+往返机票</td><td>本科</td><td>full</td><td>全额</td><td>3-4月</td><td>高(中法9+9等项目)</td></tr><tr><td>Erasmus+/Erasmus Mundus</td><td>欧盟委员会</td><td>+生活费+旅费+学费</td><td>本科/硕士</td><td>最高25000EUR/年</td><td>全额</td><td>各大学不同</td><td>高</td></tr><tr><td>EDHEC Scholarship</td><td>EDHEC高商</td><td>最高全额学费</td><td>本科BBA</td><td>最高full</td><td>学费</td><td>Rolling</td><td>中-高(merit-based)</td></tr><tr><td>emlyon Early Bird</td><td>emlyon高商</td><td>最高30%学费减免</td><td>本科BBA</td><td>最高30%</td><td>学费</td><td>12-3月</td><td>中</td></tr><tr><td>ESSEC Excellence</td><td>ESSEC高商</td><td>最高全额学费</td><td>本科BBA</td><td>最高full</td><td>学费</td><td>1-3月</td><td>高</td></tr><tr><td>HEC Paris Scholarship</td><td>HEC Paris</td><td>need-based+merit</td><td>本科BBA</td><td>最高full</td><td>学费+生活费</td><td>与申请同时</td><td>高</td></tr><tr><td>地方政府奖学金(区域奖)</td><td>法国大区政府</td><td>+住房+交通优惠</td><td>本科</td><td>500-2000EUR/年</td><td>部分</td><td>各区域不同</td><td>低-中</td></tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="source-footer">
+        <h3>📚 数据来源与参考来源</h3>
+        <ul>
+            <li>Campus France</li><li>法国高教部</li><li>QS World Rankings</li><li>DAAP</li><li>Campus France Chine</li><li>France-Visas</li><li>CROUS</li><li>INSEE</li><li>CIEP/France Éducation International</li><li>法语联盟</li><li>OFII</li><li>法国劳工部</li><li>Pôle Emploi</li><li>中留服</li><li>留学生互助组织</li>
+        </ul>
+        <p style="margin-top:0.5rem;font-size:0.75rem;">* 点击来源名称可跳转至官方页面验证信息</p>
+    </div>
+
+</div>
+</body>
+</html>

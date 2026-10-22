@@ -4,5 +4,6 @@ Macro Renderers — 宏观经济报告渲染器
 """
 
 from src.renderers.macro.dashboard import MacroDashboardRenderer
+from src.renderers.macro.japan_economy import JapanEconomyRenderer
 
-__all__ = ["MacroDashboardRenderer"]
+__all__ = ["MacroDashboardRenderer", "JapanEconomyRenderer"]

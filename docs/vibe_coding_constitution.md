@@ -1,6 +1,6 @@
 # Insights 项目 Vibe Coding 宪法规范
 
-> **版本**: v1.4  
+> **版本**: v1.7  
 > **生效日期**: 2026-10-12  
 > **适用范围**: 本仓库所有代码、配置、数据管道、渲染器、文档及 AI 辅助开发活动  
 > **跨工具兼容**: 本规范独立于任何 IDE (CatPaw / CodeBuddy / Cursor 等) 和任何 AI 模型 (LongCat / HY 等),具有工具无关性
@@ -48,6 +48,12 @@
 ║  开发产物(代码/配置/文档)不得包含特定 IDE 或模型的私有格式依赖。            ║
 ║                                                                          ║
 ║  原则五: 反幻觉约束 — 事实零虚构 (Zero Fabrication)                       ║
+║                                                                          ║
+║  原则六: 反时间幻觉约束 — 日期感知报告生成 (Date-Aware Reporting)        ║
+║  ─────────────────────────────────────                                   ║
+║  所有 Prompt 报告必须基于 ReportContext.report_date 作为唯一时间基准。     ║
+║  禁止硬编码未来年份 / 禁止使用 datetime.now() 替代 analysis.context。    ║
+║  渲染器必须统一使用 analysis.context.format_date() 生成元数据。            ║
 ║  ─────────────────────────────────────                                   ║
 ║  禁止 AI 生成任何无法溯源至权威来源的事实性声明。                           ║
 ║  数据缺失时必须显式标注"暂无数据"或"—",严禁推断填充或编造数值。          ║
@@ -649,7 +655,179 @@ html = render_source_ul_as_html(sources)
 
 > **递增要求**: 每新建/修改一个 Renderer,必须使用 `source_links` 模块渲染所有来源。
 
-### 5.4 反幻觉防控规范 (Anti-Hallucination Best Practices)
+### 5.4 职业 (Career) 赛道 URL 文件命名与路由规范
+
+> **★ 核心规则**: 职业/签证赛道的报告文件名和页面标题必须使用 **小写英文前缀** 标识目标国家/地区，避免 `[[country]]` 占位符泄漏或中文/混乱名称出现。
+
+#### 5.4.1 国家/地区前缀命名规则
+
+| 目标 | 前缀 (slug) | 示例报告文件名 | 示例页面标题 |
+|------|------------|----------------|-------------|
+| 迪拜/阿联酋 | `dubai` | `career_dubai_ai_security_engineer_20261012.html` | Dubai AI Security Engineer 人才深度分析 |
+| 日本 | `japan` | `career_japan_it_engineer_20261012.html` | Japan IT Engineer 人才深度分析 |
+| 德国 | `germany` | `career_germany_auto_engineer_20261012.html` | Germany Auto Engineer 人才深度分析 |
+| 新加坡 | `singapore` | `career_singapore_data_analyst_20261012.html` | Singapore Data Analyst 人才深度分析 |
+| 澳洲/澳大利亚 | `australia` | `career_australia_accountant_20261012.html` | Australia Accountant 人才深度分析 |
+| 新西兰 | `nz` | `career_nz_driver_20261012.html` | NZ Driver 人才深度分析 |
+| 英国 | `uk` | `career_uk_finance_20261012.html` | UK Finance 人才深度分析 |
+| 加拿大 | `canada` | `career_canada_nurse_20261012.html` | Canada Nurse 人才深度分析 |
+| 美国 | `us` | `career_us_software_engineer_20261012.html` | US Software Engineer 人才深度分析 |
+
+#### 5.4.2 模板变量解析规则
+
+`profession_country.yaml` 中使用 `[[country]]` 和 `[[profession]]` 作为模板占位符，必须在 **执行时** 替换为实际小写英文值：
+
+```python
+# src/utils/career_naming.py 中实现 resolve_career_title()
+def resolve_career_title(keyword: str) -> Tuple[str, str]:
+    """
+    将用户输入的关键词映射为 (country_slug, profession_slug)。
+    
+    返回值:
+        country_slug:   "dubai" / "japan" / "germany" / ...
+        profession_slug: "ai-security-engineer" / "it-engineer" / ...
+    
+    示例:
+        "迪拜AI安全工程师" → ("dubai", "ai-security-engineer")
+        "日本IT"          → ("japan", "it-engineer")
+        "Germany automotive" → ("germany", "automotive-engineer")
+    """
+    ...
+```
+
+#### 5.4.3 报告文件命名规范
+
+```
+reports/career/career_{country_slug}_{profession_slug}_{YYYYMMDD}.html
+```
+
+- 所有字母 **小写**
+- 多单词用 **连字符** (`-`) 连接
+- 日期使用 ISO 短格式 (`YYYYMMDD`)
+- 禁止出现中文字符、空格、大写字母
+
+#### 5.4.4 标题渲染规范
+
+报告 HTML `<title>` 和 `<h1>` 显示格式:
+
+```html
+<!-- 正确 -->
+<title>Dubai AI Security Engineer 人才需求与就业前景深度分析</title>
+<h1>Dubai AI Security Engineer 人才需求与就业前景深度分析</h1>
+
+<!-- 错误 — 占位符泄漏 -->
+<title>[[country]][[profession]]人才需求与就业前景深度分析</title>
+
+<!-- 错误 — 混乱格式 -->
+<title>阿联酋・迪拜 AI安全工程师 人才分析</title>
+```
+
+#### 5.4.5 PromptRegistry 集成要求
+
+当通过 `--keyword` 触发 `profession_country` 类模板 Prompt 时，`PromptRegistry.resolve()` 必须在返回 `PromptDefinition` 前调用 `resolve_career_title()` 填充 `label_zh` 和 `label_en` 中的 `[[country]]` / `[[profession]]` 占位符。
+
+```python
+# src/prompt_registry/__init__.py — resolve() 方法中
+if matched_prompt.id.startswith("profession_"):
+    from src.utils.career_naming import resolve_career_title
+    country_slug, profession_slug = resolve_career_title(keyword)
+    matched_prompt = _fill_career_template(matched_prompt, country_slug, profession_slug)
+```
+
+### 5.6 反时间幻觉规范 (Date-Aware Reporting — **全Prompt通用**) ★v1.7新增
+
+> **★ 原则六衍生规范**: 以下规则是"日期感知报告生成"原则在 **所有垂直赛道 (macro/career/studyabroad/realestate/tech)** 的具体体现。时间幻觉是报告可信度的慢性毒素,必须从架构层面彻底根除。
+
+#### 5.6.1 适用范围 (无一例外)
+
+| 垂直赛道 | 日期敏感元素 | 强制约束 |
+|---------|------------|---------|
+| **宏观 (macro)** | GDP预测/政策利率/通胀展望 | 使用 `ctx.year_str(offset)` 动态生成年份;引用IMF/WorldBank/OECD报告时标注报告发布年份 |
+| **留学 (studyabroad)** | 申请截止日期/开学时间 | 必须标注以官网最新公布为准;不得硬编码"2025年9月入学" |
+| **职业移民 (career)** | 签证政策/工资中位数/认证要求 | 政策生效日期+信息来源URL;时效性数据须标注"截至{report_date}" |
+| **房地产 (realestate)** | 房价指数/租金回报率/交易量 | 历史数据标注时间区间(如 2020-2024 实际值);预测标注基准年 |
+| **科技 (tech)** | TAM预测/融资数据/技术路线图 | 区分"已发布/已验证"与"预测/推测";标注数据来源的采集/发布时间 |
+
+#### 5.6.2 渲染器日期规范 (Renderer Date Policy)
+
+```python
+# ❌ 违规写法 — 使用系统当前时间(每次生成报告会产生不同日期)
+from datetime import datetime
+meta = f"生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+
+# ✅ 正确写法 — 使用 ReportContext 保证整份报告时间一致
+meta = f"生成时间: {analysis.context.format_date('%Y-%m-%d %H:%M')}"
+```
+
+**强制规则**:
+1. 所有 6 个渲染器 (visa_tracker / japan_driver / migration_lifecycle / profession_analyzer / mckinsey_style / mckinsey_v2 / real_estate_dashboard / japan_economy) **禁止导入 `from datetime import datetime`** 用于报告生成
+2. 所有日期元数据字段必须来自 `ReportContext.format_date()` 或 `ReportContext.date_tag()`
+3. 文件名的 YYYYMMDD 标签必须使用 `analysis.context.date_tag()` 生成
+4. 报告内所有"今年/明年/去年"必须使用 `ctx.this_year / ctx.next_year / ctx.year_str(-1)` 等动态值
+
+#### 5.6.3 分析方法日期规范
+
+所有 `_method_*` 函数的签名必须包含 `ctx: ReportContext = None` 参数:
+
+```python
+# ✅ 正确签名
+def _method_xxx(self, s: SectionResult, p: PromptDefinition, ctx: ReportContext = None):
+    c = ctx or ReportContext()  # 容错:若无上下文则创建默认
+    s.insights.append(f"【数据覆盖】{c.this_year}年度实际值 + {c.next_year}年度预测")
+    s.source_attribution.append(f"IMF WEO {c.quarter_str(0, 2)} — https://...")
+```
+
+#### 5.6.4 Prompt YAML 时间声明
+
+Prompt YAML 字段中 **hardcode 未来年份的位置** 必须通过动态生成:
+
+```yaml
+# ❌ 错误示例
+analysis_dimensions:
+  - id: growth_forecast
+    label_zh: "2025-2030年美国经济增长展望"  # 硬编码 → 时间幻觉
+
+# ✅ 正确示例
+analysis_dimensions:
+  - id: growth_forecast
+    label_zh: ""  # 运行时由 _method 函数动态生成
+```
+
+**规则**: Prompt YAML 的 `label_zh` 和 `label_en` 中不得包含具体年份(如"2025"/"2026")。所有时间相关的显示值必须由分析方法在运行时动态生成。
+
+#### 5.6.5 时间幻觉检查清单 (Submit前必检)
+
+```markdown
+Report QA Checklist (时间幻觉专项):
+□ 所有渲染器已移除 datetime.now() 调用
+□ 文件名 YYYYMMDD 与报告内元数据日期一致
+□ 报告生成的年份 ≤ report_date.year (不得引用"未来发布"的数据)
+□ 所有预测性陈述已标注 "(E)" / "预测" / "estimated" 后缀
+□ 申请类信息已标注"以[官网名]最新公布为准"
+□ 使用 format_relative_year() / year_str() 生成相对年份
+```
+
+#### 5.6.6 违规拦截机制
+
+```python
+# 建议在 PromptRuntime.execute() 末尾增加时间幻觉检测
+def _detect_time_hallucination(analysis: AnalysisResult) -> List[str]:
+    """检测报告中的时间幻觉."""
+    violations = []
+    report_year = analysis.context.report_year
+    for section in analysis.segments:
+        for insight in section.insights:
+            # 检测硬编码的未来年份 (如 2027/2028/2029/2030)
+            future_years = [str(y) for y in range(report_year + 1, report_year + 10)]
+            if any(y in insight for y in future_years):
+                if "(E)" not in insight and "预测" not in insight:
+                    violations.append(f"[{section.dimension_id}] 可能的时间幻觉: {insight[:50]}")
+    return violations
+```
+
+---
+
+### 5.5 反幻觉防控规范 (Anti-Hallucination Best Practices)
 
 > **★ 原则五衍生规范**: 以下规则是"事实零虚构"原则在所有数据采集、分析、渲染活动中的具体体现。AI 幻觉是报告质量的最大威胁,必须从架构层面建立防线。
 
@@ -1202,8 +1380,11 @@ repos:
 
 ---
 
-> **文档维护**: 本规范为项目开发的"宪法"文件,任何修改需经项目负责人审核。  
-> **持续改进**: 随着项目演进和规范执行情况,定期更新本文件。  
-> **v1.4 变更**: 新增原则五(反幻觉约束 — 事实零虚构);第 5.4 节「反幻觉防控规范」详细规定三条铁律、元数据强制字段、渲染层防幻觉呈现规则、Prompt YAML 反幻觉配置、幻觉风险检查清单及自动化检测机制。  
+> **文档维护**: 本规范为项目开发的"宪法"文件,任何修改需经项目负责人审核。
+> **持续改进**: 随着项目演进和规范执行情况,定期更新本文件。
+> **v1.7 变更**: 新增原则六(反时间幻觉约束 — 日期感知报告生成全Prompt通用);第 5.6 节「反时间幻觉规范」详细规定适用范围、渲染器日期规范、分析方法签名规范、Prompt YAML 时间声明约束、时间幻觉检查清单及违规拦截机制;渲染器统一迁移至 analysis.context.format_date();宪法压缩版同步升级。
+> **v1.6 变更**: 压缩版新增「反时间幻觉约束」原则(仅覆盖宏观 Prompt);宪法压缩版升级至 v1.6。
+> **v1.5 变更**: 第 5.4 节新增「职业赛道路由命名规范」— 国家/地区使用小写英文前缀 (dubai/japan/germany 等),报告文件命名格式 `career_{country}_{profession}_{YYYYMMDD}.html`,模板占位符 `[[country]]`/`[[profession]]` 在 resolve 阶段自动填充。反幻觉章节重编号为 5.5。
+> **v1.4 变更**: 新增原则五(反幻觉约束 — 事实零虚构);第 5.4 节(现 5.5)「反幻觉防控规范」详细规定三条铁律、元数据强制字段、渲染层防幻觉呈现规则、Prompt YAML 反幻觉配置、幻觉风险检查清单及自动化检测机制。  
 > **v1.3 变更**: 原则一增强 — 新增来源可点击强制规范 (所有报告来源必须附带可点击 URL,引入 `src/renderers/source_links.py` 模块 + SOURCE_URL_MAP 映射表);第 5.3 节全面升级为「来源引用规范 (强制可点击)」;宪法压缩版同步更新。  
 > **v1.2 变更**: 新增原则四(工具无关性)、第十部分(跨 IDE/跨模型操作指南)、附录 D (AI 系统提示词模板)、附录 E (pre-commit 钩子)。
